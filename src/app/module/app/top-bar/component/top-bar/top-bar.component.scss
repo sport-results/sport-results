@@ -1,0 +1,52 @@
+.top-bar {
+  .start {
+    display: flex;
+  }
+
+  svg-icon:hover {
+    cursor: pointer;
+  }
+
+  .end {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+}
+
+.title {
+  font-size: 2.2rem;
+  font-weight: 500;
+  line-height: 2.2rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.users-dropdown {
+  margin-left: 1rem;
+  width: 15rem;
+}
+
+.login-container {
+  display: flex;
+  align-items: center;
+
+  a.login {
+    color: #0078d4;
+    cursor: pointer;
+  }
+
+  .login {
+    margin-left: 0.5rem;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .logo-text {
+    display: none;
+  }
+
+  .login {
+    display: none;
+  }
+}

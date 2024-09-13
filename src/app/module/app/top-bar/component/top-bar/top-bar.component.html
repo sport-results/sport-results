@@ -1,0 +1,39 @@
+<ng-container *ngIf="params$ | async as params">
+  <section class="top-bar">
+    <p-menubar [model]="params.menuItems">
+      <ng-template pTemplate="start">
+        <div class="start">
+          <span class="title">{{ title }}</span>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="end">
+        <div class="end">
+          <p-dropdown
+            [options]="params.users"
+            optionLabel="displayName"
+            placeholder="Select a user"
+            (onChange)="testLoginClickHandler($event)"
+          />
+
+          <ng-container *mcIsAuthenticated="true">
+            <sr-user-profile
+              [user]="params.user"
+              (logout)="logoutHandler()"
+            ></sr-user-profile>
+          </ng-container>
+  
+          <ng-container *mcIsAuthenticated="false">
+            <div class="login-container">
+              <a class="login" (click)="loginClickHandler()"
+                ><i class="pi pi-sign-in"></i>
+  
+                <span> login </span></a
+              >
+            </div>
+          </ng-container>
+        </div>
+      </ng-template>
+    </p-menubar>
+  </section>
+</ng-container>

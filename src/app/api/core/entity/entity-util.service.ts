@@ -1,0 +1,19 @@
+import { Observable } from 'rxjs';
+
+import { FormGroup } from '@angular/forms';
+
+export abstract class EntityUtilService<R, S, T, Y, Z, X> {
+    public abstract _sort(a: R, b: R): number;
+    public abstract convertEntityAddToModelAdd(entityAdd: S): Z;
+    public abstract convertEntityToModel(entity: R): Y;
+    public abstract convertEntityUpdateToModelUpdate(entity: T): X;
+    public abstract convertModelAddToEntityAdd(model: Z): S;
+    public abstract convertModelToEntity$(model: Y): Observable<R>;
+    public abstract convertModelUpdateToEntityUpdate$(model: X): Observable<T>;
+    public abstract createEntity(formGroup: FormGroup): S;
+    public abstract createEntitySearchParameter(entity: R | S | T): string[];
+    public abstract createFormGroup(entity: R | undefined): FormGroup;
+    public abstract updateEntity(formGroup: FormGroup): T;
+
+    protected abstract createSearchParameter(name: string): string[];
+}

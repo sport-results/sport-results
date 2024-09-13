@@ -19,7 +19,7 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "sr",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
@@ -39,6 +39,8 @@
               }
             ],
             "styles": [
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/primeng/resources/themes/aura-light-blue/theme.css",
               "src/styles.scss"
             ],
             "scripts": []
