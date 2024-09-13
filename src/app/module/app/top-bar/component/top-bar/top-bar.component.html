@@ -9,13 +9,6 @@
 
       <ng-template pTemplate="end">
         <div class="end">
-          <p-dropdown
-            [options]="params.users"
-            optionLabel="displayName"
-            placeholder="Select a user"
-            (onChange)="testLoginClickHandler($event)"
-          />
-
           <ng-container *mcIsAuthenticated="true">
             <sr-user-profile
               [user]="params.user"

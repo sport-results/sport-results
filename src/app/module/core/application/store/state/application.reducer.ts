@@ -24,7 +24,7 @@ const defaultState: ApplicationState = {
 
 export const applicationReducer = createReducer(
  defaultState,
-  on(applicationActions.getUser, (state) => ({ ...state, loading: true })),
+  on(applicationActions.getAuthenticatedUser, (state) => ({ ...state, loading: true })),
   on(applicationActions.authenticated, (state, { user }) => {
     return {
       ...state,

@@ -9,6 +9,12 @@ import { CoreAuthorizationDataModule } from './module/core/authorization';
 import { CoreApplicationModule } from './module/core/application';
 import { CoreStoreModule } from './module/core/store';
 import { NgxPermissionsModule } from 'ngx-permissions';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { environment } from '../environments/environment';
+import { UserModule } from '@app/domain/user';
+import { RoleModule } from './module/domain/role';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,8 +27,14 @@ import { NgxPermissionsModule } from 'ngx-permissions';
     CoreApplicationModule,
     CoreStoreModule,
     NgxPermissionsModule.forRoot(),
+    UserModule,
+    RoleModule
   ],
-  providers: [],
+  providers: [
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

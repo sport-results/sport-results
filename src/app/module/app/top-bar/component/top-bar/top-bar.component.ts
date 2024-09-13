@@ -45,8 +45,4 @@ export class TopBarComponent implements OnInit {
   logoClickHandler(): void {
     this.componentService.logoClickHandler();
   }
-
-  testLoginClickHandler(event: DropdownChangeEvent): void {
-    this.componentService.testLogin(event.value);
-  }
 }

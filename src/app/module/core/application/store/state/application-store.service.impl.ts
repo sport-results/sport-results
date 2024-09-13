@@ -20,7 +20,7 @@ export class ApplicationStoreServiceImpl extends ApplicationStoreService {
   }
 
   public dispatchGetUser(): void {
-    this.store.dispatch(applicationActions.getUser());
+    this.store.dispatch(applicationActions.getAuthenticatedUser());
   }
 
   public dispatchLogin(): void {

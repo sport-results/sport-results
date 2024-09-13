@@ -25,9 +25,16 @@
         "./src/app/api/core/authorization/index.ts"
       ],
       "@app/api/core/application": ["./src/app/api/core/application/index.ts"],
+      "@app/api/core/entity": ["./src/app/api/core/entity/index.ts"],
+      "@app/api/core/search": ["./src/app/api/core/search/index.ts"],
       "@app/api/core/store": ["./src/app/api/core/store/index.ts"],
+      "@app/api/domain/role": ["./src/app/api/domain/role/index.ts"],
+      "@app/api/domain/user": ["./src/app/api/domain/user/index.ts"],
+      "@app/api/engine": ["./src/app/api/engine/index.ts"],
       "@app/api/module/admin": ["./src/app/api/module/admin/index.ts"],
+      "@app/core/entity": ["./src/app/module/core/entity/index.ts"],
       "@app/domain/user": ["./src/app/module/domain/user/index.ts"],
+      "@app/engine": ["./src/app/module/engine/index.ts"],
     }
   },
   "angularCompilerOptions": {

@@ -12,6 +12,5 @@ export interface _User {
 }
 
 export type User = _User & Identifiable & {
-    checkpointId?: number;
     roles: Role[];
 };

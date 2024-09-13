@@ -1,0 +1,47 @@
+<section
+    class="artist-table"
+    *ngIf="roleTableViewModel$ | async as roleTableViewModel"
+>
+    <p-table
+        [value]="roleTableViewModel.roleEntities"
+        sortField="name"
+        sortMode="multiple"
+        styleClass="p-datatable-striped p-datatable-sm"
+        responsiveLayout="scroll"
+        [paginator]="true"
+        [rows]="10"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="name">
+                    Name <p-sortIcon field="name"></p-sortIcon>
+                </th>
+
+                <th></th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-roleEntity>
+            <tr>
+                <td>{{ roleEntity.name }}</td>
+
+                <td>
+                    <ng-template
+                        [ngxPermissionsOnly]="
+                            roleTableViewModel.buttonPermissions
+                        "
+                    >
+                        <button
+                            pButton
+                            pRipple
+                            icon="pi pi-pencil"
+                            class="p-button-rounded p-button-success mr-2"
+                            [disabled]="!roleEntity.editable"
+                            (click)="roleTableViewModel.editRole$$.next(roleEntity)"
+                        ></button>
+                    </ng-template>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</section>

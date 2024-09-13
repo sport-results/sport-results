@@ -23,19 +23,17 @@ export class TopBarService {
   constructor(
     private applicationStoreService: ApplicationStoreService,
     private authorizationService: AuthorizationService,
-    private router: Router,
+    private router: Router
   ) {
     this.params$$ = new ReplaySubject();
   }
 
   public createMenuItems(): MenuItem[] {
-    return [
-      
-    ];
+    return [];
   }
 
   logoClickHandler(): void {
-    this.applicationStoreService.dispatchLogin(); 
+    this.applicationStoreService.dispatchLogin();
     this.router.navigate(['/']);
   }
 
@@ -48,10 +46,7 @@ export class TopBarService {
       this.applicationStoreService.selectAuthenticatedUser$(),
     ]).pipe(
       switchMap(([user]) => {
-        this.params = this.updateParams(
-          this.params,
-          user,
-        );
+        this.params = this.updateParams(this.params, user);
 
         this.params$$.next(this.params);
 
@@ -75,10 +70,7 @@ export class TopBarService {
     this.router.navigate(['/home']);
   }
 
-  private updateParams(
-    params: TopBarParams,
-    user: User | null,
-  ): TopBarParams {
+  private updateParams(params: TopBarParams, user: User | null): TopBarParams {
     let newParams: TopBarParams;
 
     if (!params) {
@@ -88,7 +80,6 @@ export class TopBarService {
         isAuthenticated: !!user,
         menuItems: this.createMenuItems(),
         user,
-        users
       };
     } else {
       params.user = user;
@@ -99,39 +90,3 @@ export class TopBarService {
     return newParams;
   }
 }
-
-const users: User[] = [
-  {
-    id: 'admin',
-    email: 'admin@example.com',
-    displayName: 'Test Admin',
-    roles: [{
-      id: 'admin',
-      name: RoleNames.ADMIN,
-      editable: false,
-      permissions: ['ADMIN']
-    }]
-  },
-  {
-    id: 'user1',
-    email: 'user1@example.com',
-    displayName: 'User 1',
-    roles: [{
-      id: 'user',
-      name: RoleNames.USER,
-      editable: false,
-      permissions: ['USER']
-    }]
-  },
-  {
-    id: 'user2',
-    email: 'user2@example.com',
-    displayName: 'User 2',
-    roles: [{
-      id: 'user',
-      name: RoleNames.USER,
-      editable: false,
-      permissions: ['USER']
-    }]
-  },
-];

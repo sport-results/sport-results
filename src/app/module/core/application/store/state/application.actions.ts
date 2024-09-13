@@ -2,7 +2,7 @@
 import { User } from '@app/api/common';
 import { createAction, props } from '@ngrx/store';
 
-export const getUser = createAction('[Auth] Get User');
+export const getAuthenticatedUser = createAction('[Auth] Get Authenticated User');
 
 export const authenticated = createAction(
 	'[Auth] Authenticated',

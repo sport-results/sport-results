@@ -1,0 +1,121 @@
+import { first, forkJoin, Observable, switchMap } from 'rxjs';
+
+import { KeyValue } from '@angular/common';
+import { Injectable } from '@angular/core';
+import {
+  Entity,
+  EntityAdd,
+  EntityDataService,
+  EntityEffectService,
+  EntityModel,
+  EntityModelAdd,
+  EntityModelUpdate,
+  EntityUpdate,
+  EntityUtilService,
+} from '@app/api/core/entity';
+import { SearchParams } from '@app/api/core/search';
+
+@Injectable()
+export class EntityEffectServiceImpl extends EntityEffectService<
+  Entity,
+  EntityAdd,
+  EntityUpdate
+> {
+  protected entityDataService: EntityDataService<
+    EntityModel,
+    EntityModelAdd,
+    EntityModelUpdate
+  >;
+  protected entityUtilService: EntityUtilService<
+    Entity,
+    EntityAdd,
+    EntityUpdate,
+    EntityModel,
+    EntityModelAdd,
+    EntityModelUpdate
+  >;
+
+  public constructor(
+    entityDataService: EntityDataService<
+      EntityModel,
+      EntityModelAdd,
+      EntityModelUpdate
+    >,
+    entityUtilService: EntityUtilService<
+      Entity,
+      EntityAdd,
+      EntityUpdate,
+      EntityModel,
+      EntityModelAdd,
+      EntityModelUpdate
+    >
+  ) {
+    super();
+
+    this.entityDataService = entityDataService;
+    this.entityUtilService = entityUtilService;
+  }
+
+  public addEntity$(entityAdd: EntityAdd): Observable<Entity> {
+    return this.entityDataService
+      .add$(this.entityUtilService.convertEntityAddToModelAdd(entityAdd))
+      .pipe(
+        switchMap((model) =>
+          this.entityUtilService.convertModelToEntity$(model)
+        )
+      );
+  }
+
+  public override listEntities$(
+    pathParams: string[],
+    queryParams: KeyValue<string, string>[]
+  ): Observable<Entity[]> {
+    return this.entityDataService
+      .list$(pathParams, queryParams)
+      .pipe(
+        switchMap((models) =>
+          forkJoin(
+            models.map((model) =>
+              this.entityUtilService.convertModelToEntity$(model).pipe(first())
+            )
+          )
+        )
+      );
+  }
+
+  public searchEntities$(params: SearchParams): Observable<Entity[]> {
+    return this.entityDataService
+      .search$(params)
+      .pipe(
+        switchMap((result) =>
+          forkJoin(
+            result.map((document) =>
+              this.entityUtilService.convertModelToEntity$(document)
+            )
+          )
+        )
+      );
+  }
+
+  public loadEntity$(entityId: string): Observable<Entity> {
+    return this.entityDataService
+      .load$(entityId)
+      .pipe(
+        switchMap((model) =>
+          this.entityUtilService.convertModelToEntity$(model as EntityModel)
+        )
+      );
+  }
+
+  public updateEntity$(entityUpdate: EntityUpdate): Observable<EntityUpdate> {
+    return this.entityDataService
+      .update$(
+        this.entityUtilService.convertEntityUpdateToModelUpdate(entityUpdate)
+      )
+      .pipe(
+        switchMap((modelUpdate) =>
+          this.entityUtilService.convertModelUpdateToEntityUpdate$(modelUpdate)
+        )
+      );
+  }
+}

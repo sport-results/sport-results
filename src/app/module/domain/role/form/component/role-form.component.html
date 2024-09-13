@@ -1,0 +1,64 @@
+<section
+    class="artist-form"
+    *ngIf="roleFormViewModel$ | async as roleFormViewModel"
+>
+    <form [formGroup]="roleFormViewModel.formGroup" *ngIf="roleFormViewModel.formGroup">
+        <input name="uid" formControlName="uid" hidden />
+        <input name="editable" formControlName="editable" hidden />
+
+        <div class="field">
+            <span class="p-float-label">
+                <input
+                    id="name"
+                    type="text"
+                    pInputText
+                    formControlName="name"
+                />
+
+                <label for="name">Name</label>
+            </span>
+        </div>
+
+        <div class="field">
+            <span class="p-float-label">
+                <p-multiSelect
+                    id="permissions"
+                    optionGroupLabel="label"
+                    optionGroupChildren="items"
+                    [options]="roleFormViewModel.permissions"
+                    placeholder="Select a permission"
+                    formControlName="permissions"
+                    [group]="true"
+                    display="chip"
+                >
+                    <ng-template pTemplate="header">
+                        <div></div>
+                    </ng-template>
+                </p-multiSelect>
+
+                <label for="permissions">Permissions</label>
+            </span>
+        </div>
+
+        <div
+            style="margin-top: 10px"
+            fxLayout="row"
+            fxLayoutAlign="space-around"
+        >
+            <button
+                pButton
+                type="button"
+                label="Submit"
+                (click)="roleFormViewModel.submit$$.next()"
+                [disabled]="!roleFormViewModel.formGroup.valid"
+            ></button>
+
+            <button
+                pButton
+                type="button"
+                label="Cancel"
+                (click)="roleFormViewModel.cancel$$.next()"
+            ></button>
+        </div>
+    </form>
+</section>
