@@ -1,7 +1,7 @@
 import { Observable, Subject, tap } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentStore } from '@ngrx/component-store';
@@ -29,6 +29,12 @@ export type UserFormViewModel = {
 
 @Injectable()
 export class UserFormService extends ComponentStore<UserFormState> {
+    private activatedRoute = inject(ActivatedRoute);
+    private roleStoreService = inject(RoleStoreService);
+    private userStoreService = inject(UserStoreService);
+    private userUtilService = inject(UserUtilService);
+    private router = inject(Router);
+
     private readonly formGroup$ = this.select((state) => state.formGroup);
     private readonly getDataForSubmit$ = this.select((state) => ({
         userEntity: state.userEntity,
@@ -91,11 +97,6 @@ export class UserFormService extends ComponentStore<UserFormState> {
     readonly userId$ = this.select((state) => state.userId);
 
     public constructor(
-        private activatedRoute: ActivatedRoute,
-        private roleStoreService: RoleStoreService,
-        private userStoreService: UserStoreService,
-        private userUtilService: UserUtilService,
-        private router: Router
     ) {
         super({
             formGroup: undefined,

@@ -1,88 +1,82 @@
 import { map, Observable, Subject, tap } from 'rxjs';
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoleNames } from '@app/api/common';
-import {
-    RoleEntity,
-    RolePermissionsService,
-    RoleStoreService,
-} from '@app/api/domain/role';
+import { RoleEntity, RolePermissionsService, RoleStoreService } from '@app/api/domain/role';
 import { ComponentStore } from '@ngrx/component-store';
 
 export type RoleTableState = {
-    roleEntities: RoleEntity[];
+  roleEntities: RoleEntity[];
 };
 
 export type RoleTableViewModel = {
-    roleEntities: RoleEntity[];
-    buttonPermissions: string[];
-    editRole$$: Subject<RoleEntity>;
+  roleEntities: RoleEntity[];
+  buttonPermissions: string[];
+  editRole$$: Subject<RoleEntity>;
 };
 
 @Injectable()
 export class RoleTableService extends ComponentStore<RoleTableState> {
-    private readonly handleEditRole = this.effect(
-        (editRole$: Observable<RoleEntity>) => {
-            return editRole$.pipe(
-                tap((roleEntity) => this.editRole(roleEntity))
-            );
-        }
+  private activatedRoute = inject(ActivatedRoute);
+  private roleStoreService = inject(RoleStoreService);
+  private router = inject(Router);
+
+  private readonly handleEditRole = this.effect(
+    (editRole$: Observable<RoleEntity>) => {
+      return editRole$.pipe(tap((roleEntity) => this.editRole(roleEntity)));
+    }
+  );
+  private readonly roleEntities$ = this.select((state) => state.roleEntities);
+  private readonly selectRoleEntities = this.effect(() => {
+    return this.roleStoreService.selectEntities$().pipe(
+      tap((roleEntities) => {
+        this.updateRoleEntitiesState(roleEntities);
+      })
     );
-    private readonly roleEntities$ = this.select((state) => state.roleEntities);
-    private readonly selectRoleEntities = this.effect(() => {
-        return this.roleStoreService.selectEntities$().pipe(
-            tap((roleEntities) => {
-                this.updateRoleEntitiesState(roleEntities);
-            })
-        );
+  });
+
+  private editRole$$: Subject<RoleEntity>;
+
+  public readonly roleTableViewModel$: Observable<RoleTableViewModel> =
+    this.select({
+      roleEntities: this.roleEntities$,
+    }).pipe(
+      map((roleFormViewModel) => ({
+        ...roleFormViewModel,
+        buttonPermissions: [
+          RoleNames.ADMIN,
+          RolePermissionsService.updateRoleEntity,
+        ],
+        editRole$$: this.editRole$$,
+      }))
+    );
+
+  public constructor() {
+    super({
+      roleEntities: [],
     });
 
-    private editRole$$: Subject<RoleEntity>;
+    this.editRole$$ = new Subject();
+  }
 
-    public readonly roleTableViewModel$: Observable<RoleTableViewModel> =
-        this.select({
-            roleEntities: this.roleEntities$,
-        }).pipe(
-            map((roleFormViewModel) => ({
-                ...roleFormViewModel,
-                buttonPermissions: [
-                    RoleNames.ADMIN,
-                    RolePermissionsService.updateRoleEntity,
-                ],
-                editRole$$: this.editRole$$,
-            }))
-        );
+  public editRole(roleEntity: RoleEntity): void {
+    this.router.navigate(['../edit', roleEntity?.uid], {
+      relativeTo: this.activatedRoute,
+    });
+  }
 
-    public constructor(
-        private activatedRoute: ActivatedRoute,
-        private roleStoreService: RoleStoreService,
-        private router: Router
-    ) {
-        super({
-            roleEntities: [],
-        });
+  public init$(): void {
+    this.selectRoleEntities();
+    this.handleEditRole(this.editRole$$.asObservable());
+  }
 
-        this.editRole$$ = new Subject();
-    }
-
-    public editRole(roleEntity: RoleEntity): void {
-        this.router.navigate(['../edit', roleEntity?.uid], {
-            relativeTo: this.activatedRoute,
-        });
-    }
-
-    public init$(): void {
-        this.selectRoleEntities();
-        this.handleEditRole(this.editRole$$.asObservable());
-    }
-
-    private updateRoleEntitiesState(roleEntities: RoleEntity[]): void {
-        this.setState((state) => {
-            return {
-                ...state,
-                roleEntities,
-            };
-        });
-    }
+  private updateRoleEntitiesState(roleEntities: RoleEntity[]): void {
+    this.setState((state) => {
+      return {
+        ...state,
+        roleEntities,
+      };
+    });
+  }
 }

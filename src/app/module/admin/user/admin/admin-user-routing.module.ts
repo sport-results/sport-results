@@ -2,23 +2,23 @@ import { NgxPermissionsGuard } from 'ngx-permissions';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { UserAdminPermissionsService } from '@app/api/admin/user';
 import { RoleNames } from '@app/api/common';
 
-import { RoleAdminPageComponent } from './page/admin';
+import { UserAdminPageComponent } from './page/admin';
 import {
-    RoleEditPageComponent,
-    RoleEditPageResolverService,
+    UserEditPageComponent,
+    UserEditPageResolverService,
 } from './page/edit';
 import {
-    RoleListPageComponent,
-    RoleListPageResolverService,
+    UserListPageComponent,
+    UserListPageResolverService,
 } from './page/list';
-import { RoleAdminPermissionsService } from './service';
 
 const routes: Routes = [
     {
         path: '',
-        component: RoleAdminPageComponent,
+        component: UserAdminPageComponent,
         children: [
             {
                 path: '',
@@ -26,38 +26,38 @@ const routes: Routes = [
                 redirectTo: 'list',
             },
             {
-                component: RoleEditPageComponent,
+                component: UserEditPageComponent,
                 canActivate: [NgxPermissionsGuard],
                 data: {
                     breadcrumb: 'Edit',
                     permissions: {
                         only: [
                             RoleNames.ADMIN,
-                            RoleAdminPermissionsService.viewRoleEditPage,
+                            UserAdminPermissionsService.viewUserEditPage,
                         ],
                         redirectTo: '/error',
                     },
                 },
-                path: 'edit/:roleId',
+                path: 'edit/:userId',
                 pathMatch: 'full',
-                resolve: { data: RoleEditPageResolverService },
+                resolve: { data: UserEditPageResolverService },
             },
             {
-                component: RoleListPageComponent,
+                component: UserListPageComponent,
                 canActivate: [NgxPermissionsGuard],
                 data: {
                     breadcrumb: 'List',
                     permissions: {
                         only: [
                             RoleNames.ADMIN,
-                            RoleAdminPermissionsService.viewRoleListPage,
+                            UserAdminPermissionsService.viewUserListPage,
                         ],
                         redirectTo: '/error',
                     },
                 },
                 path: 'list',
                 pathMatch: 'full',
-                resolve: { data: RoleListPageResolverService },
+                resolve: { data: UserListPageResolverService },
             },
         ],
     },
@@ -67,4 +67,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule],
 })
-export class RoleAdminPageRoutingModule {}
+export class AdminUserRoutingModule {}
