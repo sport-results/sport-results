@@ -15,14 +15,14 @@ const routes: Routes = [
   {
     path: 'home',
     loadChildren: () =>
-      import('./pages/home/home-page.module').then(
+      import('./page/home/home-page.module').then(
         (module) => module.HomePageModule
       ),
   },
   {
     path: 'user',
     loadChildren: () =>
-      import('./pages/user/user-page.module').then(
+      import('./page/user/user-page.module').then(
         (module) => module.UserPageModule
       ),
   },
@@ -37,7 +37,7 @@ const routes: Routes = [
       },
     },
     loadChildren: () =>
-      import('./pages/admin/admin-page.module').then(
+      import('./page/admin/admin-page.module').then(
         (module) => module.AdminPageModule
       ),
   },
