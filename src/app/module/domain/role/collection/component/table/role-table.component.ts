@@ -7,7 +7,7 @@ import { RoleTableService, RoleTableViewModel } from './role-table.service';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [RoleTableService],
-    selector: 'app-role-table',
+    selector: 'sr-role-table',
     templateUrl: './role-table.component.html',
     styleUrls: ['./role-table.component.scss'],
 })

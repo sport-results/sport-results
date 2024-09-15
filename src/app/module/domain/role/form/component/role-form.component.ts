@@ -8,7 +8,7 @@ import { RoleFormService, RoleFormViewModel } from './role-form.service';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [RoleFormService],
-    selector: 'app-role-form',
+    selector: 'sr-role-form',
     templateUrl: './role-form.component.html',
     styleUrls: ['./role-form.component.scss'],
 })

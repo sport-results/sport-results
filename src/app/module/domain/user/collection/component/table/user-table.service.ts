@@ -1,6 +1,6 @@
 import { map, Observable, Subject, tap } from 'rxjs';
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoleNames } from '@app/api/common';
 import {
@@ -22,6 +22,10 @@ export type UserTableViewModel = {
 
 @Injectable()
 export class UserTableService extends ComponentStore<UserTableState> {
+    private activatedRoute = inject(ActivatedRoute);
+    private userStoreService =  inject(UserStoreService);
+    private router = inject(Router);
+
     private readonly handleEditUser = this.effect(
         (editUser$: Observable<UserEntity>) => {
             return editUser$.pipe(
@@ -55,9 +59,6 @@ export class UserTableService extends ComponentStore<UserTableState> {
         );
 
     public constructor(
-        private activatedRoute: ActivatedRoute,
-        private userStoreService: UserStoreService,
-        private router: Router
     ) {
         super({
             userEntities: [],

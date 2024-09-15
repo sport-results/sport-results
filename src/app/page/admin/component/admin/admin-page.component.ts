@@ -1,4 +1,3 @@
-import { MenuItem } from 'primeng/api';
 import { Observable } from 'rxjs';
 
 import {
@@ -9,10 +8,12 @@ import {
 } from '@angular/core';
 
 import { AdminPageService, AdminPageViewModel } from './admin-page.service';
-import { SportCategoryAdminPermissionsService } from '@app/api/admin/sport-category';
 import { AdminSportCategoryPermissionsService } from '../../permissions';
 import { RoleNames } from '@app/api/common';
 import { AuthorizationService } from '@app/api/core/authorization';
+import { AdminRolePermissionsService } from '../../permissions/admin-role-permissions.service';
+import { AdminUserPermissionsService } from '../../permissions/admin-user-permissions.service';
+import { AdminPermissionsService } from '@app/api/module/admin';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +27,6 @@ export class AdminPageComponent implements OnInit {
   private authorizationService = inject(AuthorizationService);
 
   public adminPageViewModel$!: Observable<AdminPageViewModel>;
- 
 
   public ngOnInit(): void {
     this.componentService.init$();
