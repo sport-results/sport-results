@@ -1,0 +1,13 @@
+.admin-page {
+    display: flex;
+    gap: .8rem;
+    margin: 1rem 0;
+
+    .menu {
+        flex: 1;
+    }
+
+    .content {
+        flex: 5;
+    }
+}

@@ -1,5 +1,3 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
   "compileOnSave": false,
   "compilerOptions": {
@@ -35,6 +33,18 @@
       "@app/core/entity": ["./src/app/module/core/entity/index.ts"],
       "@app/domain/user": ["./src/app/module/domain/user/index.ts"],
       "@app/engine": ["./src/app/module/engine/index.ts"],
+      "@app/api/domain/sport-category": [
+        "./src/app/api/domain/sport-category/index.ts"
+      ],
+      "@app/api/admin/sport-category": [
+        "./src/app/api/admin/sport-category/index.ts"
+      ],
+      "@app/module/domain/sport-category": [
+        "./src/app/module/domain/sport-category/index.ts"
+      ],
+      "@app/module/admin/sport-category": [
+        "./src/app/module/admin/sport-category/index.ts"
+      ]
     }
   },
   "angularCompilerOptions": {

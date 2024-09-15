@@ -1,20 +1,22 @@
+import { NgxPermissionsModule } from 'ngx-permissions';
+
 import { NgModule } from '@angular/core';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { UserModule } from '@app/domain/user';
 
+import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TopBarModule } from './module/app/top-bar';
-import { CoreAuthorizationDataModule } from './module/core/authorization';
 import { CoreApplicationModule } from './module/core/application';
+import { CoreAuthorizationDataModule } from './module/core/authorization';
 import { CoreStoreModule } from './module/core/store';
-import { NgxPermissionsModule } from 'ngx-permissions';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getAuth, provideAuth } from '@angular/fire/auth';
-import { environment } from '../environments/environment';
-import { UserModule } from '@app/domain/user';
 import { RoleModule } from './module/domain/role';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { SportCategoryModule } from './module/domain/sport-category';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,7 +30,8 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
     CoreStoreModule,
     NgxPermissionsModule.forRoot(),
     UserModule,
-    RoleModule
+    RoleModule,
+    SportCategoryModule,
   ],
   providers: [
     provideFirebaseApp(() => initializeApp(environment.firebase)),
