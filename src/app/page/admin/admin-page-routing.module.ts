@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { RoleNames } from '@app/api/common';
 
 import { AdminPageComponent } from './component';
-import { AdminSportCategoryPermissionsService } from './permissions';
+import { AdminSportCategoryPermissionsService, AdminSportCategoryRulePermissionsService } from './permissions';
 import { AdminUserPermissionsService } from './permissions/admin-user-permissions.service';
 import { AdminRolePermissionsService } from './permissions/admin-role-permissions.service';
 
@@ -65,7 +65,23 @@ function createRoutes(): Routes {
             import('../../module/admin/user/admin/admin-user.module').then(
               (lib) => lib.AdminUserModule
             ),
+   {
+        canActivate: [NgxPermissionsGuard],
+        data: {
+            permissions: {
+                only: [
+                    RoleNames.ADMIN,
+                    AdminSportCategoryRulePermissionsService.viewSportCategoryRuleAdminPage,
+                ],
+                redirectTo: '/error',
+            },
         },
+        path: 'sport-category-rule',
+        loadChildren: () =>
+            import('../../module/admin/sport-category-rule/admin/sport-category-rule-admin-page.module').then(
+                (lib) => lib.SportCategoryRuleAdminPageModule
+            ),
+    },     },
       ],
     },
   ];
