@@ -65,23 +65,7 @@ function createRoutes(): Routes {
             import('../../module/admin/user/admin/admin-user.module').then(
               (lib) => lib.AdminUserModule
             ),
-   {
-        canActivate: [NgxPermissionsGuard],
-        data: {
-            permissions: {
-                only: [
-                    RoleNames.ADMIN,
-                    AdminSportCategoryRulePermissionsService.viewSportCategoryRuleAdminPage,
-                ],
-                redirectTo: '/error',
-            },
-        },
-        path: 'sport-category-rule',
-        loadChildren: () =>
-            import('../../module/admin/sport-category-rule/admin/sport-category-rule-admin-page.module').then(
-                (lib) => lib.SportCategoryRuleAdminPageModule
-            ),
-    },     },
+       },
       ],
     },
   ];

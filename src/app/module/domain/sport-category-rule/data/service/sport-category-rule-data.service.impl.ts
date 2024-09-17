@@ -1,13 +1,12 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Firestore } from '@angular/fire/firestore';
+import { SPORT_CATEGORY_FEATURE_KEY } from '@app/api/domain/sport-category';
 import { EntityDataServiceImpl } from '@app/core/entity';
-import { JsonDataEngine } from '@app/engine';
-
-export const sportCategoryRuleApiUrl = 'http://localhost:3000/sport-category-rule';
+import { FirestoreDataEngine } from '@app/engine';
 
 @Injectable()
 export class SportCategoryRuleDataServiceImpl extends EntityDataServiceImpl {
-    constructor(httpClient: HttpClient) {
-      super(new JsonDataEngine(httpClient, sportCategoryRuleApiUrl));
-    }
+  public constructor(firestore: Firestore) {
+    super(new FirestoreDataEngine(firestore, SPORT_CATEGORY_FEATURE_KEY));
+  }
 }

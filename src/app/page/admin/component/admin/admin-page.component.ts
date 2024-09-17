@@ -31,16 +31,6 @@ export class AdminPageComponent implements OnInit {
 
   public ngOnInit(): void {
     this.componentService.init$();
-    this.adminPageViewModel$ = this.componentSeif (
-        this.authorizationService.hasPermission(RoleNames.ADMIN) ||
-        this.authorizationService.hasPermission(
-            SportCategoryRuleAdminPermissionsService.viewSportCategoryRuleAdminPage
-        )
-      ) {
-          items.push({
-              label: ' SportCategoryRule',
-              routerLink: 'sport-category-rule',
-          });
-      }rvice.adminPageViewModel$;
+    this.adminPageViewModel$ = this.componentService.adminPageViewModel$;
   }
 }

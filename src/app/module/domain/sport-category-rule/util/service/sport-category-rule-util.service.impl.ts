@@ -9,9 +9,22 @@ import {
     SportCategoryRuleModelUpdate,
 } from '@app/api/domain/sport-category-rule';
 import { EntityUtilServiceImpl } from '@app/core/entity';
+import { EntityAdd, Entity, EntityUpdate } from '@app/api/core/entity';
 
 @Injectable()
 export class SportCategoryRuleUtilServiceImpl extends EntityUtilServiceImpl {
+    public override createEntity(formGroup: FormGroup): EntityAdd {
+        throw new Error('Method not implemented.');
+    }
+    public override createEntitySearchParameter(entity: Entity | EntityAdd | EntityUpdate): string[] {
+        throw new Error('Method not implemented.');
+    }
+    public override createFormGroup(entity: Entity | undefined): FormGroup {
+        throw new Error('Method not implemented.');
+    }
+    public override updateEntity(formGroup: FormGroup): EntityUpdate {
+        throw new Error('Method not implemented.');
+    }
     public _sort = (a: SportCategoryRuleEntity, b: SportCategoryRuleEntity): number =>
         a.name < b.name ? 1 : -1;
 

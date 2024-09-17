@@ -1,6 +1,6 @@
 import { catchError, map, of, switchMap } from 'rxjs';
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { SportCategoryRuleEffectService } from '@app/api/domain/sport-category-rule';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
@@ -8,6 +8,9 @@ import * as sportCategoryRuleActions from './sport-category-rule.actions';
 
 @Injectable()
 export class SportCategoryRuleEffects {
+    private actions$ = inject(Actions);
+    private sportCategoryRuleEffectService = inject(SportCategoryRuleEffectService);
+    
     addEntity$ = createEffect(() =>
         this.actions$.pipe(
             ofType(sportCategoryRuleActions.addEntity),
@@ -73,9 +76,4 @@ export class SportCategoryRuleEffects {
             )
         )
     );
-
-    public constructor(
-        private actions$: Actions,
-        private sportCategoryRuleEffectService: SportCategoryRuleEffectService
-    ) {}
 }
