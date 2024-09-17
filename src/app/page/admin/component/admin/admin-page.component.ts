@@ -8,12 +8,13 @@ import {
 } from '@angular/core';
 
 import { AdminPageService, AdminPageViewModel } from './admin-page.service';
-import { AdminSportCategoryPermissionsService } from '../../permissions';
+import { AdminSportCategoryPermissionsService, AdminSportCategoryRulePermissionsService } from '../../permissions';
 import { RoleNames } from '@app/api/common';
 import { AuthorizationService } from '@app/api/core/authorization';
 import { AdminRolePermissionsService } from '../../permissions/admin-role-permissions.service';
 import { AdminUserPermissionsService } from '../../permissions/admin-user-permissions.service';
 import { AdminPermissionsService } from '@app/api/module/admin';
+import { SportCategoryRuleAdminPermissionsService } from '@app/api/admin/sport-category-rule';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

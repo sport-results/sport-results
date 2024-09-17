@@ -17,6 +17,7 @@ import { CoreAuthorizationDataModule } from './module/core/authorization';
 import { CoreStoreModule } from './module/core/store';
 import { RoleModule } from './module/domain/role';
 import { SportCategoryModule } from './module/domain/sport-category';
+import { SportCategoryRuleModule } from './module/domain/sport-category-rule';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,6 +33,7 @@ import { SportCategoryModule } from './module/domain/sport-category';
     UserModule,
     RoleModule,
     SportCategoryModule,
+    SportCategoryRuleModule,
   ],
   providers: [
     provideFirebaseApp(() => initializeApp(environment.firebase)),
