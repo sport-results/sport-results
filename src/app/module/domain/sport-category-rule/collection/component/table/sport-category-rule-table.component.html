@@ -13,12 +13,34 @@
   >
     <ng-template pTemplate="header">
       <tr>
-        <th rowspan="2">Participant</th>
-        <th colspan="4">Period</th>
-    </tr>
-      <tr>
-        <th pSortableColumn="name">
+        <th rowspan="2" pSortableColumn="name">
           Name <p-sortIcon field="name"></p-sortIcon>
+        </th>
+
+        <th colspan="3">Period</th>
+
+        <th colspan="2">Participant</th>
+      </tr>
+
+      <tr>
+        <th pSortableColumn="periodWinningsSize">
+          Winning size <p-sortIcon field="periodWinningSize"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="periodType">
+          Type <p-sortIcon field="periodType"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="periodTypeWinningsSize">
+          Type winning size <p-sortIcon field="periodTypeWinningSize"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="participantType">
+          Type <p-sortIcon field="participantType"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="participantSize">
+          Size <p-sortIcon field="participantSize"></p-sortIcon>
         </th>
 
         <th>Actions</th>
@@ -26,8 +48,18 @@
     </ng-template>
 
     <ng-template pTemplate="body" let-entity>
-      <tr>
+      <tr class="data-row-sub">
         <td>{{ entity.name }}</td>
+
+        <td>{{ entity.periodType }}</td>
+
+        <td>{{ entity.periodWinningSize }}</td>
+
+        <td>{{ entity.periodTypeWinningSize }}</td>
+
+        <td>{{ entity.participantType }}</td>
+
+        <td>{{ entity.participantSize }}</td>
 
         <td>
           <ng-template

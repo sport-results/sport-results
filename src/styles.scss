@@ -38,3 +38,15 @@ form {
     content: "*";
   }
 }
+
+table {
+  .data-row {
+    font-weight: 700;
+    font-size: large;
+  }
+
+  .data-row-sub{
+    font-weight: 600;
+    font-size: large;
+  }
+}
