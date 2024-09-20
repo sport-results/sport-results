@@ -59,8 +59,9 @@ export abstract class EntityDataServiceImpl extends EntityDataService<
   }
 
   public override update$(
-    entityUpdate: EntityModelUpdate
+    entityUpdate: EntityModelUpdate,
+    subCollectionPath?: string
   ): Observable<EntityModelUpdate> {
-    return this.dataEngine.update$(entityUpdate);
+    return this.dataEngine.update$(entityUpdate, subCollectionPath);
   }
 }

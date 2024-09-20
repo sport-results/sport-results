@@ -77,7 +77,7 @@ export const selectEntitySuccess = createAction(
 
 export const updateEntity = createAction(
   '[SportCategoryRule Admin] Update SportCategoryRule',
-  props<{ sportCategoryRule: SportCategoryRuleEntityUpdate }>()
+  props<{ sportCategoryRule: SportCategoryRuleEntityUpdate, subCollectionPath?: string }>()
 );
 
 export const updateEntitySuccess = createAction(

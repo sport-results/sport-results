@@ -57,9 +57,11 @@ export class FirestoreDataEngine extends DataEngine {
     };
 
     return new Observable((subscriber) => {
-      const path = subCollectionPath
-        ? `${subCollectionPath}/${this.featureKey}/${uid}`
-        : `${this.featureKey}/${uid}`;
+      const path = this.dataUtil.createPath(
+        this.featureKey,
+        uid,
+        subCollectionPath
+      );
 
       setDoc(doc(this.firestore, path), newEntity)
         .then(() => {
@@ -183,14 +185,21 @@ export class FirestoreDataEngine extends DataEngine {
   }
 
   public override update$(
-    entityUpdate: EntityModelUpdate
+    entityUpdate: EntityModelUpdate,
+    subCollectionPath?: string
   ): Observable<EntityModelUpdate> {
     const newEntity: EntityModel = {
       ...entityUpdate,
     } as EntityModel;
 
     return new Observable((subscriber) => {
-      setDoc(doc(this.collection, entityUpdate.uid), newEntity)
+      const path = this.dataUtil.createPath(
+        this.featureKey,
+        entityUpdate.uid,
+        subCollectionPath
+      );
+
+      setDoc(doc(this.firestore, path), newEntity)
         .then(() => {
           subscriber.next({
             ...newEntity,

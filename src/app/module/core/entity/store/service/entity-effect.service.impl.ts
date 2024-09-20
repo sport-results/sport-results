@@ -56,9 +56,15 @@ export class EntityEffectServiceImpl extends EntityEffectService<
     this.entityUtilService = entityUtilService;
   }
 
-  public addEntity$(entityAdd: EntityAdd, subCollectionPath?: string): Observable<Entity> {
+  public addEntity$(
+    entityAdd: EntityAdd,
+    subCollectionPath?: string
+  ): Observable<Entity> {
     return this.entityDataService
-      .add$(this.entityUtilService.convertEntityAddToModelAdd(entityAdd), subCollectionPath)
+      .add$(
+        this.entityUtilService.convertEntityAddToModelAdd(entityAdd),
+        subCollectionPath
+      )
       .pipe(
         switchMap((model) =>
           this.entityUtilService.convertModelToEntity$(model)
@@ -108,10 +114,14 @@ export class EntityEffectServiceImpl extends EntityEffectService<
       );
   }
 
-  public updateEntity$(entityUpdate: EntityUpdate): Observable<EntityUpdate> {
+  public updateEntity$(
+    entityUpdate: EntityUpdate,
+    subCollectionPath?: string
+  ): Observable<EntityUpdate> {
     return this.entityDataService
       .update$(
-        this.entityUtilService.convertEntityUpdateToModelUpdate(entityUpdate)
+        this.entityUtilService.convertEntityUpdateToModelUpdate(entityUpdate),
+        subCollectionPath
       )
       .pipe(
         switchMap((modelUpdate) =>

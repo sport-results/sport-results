@@ -15,5 +15,5 @@ export abstract class DataService<R, S, T> {
   public abstract listByIds$(ids: string[]): Observable<R[]>;
   public abstract load$(id: string): Observable<R | undefined>;
   public abstract search$(params: SearchParams): Observable<R[]>;
-  public abstract update$(entityUpdate: T): Observable<T>;
+  public abstract update$(entityUpdate: T, subCollectionPath?: string): Observable<T>;
 }

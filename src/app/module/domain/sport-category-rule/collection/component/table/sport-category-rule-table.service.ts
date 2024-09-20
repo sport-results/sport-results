@@ -79,7 +79,7 @@ export class SportCategoryRuleTableService extends ComponentStore<SportCategoryR
   }
 
   public editEntity(entity: SportCategoryRuleEntity): void {
-    this.router.navigate(['../edit', entity?.uid], {
+    this.router.navigate([`../edit-rule/${entity.sportCategory.uid}/${entity?.uid}`], {
       relativeTo: this.activatedRoute,
     });
   }

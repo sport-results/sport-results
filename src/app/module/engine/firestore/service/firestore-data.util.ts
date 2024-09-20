@@ -21,4 +21,10 @@ export class FirestoreDataUtil {
   ): DocumentReference {
     return doc(firestore, `${featureKey}/${uid}`);
   }
+
+  public createPath(featureKey: string, uid: string, subCollectionPath: string | undefined): string {
+    return subCollectionPath
+    ? `${subCollectionPath}/${featureKey}/${uid}`
+    : `${featureKey}/${uid}`;
+  }
 }

@@ -66,7 +66,7 @@ export class SportCategoryRuleEffects {
       ofType(sportCategoryRuleActions.updateEntity),
       switchMap((action) =>
         this.sportCategoryRuleEffectService
-          .updateEntity$(action.sportCategoryRule)
+          .updateEntity$(action.sportCategoryRule, action.subCollectionPath)
           .pipe(
             map((entity) =>
               sportCategoryRuleActions.updateEntitySuccess({

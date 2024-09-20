@@ -64,10 +64,14 @@ export class SportCategoryRuleStoreServiceImpl extends SportCategoryRuleStoreSer
   }
 
   public dispatchUpdateEntityAction(
-    sportCategoryRule: SportCategoryRuleEntityUpdate
+    sportCategoryRule: SportCategoryRuleEntityUpdate,
+    subCollectionPath?: string
   ): void {
     this.store.dispatch(
-      sportCategoryRuleActions.updateEntity({ sportCategoryRule })
+      sportCategoryRuleActions.updateEntity({
+        sportCategoryRule,
+        subCollectionPath,
+      })
     );
   }
 

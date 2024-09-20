@@ -15,7 +15,7 @@ import {
   SportCategoryRuleStoreService,
 } from '@app/api/domain/sport-category-rule';
 import { ComponentStore } from '@ngrx/component-store';
-import { SportCategory, SportCategoryEntity, SportCategoryStoreService } from '@app/api/domain/sport-category';
+import { SPORT_CATEGORY_FEATURE_KEY, SportCategory, SportCategoryEntity, SportCategoryStoreService } from '@app/api/domain/sport-category';
 
 export interface SportCategoryRuleFormState {
   formGroup: FormGroup | undefined;
@@ -180,7 +180,7 @@ export class SportCategoryRuleFormService extends ComponentStore<SportCategoryRu
     formGroup: FormGroup
   ): void {
     if (entity) {
-      this.updateEntity(formGroup);
+      this.updateEntity(formGroup, parentEntity);
     } else {
       this.addEntity(formGroup, parentEntity);
     }
@@ -199,9 +199,10 @@ export class SportCategoryRuleFormService extends ComponentStore<SportCategoryRu
     });
   }
 
-  private updateEntity(formGroup: FormGroup): void {
+  private updateEntity(formGroup: FormGroup, parentEntity: SportCategoryEntity | undefined): void {
     this.sportCategoryRuleStoreService.dispatchUpdateEntityAction(
-      this.sportCategoryRuleFormUtil.updateEntity(formGroup)
+      this.sportCategoryRuleFormUtil.updateEntity(formGroup),
+      `${SPORT_CATEGORY_FEATURE_KEY}/${parentEntity?.uid}`
     );
   }
 
