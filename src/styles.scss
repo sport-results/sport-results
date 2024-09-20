@@ -40,13 +40,17 @@ form {
 }
 
 table {
-  .data-row {
+  tr.data-row {
     font-weight: 700;
     font-size: large;
   }
 
-  .data-row-sub{
+  tr.data-row-sub{
     font-weight: 600;
     font-size: large;
+  }
+
+  td.sub-content {
+    background-color: #abc9fb;
   }
 }
