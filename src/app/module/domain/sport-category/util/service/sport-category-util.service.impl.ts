@@ -44,7 +44,6 @@ export class SportCategoryUtilServiceImpl extends EntityUtilServiceImpl {
         lastUpdated: now,
       },
       name: formGroup.value['name'],
-      rules: formGroup.value['rules'],
     };
   }
 

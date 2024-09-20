@@ -6,7 +6,6 @@ export interface SportCategory {
 }
 
 export type SportCategoryEntity = SportCategory & Entity & {
-    rules: SportCategoryRuleEntity[];
 };
 
 export type SportCategoryEntityAdd = Omit<SportCategoryEntity, 'uid'>;
