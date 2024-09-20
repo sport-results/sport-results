@@ -5,7 +5,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { RoleNames } from '@app/api/common';
 
 import { AdminPageComponent } from './component';
-import { AdminSportCategoryPermissionsService, AdminSportCategoryRulePermissionsService } from './permissions';
+import {
+  AdminSportCategoryPermissionsService,
+  AdminSportNetworkPermissionsService,
+} from './permissions';
 import { AdminUserPermissionsService } from './permissions/admin-user-permissions.service';
 import { AdminRolePermissionsService } from './permissions/admin-role-permissions.service';
 
@@ -65,7 +68,24 @@ function createRoutes(): Routes {
             import('../../module/admin/user/admin/admin-user.module').then(
               (lib) => lib.AdminUserModule
             ),
-       },
+        },
+        {
+          canActivate: [ngxPermissionsGuard],
+          data: {
+            permissions: {
+              only: [
+                RoleNames.ADMIN,
+                AdminSportNetworkPermissionsService.viewSportNetworkAdminPage,
+              ],
+              redirectTo: '/error',
+            },
+          },
+          path: 'sport-network',
+          loadChildren: () =>
+            import(
+              '../../module/admin/sport-network/admin/sport-network-admin-page.module'
+            ).then((lib) => lib.SportNetworkAdminPageModule),
+        },
       ],
     },
   ];

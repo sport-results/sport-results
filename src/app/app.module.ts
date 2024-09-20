@@ -20,6 +20,7 @@ import { RoleModule } from './module/domain/role';
 import { SportCategoryModule } from './module/domain/sport-category';
 import { SportCategoryRuleModule } from './module/domain/sport-category-rule';
 import { MessageService } from 'primeng/api';
+import { SportNetworkModule } from './module/domain/sport-network';
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,6 +38,7 @@ import { MessageService } from 'primeng/api';
     SportCategoryModule,
     SportCategoryRuleModule,
     ToastModule,
+    SportNetworkModule,
   ],
   providers: [
     provideFirebaseApp(() => initializeApp(environment.firebase)),
