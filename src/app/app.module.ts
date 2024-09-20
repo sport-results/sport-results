@@ -1,4 +1,5 @@
 import { NgxPermissionsModule } from 'ngx-permissions';
+import { ToastModule } from 'primeng/toast';
 
 import { NgModule } from '@angular/core';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -18,6 +19,7 @@ import { CoreStoreModule } from './module/core/store';
 import { RoleModule } from './module/domain/role';
 import { SportCategoryModule } from './module/domain/sport-category';
 import { SportCategoryRuleModule } from './module/domain/sport-category-rule';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,11 +36,13 @@ import { SportCategoryRuleModule } from './module/domain/sport-category-rule';
     RoleModule,
     SportCategoryModule,
     SportCategoryRuleModule,
+    ToastModule,
   ],
   providers: [
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
+    MessageService
   ],
   bootstrap: [AppComponent],
 })

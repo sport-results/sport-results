@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 
 import { KeyValue } from '@angular/common';
 import {
+  collection,
   collectionData,
   collectionGroup,
   CollectionReference,
@@ -45,7 +46,10 @@ export class FirestoreDataEngine extends DataEngine {
     );
   }
 
-  public override add$(entityAdd: EntityModelAdd): Observable<EntityModel> {
+  public override add$(
+    entityAdd: EntityModelAdd,
+    subCollectionPath?: string
+  ): Observable<EntityModel> {
     const uid = doc(this.idCollection).id;
     const newEntity = {
       ...entityAdd,
@@ -53,28 +57,11 @@ export class FirestoreDataEngine extends DataEngine {
     };
 
     return new Observable((subscriber) => {
-      setDoc(doc(this.collection, uid), newEntity).then(() => {
-        subscriber.next({ ...newEntity } as unknown as EntityModel);
-      });
-    });
-  }
+      const path = subCollectionPath
+        ? `${subCollectionPath}/${this.featureKey}/${uid}`
+        : `${this.featureKey}/${uid}`;
 
-  public override addToParent$(
-    subEntityAdd: EntityModelAdd,
-    subCollectionPath: string
-  ): Observable<EntityModel> {
-    const uid = doc(this.idCollection).id;
-    const newEntity = {
-      ...subEntityAdd,
-      uid,
-    };
-
-    return new Observable((subscriber) => {
-      const path = `${subCollectionPath}/${this.featureKey}/${uid}`;
-      setDoc(
-        doc(this.firestore, path),
-        newEntity
-      )
+      setDoc(doc(this.firestore, path), newEntity)
         .then(() => {
           subscriber.next({ ...newEntity } as unknown as EntityModel);
         })
@@ -89,16 +76,22 @@ export class FirestoreDataEngine extends DataEngine {
   }
 
   public override list$(
-    pathParams: string[],
-    queryParams: KeyValue<string, string>[]
+    subCollectionPath?: string,
+    pathParams?: string[],
+    queryParams?: KeyValue<string, string>[]
   ): Observable<EntityModel[]> {
-    const pathParamsString = pathParams.join('/');
-    const queryParamsString = queryParams
-      .map((param) => param.key + '=' + param.value)
-      .join('&');
+    const pathParamsString = pathParams && pathParams.join('/');
+    const queryParamsString =
+      queryParams &&
+      queryParams.map((param) => param.key + '=' + param.value).join('&');
 
     return collectionData<EntityModel>(
-      collectionGroup(this.firestore, this.featureKey) as Query<EntityModel>,
+      collection(
+        this.firestore,
+        subCollectionPath
+          ? `${subCollectionPath}/${this.featureKey}`
+          : this.featureKey
+      ) as Query<EntityModel>,
       {
         idField: 'uid',
       }

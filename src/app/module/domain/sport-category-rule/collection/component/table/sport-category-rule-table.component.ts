@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 
 import { SportCategoryRuleTableService, EntityTableViewModel } from './sport-category-rule-table.service';
 
@@ -12,13 +12,16 @@ import { SportCategoryRuleTableService, EntityTableViewModel } from './sport-cat
 	styleUrls: ['./sport-category-rule-table.component.scss'],
 })
 export class SportCategoryRuleTableComponent implements OnInit {
+	@Input()
+	sportCategoryId!: string;
+
 	public entityTableViewModel$!: Observable<EntityTableViewModel>;
 
 	public constructor(private componentService: SportCategoryRuleTableService) {
 	}
 
 	public ngOnInit(): void {
-		this.componentService.init$();
+		this.componentService.init$(this.sportCategoryId);
         this.entityTableViewModel$ = this.componentService.entityTableViewModel$;
 	}
 }

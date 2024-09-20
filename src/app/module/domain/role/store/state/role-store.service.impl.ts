@@ -35,13 +35,15 @@ export class RoleStoreServiceImpl extends RoleStoreService {
     }
 
     public dispatchListEntitiesAction(
+        subCollectionPath?: string,
         pathParams?: string[],
         queryParams?: KeyValue<string, string>[]
     ): void {
         this.store.dispatch(
             roleActions.listEntities({
-                pathParams: pathParams || [],
-                queryParams: queryParams || [],
+                subCollectionPath,
+                pathParams: pathParams,
+                queryParams: queryParams,
             })
         );
     }

@@ -56,25 +56,9 @@ export class EntityEffectServiceImpl extends EntityEffectService<
     this.entityUtilService = entityUtilService;
   }
 
-  public addEntity$(entityAdd: EntityAdd): Observable<Entity> {
+  public addEntity$(entityAdd: EntityAdd, subCollectionPath?: string): Observable<Entity> {
     return this.entityDataService
-      .add$(this.entityUtilService.convertEntityAddToModelAdd(entityAdd))
-      .pipe(
-        switchMap((model) =>
-          this.entityUtilService.convertModelToEntity$(model)
-        )
-      );
-  }
-
-  public addEntityToParent$(
-    entityAdd: EntityAdd,
-    subCollectionPath: string
-  ): Observable<Entity> {
-    return this.entityDataService
-      .addToParent$(
-        this.entityUtilService.convertEntityAddToModelAdd(entityAdd),
-        subCollectionPath
-      )
+      .add$(this.entityUtilService.convertEntityAddToModelAdd(entityAdd), subCollectionPath)
       .pipe(
         switchMap((model) =>
           this.entityUtilService.convertModelToEntity$(model)
@@ -83,11 +67,12 @@ export class EntityEffectServiceImpl extends EntityEffectService<
   }
 
   public override listEntities$(
-    pathParams: string[],
-    queryParams: KeyValue<string, string>[]
+    subCollectionPath?: string,
+    pathParams?: string[],
+    queryParams?: KeyValue<string, string>[]
   ): Observable<Entity[]> {
     return this.entityDataService
-      .list$(pathParams, queryParams)
+      .list$(subCollectionPath, pathParams, queryParams)
       .pipe(
         switchMap((models) =>
           forkJoin(

@@ -154,9 +154,9 @@ export class SportCategoryRuleFormService extends ComponentStore<SportCategoryRu
     if (!parentEntity) {
       throw new Error('No parent entity');
     }
-    this.sportCategoryRuleStoreService.dispatchAddEntityToParentAction(
+    this.sportCategoryRuleStoreService.dispatchAddEntityAction(
       this.sportCategoryRuleFormUtil.createEntity(
-        formGroup
+        formGroup, parentEntity
       ) as SportCategoryRuleEntityAdd,
       parentEntity.uid
     );

@@ -51,3 +51,8 @@ export const getEntityById = (uid: string) =>
     createSelector(getEntities, (entities: Dictionary<SportCategoryRuleEntity>) => {
         return entities[uid];
     });
+
+    export const getRulesByCategoryId = (categoryId: string) =>
+        createSelector(getAll, (rules: SportCategoryRuleEntity[]) => {
+            return (rules || []).filter(rule => rule.sportCategory?.uid === categoryId);
+        });

@@ -30,7 +30,7 @@ export class RoleEffects {
       ofType(roleActions.listEntities),
       switchMap((action) =>
         this.roleEffectService
-          .listEntities$(action.pathParams, action.queryParams)
+          .listEntities$(action.subCollectionPath, action.pathParams, action.queryParams)
           .pipe(
             map((roles) => {
               return roleActions.listEntitiesSuccess({

@@ -8,6 +8,7 @@
     responsiveLayout="scroll"
     [paginator]="false"
     [rows]="10"
+    (onRowExpand)="entityTableViewModel.rowExpand$$.next($event)" 
 	dataKey="uid"
   >
     <ng-template pTemplate="caption">
@@ -77,7 +78,7 @@
               </ng-template>
             </div>
       
-            <sr-sport-category-rule-table />
+            <sr-sport-category-rule-table [sportCategoryId]="sportCategory.uid" />
           </div>
         </td>
       </tr>

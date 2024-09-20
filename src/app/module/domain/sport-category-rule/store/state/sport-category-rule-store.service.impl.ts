@@ -23,22 +23,11 @@ export class SportCategoryRuleStoreServiceImpl extends SportCategoryRuleStoreSer
   }
 
   public dispatchAddEntityAction(
-    sportCategoryRule: SportCategoryRuleEntityAdd
-  ): void {
-    this.store.dispatch(
-      sportCategoryRuleActions.addEntity({ sportCategoryRule })
-    );
-  }
-
-  public dispatchAddEntityToParentAction(
     sportCategoryRule: SportCategoryRuleEntityAdd,
-    parentEntityId: string
+    parentEntityId?: string
   ): void {
     this.store.dispatch(
-      sportCategoryRuleActions.addEntityToParent({
-        sportCategoryRule,
-        parentEntityId,
-      })
+      sportCategoryRuleActions.addEntity({ sportCategoryRule, parentEntityId })
     );
   }
 
@@ -53,13 +42,15 @@ export class SportCategoryRuleStoreServiceImpl extends SportCategoryRuleStoreSer
   }
 
   public dispatchListEntitiesAction(
+    subCollectionPath?: string,
     pathParams?: string[],
     queryParams?: KeyValue<string, string>[]
   ): void {
     this.store.dispatch(
       sportCategoryRuleActions.listEntities({
-        pathParams: pathParams || [],
-        queryParams: queryParams || [],
+        subCollectionPath,
+        pathParams: pathParams,
+        queryParams: queryParams,
       })
     );
   }
@@ -101,6 +92,14 @@ export class SportCategoryRuleStoreServiceImpl extends SportCategoryRuleStoreSer
   ): Observable<SportCategoryRuleEntity | undefined> {
     return this.store.pipe(
       select(SportCategoryRuleSelectors.getEntityById(entityId))
+    );
+  }
+
+  public selectRulesByCategoryId$(
+    categoryId: string
+  ): Observable<SportCategoryRuleEntity[]> {
+    return this.store.pipe(
+      select(SportCategoryRuleSelectors.getRulesByCategoryId(categoryId))
     );
   }
 

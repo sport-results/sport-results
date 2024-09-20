@@ -12,10 +12,9 @@ export abstract class SportCategoryRuleStoreService extends EntityStoreService<
   SportCategoryRuleEntityAdd,
   SportCategoryRuleEntityUpdate
 > {
-  public abstract dispatchAddEntityToParentAction(
-    sportCategoryRule: SportCategoryRuleEntityAdd,
-    parentEntityId: string
-  ): void;
   public abstract dispatchChangeNewEntityButtonEnabled(enabled: boolean): void;
   public abstract selectNewEntityButtonEnabled$(): Observable<boolean>;
+  public abstract selectRulesByCategoryId$(
+    categoryId: string
+  ): Observable<SportCategoryRuleEntity[]>;
 }

@@ -37,7 +37,11 @@ export class UserEffects {
       ofType(userActions.listEntities),
       switchMap((action) =>
         this.userEffectService
-          .listEntities$(action.pathParams, action.queryParams)
+          .listEntities$(
+            action.subCollectionPath,
+            action.pathParams,
+            action.queryParams
+          )
           .pipe(
             map((users) => {
               return userActions.listEntitiesSuccess({

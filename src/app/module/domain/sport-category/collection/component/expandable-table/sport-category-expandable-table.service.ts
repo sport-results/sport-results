@@ -1,15 +1,21 @@
-import { map, Observable, Subject, tap } from 'rxjs';
+import { map, Observable, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoleNames } from '@app/api/common';
 import {
+  SPORT_CATEGORY_FEATURE_KEY,
   SportCategoryEntity,
   SportCategoryPermissionsService,
   SportCategoryStoreService,
 } from '@app/api/domain/sport-category';
 import { ComponentStore } from '@ngrx/component-store';
-import { SportCategoryRulePermissionsService } from '@app/api/domain/sport-category-rule';
+import {
+  SportCategoryRulePermissionsService,
+  SportCategoryRuleStoreService,
+} from '@app/api/domain/sport-category-rule';
+import { TableRowExpandEvent } from 'primeng/table';
+import { MessageService } from 'primeng/api';
 
 export type SportCategoryExpandableTableState = {
   entities: SportCategoryEntity[];
@@ -22,13 +28,16 @@ export type EntityTableViewModel = {
   entities: SportCategoryEntity[];
   editEntity$$: Subject<SportCategoryEntity>;
   ruleButtonPermissions: string[];
+  rowExpand$$: Subject<TableRowExpandEvent>;
 };
 
 @Injectable()
 export class SportCategoryExpandableTableService extends ComponentStore<SportCategoryExpandableTableState> {
   private activatedRoute = inject(ActivatedRoute);
   private sportCategoryStoreService = inject(SportCategoryStoreService);
+  private sportCategoryRuleStoreService = inject(SportCategoryRuleStoreService);
   private router = inject(Router);
+  private messageService = inject(MessageService);
 
   private readonly handleEditEntity = this.effect(
     (editEntity$: Observable<SportCategoryEntity>) => {
@@ -55,6 +64,7 @@ export class SportCategoryExpandableTableService extends ComponentStore<SportCat
 
   private editEntity$$: Subject<SportCategoryEntity>;
   private addSportCategoryRule$$: Subject<string>;
+  private rowExpand$$: Subject<TableRowExpandEvent>;
 
   public readonly entityTableViewModel$: Observable<EntityTableViewModel> =
     this.select({
@@ -72,6 +82,7 @@ export class SportCategoryExpandableTableService extends ComponentStore<SportCat
         ],
         editEntity$$: this.editEntity$$,
         addSportCategoryRule$$: this.addSportCategoryRule$$,
+        rowExpand$$: this.rowExpand$$,
       }))
     );
 
@@ -83,6 +94,7 @@ export class SportCategoryExpandableTableService extends ComponentStore<SportCat
 
     this.addSportCategoryRule$$ = new Subject();
     this.editEntity$$ = new Subject();
+    this.rowExpand$$ = new Subject();
   }
 
   public editEntity(entity: SportCategoryEntity): void {
@@ -95,6 +107,7 @@ export class SportCategoryExpandableTableService extends ComponentStore<SportCat
     this.selectEntities();
     this.handleEditEntity(this.editEntity$$.asObservable());
     this.handleAddSportCategoryRule(this.addSportCategoryRule$$.asObservable());
+    this.handleRowExpand(this.rowExpand$$.asObservable());
   }
 
   private updateEntitiesState(entities: SportCategoryEntity[]): void {
@@ -111,4 +124,30 @@ export class SportCategoryExpandableTableService extends ComponentStore<SportCat
       relativeTo: this.activatedRoute,
     });
   }
+
+  rowExpand(
+    event: TableRowExpandEvent
+  ) {
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Category Expanded',
+      detail: event.data.name,
+      life: 3000,
+    });
+
+    const sportCategory = event.data as SportCategoryEntity;
+
+    if (sportCategory) {
+      this.sportCategoryRuleStoreService.dispatchListEntitiesAction(
+        `${SPORT_CATEGORY_FEATURE_KEY}/${sportCategory.uid}`
+      );
+    }
+  }
+
+  private readonly handleRowExpand = this.effect(
+    (rowExpand$: Observable<TableRowExpandEvent>) => {
+      return rowExpand$.pipe(
+        tap((event) => this.rowExpand(event)));
+    }
+  );
 }

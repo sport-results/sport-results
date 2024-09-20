@@ -30,7 +30,7 @@ export class SportCategoryEffects {
             ofType(sportCategoryActions.listEntities),
             switchMap((action) =>
                 this.sportCategoryEffectService
-                    .listEntities$(action.pathParams, action.queryParams)
+                    .listEntities$(action.subCollectionPath, action.pathParams, action.queryParams)
                     .pipe(
                         map((entities) => {
                             return sportCategoryActions.listEntitiesSuccess({

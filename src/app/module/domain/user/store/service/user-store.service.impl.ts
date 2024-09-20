@@ -36,13 +36,15 @@ export class UserStoreServiceImpl extends UserStoreService {
     }
 
     public dispatchListEntitiesAction(
+        subCollectionPath?: string,
         pathParams?: string[],
         queryParams?: KeyValue<string, string>[]
     ): void {
         this.store.dispatch(
             userActions.listEntities({
-                pathParams: pathParams || [],
-                queryParams: queryParams || [],
+                subCollectionPath,
+                pathParams: pathParams,
+                queryParams: queryParams,
             })
         );
     }
