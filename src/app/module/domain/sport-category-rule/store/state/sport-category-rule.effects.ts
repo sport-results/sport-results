@@ -5,75 +5,106 @@ import { SportCategoryRuleEffectService } from '@app/api/domain/sport-category-r
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import * as sportCategoryRuleActions from './sport-category-rule.actions';
+import { SPORT_CATEGORY_FEATURE_KEY } from '@app/api/domain/sport-category';
 
 @Injectable()
 export class SportCategoryRuleEffects {
-    private actions$ = inject(Actions);
-    private sportCategoryRuleEffectService = inject(SportCategoryRuleEffectService);
-    
-    addEntity$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(sportCategoryRuleActions.addEntity),
-            switchMap((action) =>
-                this.sportCategoryRuleEffectService.addEntity$(action.sportCategoryRule).pipe(
-                    map((entity) =>
-                        sportCategoryRuleActions.addEntitySuccess({
-                            sportCategoryRule: entity,
-                        })
-                    )
-                )
+  private actions$ = inject(Actions);
+  private sportCategoryRuleEffectService = inject(
+    SportCategoryRuleEffectService
+  );
+
+  addEntity$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(sportCategoryRuleActions.addEntity),
+      switchMap((action) =>
+        this.sportCategoryRuleEffectService
+          .addEntity$(action.sportCategoryRule)
+          .pipe(
+            map((entity) =>
+              sportCategoryRuleActions.addEntitySuccess({
+                sportCategoryRule: entity,
+              })
             )
+          )
+      )
+    )
+  );
+  addEntityToParent$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(sportCategoryRuleActions.addEntityToParent),
+      switchMap((action) =>
+        this.sportCategoryRuleEffectService
+          .addEntityToParent$(
+            action.sportCategoryRule,
+            `${SPORT_CATEGORY_FEATURE_KEY}/${action.parentEntityId}`
+          )
+          .pipe(
+            map((entity) =>
+              sportCategoryRuleActions.addEntityToParentSuccess({
+                sportCategoryRule: entity,
+              })
+            ),
+            catchError((error) => {
+              return of(
+                sportCategoryRuleActions.addEntityToParentFail({ error })
+              );
+            })
+          )
+      )
+    )
+  );
+  listEntities$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(sportCategoryRuleActions.listEntities),
+      switchMap((action) =>
+        this.sportCategoryRuleEffectService
+          .listEntities$(action.pathParams, action.queryParams)
+          .pipe(
+            map((entities) => {
+              return sportCategoryRuleActions.listEntitiesSuccess({
+                sportCategoryRules: entities,
+              });
+            })
+          )
+      )
+    )
+  );
+  loadEntity$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(sportCategoryRuleActions.loadEntity),
+      switchMap((action) =>
+        this.sportCategoryRuleEffectService.loadEntity$(action.uid).pipe(
+          map((entity) =>
+            sportCategoryRuleActions.loadEntitySuccess({
+              sportCategoryRule: entity,
+            })
+          )
         )
-    );
-    listEntities$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(sportCategoryRuleActions.listEntities),
-            switchMap((action) =>
-                this.sportCategoryRuleEffectService
-                    .listEntities$(action.pathParams, action.queryParams)
-                    .pipe(
-                        map((entities) => {
-                            return sportCategoryRuleActions.listEntitiesSuccess({
-                                sportCategoryRules: entities,
-                            });
-                        })
-                    )
-            )
-        )
-    );
-    loadEntity$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(sportCategoryRuleActions.loadEntity),
-            switchMap((action) =>
-                this.sportCategoryRuleEffectService.loadEntity$(action.uid).pipe(
-                    map((entity) =>
-                        sportCategoryRuleActions.loadEntitySuccess({
-                            sportCategoryRule: entity,
-                        })
-                    )
-                )
-            )
-        )
-    );
-    
-    updateEntity$ = createEffect(() =>
-        this.actions$.pipe(
-            ofType(sportCategoryRuleActions.updateEntity),
-            switchMap((action) =>
-                this.sportCategoryRuleEffectService.updateEntity$(action.sportCategoryRule).pipe(
-                    map((entity) =>
-                        sportCategoryRuleActions.updateEntitySuccess({
-                            sportCategoryRule: {
-                                changes: { ...entity },
-                                id: entity && entity.uid,
-                            },
-                        })
-                    ),
-                    catchError((error) => {
-                        return of(sportCategoryRuleActions.updateEntityFail({ error }));
-                    })
-                )
-            )
-        )
-    );
+      )
+    )
+  );
+
+  updateEntity$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(sportCategoryRuleActions.updateEntity),
+      switchMap((action) =>
+        this.sportCategoryRuleEffectService
+          .updateEntity$(action.sportCategoryRule)
+          .pipe(
+            map((entity) =>
+              sportCategoryRuleActions.updateEntitySuccess({
+                sportCategoryRule: {
+                  changes: { ...entity },
+                  id: entity && entity.uid,
+                },
+              })
+            ),
+            catchError((error) => {
+              return of(sportCategoryRuleActions.updateEntityFail({ error }));
+            })
+          )
+      )
+    )
+  );
 }

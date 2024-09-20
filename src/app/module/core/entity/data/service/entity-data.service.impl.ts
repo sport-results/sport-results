@@ -25,6 +25,10 @@ export abstract class EntityDataServiceImpl extends EntityDataService<
         return this.dataEngine.add$(entityAdd);
     }
 
+    public override addToParent$(subEntityAdd: EntityModelAdd, path: string): Observable<EntityModel> {
+        return this.dataEngine.addToParent$(subEntityAdd, path);
+    }
+
     public override delete$(entity: EntityModel): Observable<EntityModel> {
         return this.dataEngine.delete$(entity);
     }

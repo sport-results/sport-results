@@ -7,7 +7,7 @@ import { SportCategoryTableService, EntityTableViewModel } from './sport-categor
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [SportCategoryTableService],
-	selector: 'app-sport-category-table',
+	selector: 'sr-sport-category-table',
 	templateUrl: './sport-category-table.component.html',
 	styleUrls: ['./sport-category-table.component.scss'],
 })

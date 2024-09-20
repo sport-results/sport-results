@@ -1,22 +1,110 @@
-<section class="sport-category-rule-form" *ngIf="entityFormViewModel$ | async as entityFormViewModel">
-	<form [formGroup]="entityFormViewModel.formGroup">
-		<input name="uid" formControlName="uid" hidden />
-		<input name="meta" formControlName="meta" hidden />
+<section
+  class="sport-category-rule-form"
+  *ngIf="entityFormViewModel$ | async as entityFormViewModel"
+>
+  <form [formGroup]="entityFormViewModel.formGroup">
+    <input name="uid" formControlName="uid" hidden />
+    <input name="meta" formControlName="meta" hidden />
+    <input name="sportCategory" formControlName="sportCategory" hidden />
 
-		<div class="field">
-			<span class="p-float-label">
-				<input id="name" type="text" pInputText formControlName="name" />
+    <p-fieldset class="fieldset" legend="Category">
+      <div class="field">
+        <span class="p-float-label">
+          <input id="name" type="text" pInputText formControlName="name" />
 
-				<label for="name">Name</label>
-			</span>
-		</div>
+          <label class="required" for="name">Name</label>
+        </span>
+      </div>
+    </p-fieldset>
 
+    <div class="period-participant">
+      <p-fieldset class="fieldset" legend="Periods">
+        <div class="field">
+          <span class="p-float-label">
+            <p-dropdown
+              id="periodType"
+              [options]="entityFormViewModel.periodTypes"
+              formControlName="periodType"
+            >
+            </p-dropdown>
 
-		<div style="margin-top: 10px" fxLayout="row" fxLayoutAlign="space-around">
-			<button pButton type="button" label="Submit" (click)="entityFormViewModel.submit$$.next()"
-				[disabled]="!entityFormViewModel.formGroup.valid"></button>
+            <label class="required" for="periodType">Type</label>
+          </span>
+        </div>
+      
+        <div class="field">
+          <span class="p-float-label">
+            <p-inputNumber
+              id="periodWinningSize"
+              formControlName="periodWinningSize"
+              [min]="1"
+              [max]="1000"
+            />
 
-			<button pButton type="button" label="Cancel" (click)="entityFormViewModel.cancel$$.next()"></button>
-		</div>
-	</form>
+            <label class="required" for="periodWinningSize">Winning size</label>
+          </span>
+        </div>
+
+        <div class="field">
+          <span class="p-float-label">
+            <p-inputNumber
+              id="periodTypeWinningSize"
+              formControlName="periodTypeWinningSize"
+              [min]="1"
+              [max]="1000"
+            />
+
+            <label class="required" for="periodTypeWinningSize"
+              >Type winning size</label
+            >
+          </span>
+        </div>
+      </p-fieldset>
+
+      <p-fieldset class="fieldset" legend="Participants">
+        <div class="field">
+          <span class="p-float-label">
+            <p-dropdown
+              id="participantType"
+              [options]="entityFormViewModel.participantTypes"
+              formControlName="participantType"
+            >
+            </p-dropdown>
+
+            <label class="required" for="participantType">Type</label>
+          </span>
+        </div>
+
+        <div class="field">
+          <span class="p-float-label">
+            <p-inputNumber
+              id="participantSize"
+              formControlName="participantSize"
+              [min]="1"
+              [max]="1000"
+            />
+
+            <label class="required" for="participantSize">Size</label>
+          </span>
+        </div>
+      </p-fieldset>
+    </div>
+
+    <div style="margin-top: 10px" fxLayout="row" fxLayoutAlign="space-around">
+      <button
+        pButton
+        type="button"
+        label="Submit"
+        (click)="entityFormViewModel.submit$$.next()"
+        [disabled]="!entityFormViewModel.formGroup.valid"
+      ></button>
+
+      <button
+        pButton
+        type="button"
+        label="Cancel"
+        (click)="entityFormViewModel.cancel$$.next()"
+      ></button>
+    </div>
+  </form>
 </section>

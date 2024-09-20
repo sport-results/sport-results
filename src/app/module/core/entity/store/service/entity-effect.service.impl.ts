@@ -66,6 +66,22 @@ export class EntityEffectServiceImpl extends EntityEffectService<
       );
   }
 
+  public addEntityToParent$(
+    entityAdd: EntityAdd,
+    subCollectionPath: string
+  ): Observable<Entity> {
+    return this.entityDataService
+      .addToParent$(
+        this.entityUtilService.convertEntityAddToModelAdd(entityAdd),
+        subCollectionPath
+      )
+      .pipe(
+        switchMap((model) =>
+          this.entityUtilService.convertModelToEntity$(model)
+        )
+      );
+  }
+
   public override listEntities$(
     pathParams: string[],
     queryParams: KeyValue<string, string>[]

@@ -5,6 +5,10 @@ import { SearchParams } from '../../core';
 
 export abstract class DataService<R, S, T> {
     public abstract add$(entityAdd: S): Observable<R>;
+    public abstract addToParent$(
+        subEntityAdd: S,
+        subCollectionPath: string
+      ): Observable<R>;
     public abstract delete$(entity: R): Observable<R>;
     public abstract list$(
         pathParams: string[],

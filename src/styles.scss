@@ -1,1 +1,40 @@
 @import "primeicons/primeicons.css";
+
+form {
+  .field {
+    display: block;
+    margin-top: 3rem;
+
+    .label {
+      padding-left: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    input,
+    textarea {
+      width: 50%;
+    }
+
+    .p-float-label input:focus ~ label,
+    .p-float-label input.p-filled ~ label,
+    .p-float-label textarea:focus ~ label,
+    .p-float-label textarea.p-filled ~ label,
+    .p-float-label .p-inputwrapper-focus ~ label,
+    .p-float-label .p-inputwrapper-filled ~ label {
+      top: -0.9rem;
+    }
+
+    .p-float-label > label {
+      left: 0.4rem;
+    }
+  }
+  .required::before {
+    display: inline-block;
+    margin-right: 4px;
+    color: #ff4d4f;
+    font-size: 14px;
+    font-family: SimSun, sans-serif;
+    line-height: 1;
+    content: "*";
+  }
+}

@@ -7,7 +7,7 @@ import { SportCategoryRuleTableService, EntityTableViewModel } from './sport-cat
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [SportCategoryRuleTableService],
-	selector: 'app-sport-category-rule-table',
+	selector: 'sr-sport-category-rule-table',
 	templateUrl: './sport-category-rule-table.component.html',
 	styleUrls: ['./sport-category-rule-table.component.scss'],
 })

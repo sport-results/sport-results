@@ -8,5 +8,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 })
 export class SportCategoryRuleEditPageComponent {
     @Input()
+    public sportCategoryId!: string;
+    @Input()
     public sportCategoryRuleId!: string;
 }

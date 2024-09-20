@@ -8,7 +8,7 @@ import { RoleNames } from '@app/api/common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'app-sport-category-admin-page',
+    selector: 'sr-sport-category-admin-page',
     templateUrl: './sport-category-admin-page.component.html',
     styleUrls: ['./sport-category-admin-page.component.scss'],
 })

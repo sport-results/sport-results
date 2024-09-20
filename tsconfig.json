@@ -1,1 +1,71 @@
-{"compileOnSave":false,"compilerOptions":{"outDir":"./dist/out-tsc","strict":true,"noImplicitOverride":true,"noPropertyAccessFromIndexSignature":true,"noImplicitReturns":true,"noFallthroughCasesInSwitch":true,"skipLibCheck":true,"esModuleInterop":true,"sourceMap":true,"declaration":false,"experimentalDecorators":true,"moduleResolution":"bundler","importHelpers":true,"target":"ES2022","module":"ES2022","lib":["ES2022","dom"],"paths":{"@app/api/common":["./src/app/api/common/index.ts"],"@app/api/core/authorization":["./src/app/api/core/authorization/index.ts"],"@app/api/core/application":["./src/app/api/core/application/index.ts"],"@app/api/core/entity":["./src/app/api/core/entity/index.ts"],"@app/api/core/search":["./src/app/api/core/search/index.ts"],"@app/api/core/store":["./src/app/api/core/store/index.ts"],"@app/api/domain/role":["./src/app/api/domain/role/index.ts"],"@app/api/domain/user":["./src/app/api/domain/user/index.ts"],"@app/api/engine":["./src/app/api/engine/index.ts"],"@app/api/module/admin":["./src/app/api/module/admin/index.ts"],"@app/core/entity":["./src/app/module/core/entity/index.ts"],"@app/domain/role":["./src/app/module/domain/role/index.ts"],"@app/domain/user":["./src/app/module/domain/user/index.ts"],"@app/engine":["./src/app/module/engine/index.ts"],"@app/api/domain/sport-category":["./src/app/api/domain/sport-category/index.ts"],"@app/api/admin/sport-category":["./src/app/api/admin/sport-category/index.ts"],"@app/api/admin/user":["./src/app/api/admin/user/index.ts"],"@app/api/admin/role":["./src/app/api/admin/role/index.ts"],"@app/module/domain/sport-category":["./src/app/module/domain/sport-category/index.ts"],"@app/module/admin/sport-category":["./src/app/module/admin/sport-category/index.ts"],"@app/api/domain/sport-category-rule":["./src/app/api/domain/sport-category-rule/index.ts"],"@app/api/admin/sport-category-rule":["./src/app/api/admin/sport-category-rule/index.ts"],"@app/module/domain/sport-category-rule":["./src/app/module/domain/sport-category-rule/index.ts"],"@app/module/admin/sport-category-rule":["./src/app/module/admin/sport-category-rule/index.ts"]}},"angularCompilerOptions":{"enableI18nLegacyMessageIdFormat":false,"strictInjectionParameters":true,"strictInputAccessModifiers":true,"strictTemplates":true}}
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "outDir": "./dist/out-tsc",
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "declaration": false,
+    "experimentalDecorators": true,
+    "moduleResolution": "bundler",
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "lib": ["ES2022", "dom"],
+    "paths": {
+      "@app/api/common": ["./src/app/api/common/index.ts"],
+      "@app/api/core/authorization": [
+        "./src/app/api/core/authorization/index.ts"
+      ],
+      "@app/api/core/application": ["./src/app/api/core/application/index.ts"],
+      "@app/api/core/entity": ["./src/app/api/core/entity/index.ts"],
+      "@app/api/core/search": ["./src/app/api/core/search/index.ts"],
+      "@app/api/core/store": ["./src/app/api/core/store/index.ts"],
+      "@app/api/domain/role": ["./src/app/api/domain/role/index.ts"],
+      "@app/api/domain/user": ["./src/app/api/domain/user/index.ts"],
+      "@app/api/engine": ["./src/app/api/engine/index.ts"],
+      "@app/api/module/admin": ["./src/app/api/module/admin/index.ts"],
+      "@app/core/entity": ["./src/app/module/core/entity/index.ts"],
+      "@app/domain/role": ["./src/app/module/domain/role/index.ts"],
+      "@app/domain/user": ["./src/app/module/domain/user/index.ts"],
+      "@app/engine": ["./src/app/module/engine/index.ts"],
+      "@app/api/domain/sport-category": [
+        "./src/app/api/domain/sport-category/index.ts"
+      ],
+      "@app/api/admin/sport-category": [
+        "./src/app/api/admin/sport-category/index.ts"
+      ],
+      "@app/api/admin/user": ["./src/app/api/admin/user/index.ts"],
+      "@app/api/admin/role": ["./src/app/api/admin/role/index.ts"],
+      "@app/domain/sport-category": [
+        "./src/app/module/domain/sport-category/index.ts"
+      ],
+      "@app/module/admin/sport-category": [
+        "./src/app/module/admin/sport-category/index.ts"
+      ],
+      "@app/api/domain/sport-category-rule": [
+        "./src/app/api/domain/sport-category-rule/index.ts"
+      ],
+      "@app/api/admin/sport-category-rule": [
+        "./src/app/api/admin/sport-category-rule/index.ts"
+      ],
+      "@app/domain/sport-category-rule": [
+        "./src/app/module/domain/sport-category-rule/index.ts"
+      ],
+      "@app/module/admin/sport-category-rule": [
+        "./src/app/module/admin/sport-category-rule/index.ts"
+      ]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }
+}

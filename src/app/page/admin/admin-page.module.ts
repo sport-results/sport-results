@@ -27,6 +27,7 @@ export class AdminPageModule {
     adminPermissionsService: AdminPermissionsService,
     adminRolePermissionsService: AdminRolePermissionsService,
     adminSportCategoryPermissionsService: AdminSportCategoryPermissionsService,
+    adminSportCategoryRulePermissionsService: AdminSportCategoryRulePermissionsService,
     adminUserPermissionsService: AdminUserPermissionsService
   ) {}
 }

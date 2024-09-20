@@ -23,6 +23,21 @@ export const addEntitySuccess = createAction(
     props<{ sportCategoryRule: SportCategoryRuleEntity }>()
 );
 
+export const addEntityToParent = createAction(
+    '[SportCategoryRule Admin] Add SportCategoryRule to Parent',
+    props<{ sportCategoryRule: SportCategoryRuleEntityAdd, parentEntityId: string }>()
+);
+
+export const addEntityToParentFail = createAction(
+    '[SportCategoryRule Admin] Add SportCategoryRule to Parent Fail',
+    props<{ error: string }>()
+);
+
+export const addEntityToParentSuccess = createAction(
+    '[SportCategoryRule Admin] Add SportCategoryRule to Parent Success',
+    props<{ sportCategoryRule: SportCategoryRuleEntity }>()
+);
+
 export const loadEntity = createAction(
     '[SportCategoryRule] Load SportCategoryRule',
     props<{ uid: string }>()

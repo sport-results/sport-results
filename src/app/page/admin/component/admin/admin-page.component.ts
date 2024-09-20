@@ -9,7 +9,6 @@ import {
 
 import { AdminPageService, AdminPageViewModel } from './admin-page.service';
 import { AdminSportCategoryPermissionsService, AdminSportCategoryRulePermissionsService } from '../../permissions';
-import { RoleNames } from '@app/api/common';
 import { AuthorizationService } from '@app/api/core/authorization';
 import { AdminRolePermissionsService } from '../../permissions/admin-role-permissions.service';
 import { AdminUserPermissionsService } from '../../permissions/admin-user-permissions.service';
@@ -19,7 +18,7 @@ import { SportCategoryRuleAdminPermissionsService } from '@app/api/admin/sport-c
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [AdminPageService],
-  selector: 'app-admin-page',
+  selector: 'sr-admin-page',
   templateUrl: './admin-page.component.html',
   styleUrls: ['./admin-page.component.scss'],
 })

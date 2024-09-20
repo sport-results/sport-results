@@ -1,4 +1,4 @@
-import { NgxPermissionsGuard } from 'ngx-permissions';
+import { ngxPermissionsGuard } from 'ngx-permissions';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SportCategoryAdminPermissionsService } from '@app/api/admin/sport-category';
@@ -13,6 +13,7 @@ import {
     SportCategoryListPageComponent,
     SportCategoryListPageResolverService,
 } from './page/list';
+import { SportCategoryRuleEditPageComponent } from './page/edit-rule';
 
 const routes: Routes = [
     {
@@ -26,7 +27,7 @@ const routes: Routes = [
             },
             {
                 component: SportCategoryEditPageComponent,
-                canActivate: [NgxPermissionsGuard],
+                canActivate: [ngxPermissionsGuard],
                 path: 'edit/:sportCategoryId',
                 data: {
                     breadcrumb: 'Edit',
@@ -42,8 +43,25 @@ const routes: Routes = [
                 resolve: { data: SportCategoryEditPageResolverService },
             },
             {
+                component: SportCategoryRuleEditPageComponent,
+                canActivate: [ngxPermissionsGuard],
+                path: 'edit-rule/:sportCategoryId/:sportCategoryRuleId',
+                data: {
+                    breadcrumb: 'Edit',
+                    permissions: {
+                        only: [
+                            RoleNames.ADMIN,
+                            SportCategoryAdminPermissionsService.viewSportCategoryEditPage,
+                        ],
+                        redirectTo: '/error',
+                    },
+                },
+                pathMatch: 'full',
+                resolve: { data: SportCategoryEditPageResolverService },
+            },
+            {
                 component: SportCategoryListPageComponent,
-                canActivate: [NgxPermissionsGuard],
+                canActivate: [ngxPermissionsGuard],
                 data: {
                     breadcrumb: 'List',
                     permissions: {

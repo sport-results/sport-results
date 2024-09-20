@@ -10,7 +10,7 @@ import {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [UserTableService],
-    selector: 'app-user-table',
+    selector: 'sr-user-table',
     templateUrl: './user-table.component.html',
     styleUrls: ['./user-table.component.scss'],
 })

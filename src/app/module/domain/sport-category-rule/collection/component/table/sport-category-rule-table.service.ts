@@ -1,6 +1,6 @@
 import { map, Observable, Subject, tap } from 'rxjs';
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoleNames } from '@app/api/common';
 import {
@@ -22,7 +22,11 @@ export type EntityTableViewModel = {
 
 @Injectable()
 export class SportCategoryRuleTableService extends ComponentStore<SportCategoryRuleTableState> {
-     private readonly handleEditEntity = this.effect(
+    private activatedRoute = inject(ActivatedRoute);
+    private sportCategoryRuleStoreService = inject(SportCategoryRuleStoreService);
+    private router = inject(Router);
+    
+    private readonly handleEditEntity = this.effect(
         (editEntity$: Observable<SportCategoryRuleEntity>) => {
             return editEntity$.pipe(
                 tap((entity) => this.editEntity(entity))
@@ -55,9 +59,6 @@ export class SportCategoryRuleTableService extends ComponentStore<SportCategoryR
         );
 
     public constructor(
-        private activatedRoute: ActivatedRoute,
-        private sportCategoryRuleStoreService: SportCategoryRuleStoreService,
-        private router: Router
     ) {
         super({
             entities: [],

@@ -12,7 +12,7 @@ import { UserFormService, UserFormViewModel } from './user-form.service';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [UserFormService],
-    selector: 'app-user-form',
+    selector: 'sr-user-form',
     templateUrl: './user-form.component.html',
     styleUrls: ['./user-form.component.scss'],
 })

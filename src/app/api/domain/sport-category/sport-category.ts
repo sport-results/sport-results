@@ -1,10 +1,13 @@
 import { Entity } from '../../core/entity';
+import { SportCategoryRuleEntity } from '../sport-category-rule';
 
 export interface SportCategory {
     name: string;
 }
 
-export type SportCategoryEntity = SportCategory & Entity;
+export type SportCategoryEntity = SportCategory & Entity & {
+    rules: SportCategoryRuleEntity[];
+};
 
 export type SportCategoryEntityAdd = Omit<SportCategoryEntity, 'uid'>;
 
@@ -24,3 +27,5 @@ export enum SportCategoryResourceEnum {
     SPORT_CATEGORY_EDIT_PAGE  = 'SportCategoryEditPage',
     SPORT_CATEGORY_LIST_PAGE  = 'SportCategoryListPage',
 } 
+
+export type SportCategorySimple = Omit<SportCategoryEntity, 'rules'>;

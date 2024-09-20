@@ -1,5 +1,15 @@
 .sport-category-rule-form {
 	width: 100%;
+
+	.period-participant {
+		display: flex;
+		gap: 1rem;
+		margin-top: 1rem;
+
+		.fieldset {
+			flex: 1;
+		}
+	}
 }
 button {
 	margin-left: 8px;

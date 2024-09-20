@@ -7,7 +7,7 @@ import { SportCategoryFormService, EntityFormViewModel } from './sport-category-
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [SportCategoryFormService],
-    selector: 'app-sport-category-form',
+    selector: 'sr-sport-category-form',
     templateUrl: './sport-category-form.component.html',
     styleUrls: ['./sport-category-form.component.scss'],
 })

@@ -8,7 +8,7 @@ import { NgModule } from '@angular/core';
 import {
   SportCategoryRuleCollectionModule,
   SportCategoryRuleFormModule,
-} from '@app/module/domain/sport-category-rule';
+} from '@app/domain/sport-category-rule';
 
 import { SportCategoryRuleAdminPageComponent } from './page/admin';
 import {

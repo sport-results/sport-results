@@ -4,10 +4,10 @@ import { KeyValue } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import {
-    SportCategoryRuleEntity,
-    SportCategoryRuleEntityAdd,
-    SportCategoryRuleEntityUpdate,
-    SportCategoryRuleStoreService,
+  SportCategoryRuleEntity,
+  SportCategoryRuleEntityAdd,
+  SportCategoryRuleEntityUpdate,
+  SportCategoryRuleStoreService,
 } from '@app/api/domain/sport-category-rule';
 
 import * as sportCategoryRuleActions from './sport-category-rule.actions';
@@ -16,65 +16,103 @@ import * as SportCategoryRuleSelectors from './sport-category-rule.selectors';
 
 @Injectable()
 export class SportCategoryRuleStoreServiceImpl extends SportCategoryRuleStoreService {
-    public constructor(private store: Store<fromSportCategoryRule.SportCategoryRulePartialState>) {
-        super();
-    }
+  public constructor(
+    private store: Store<fromSportCategoryRule.SportCategoryRulePartialState>
+  ) {
+    super();
+  }
 
-    public dispatchAddEntityAction(sportCategoryRule: SportCategoryRuleEntityAdd): void {
-        this.store.dispatch(sportCategoryRuleActions.addEntity({ sportCategoryRule }));
-    }
+  public dispatchAddEntityAction(
+    sportCategoryRule: SportCategoryRuleEntityAdd
+  ): void {
+    this.store.dispatch(
+      sportCategoryRuleActions.addEntity({ sportCategoryRule })
+    );
+  }
 
-    public dispatchChangeNewEntityButtonEnabled(enabled: boolean): void {
-        this.store.dispatch(
-            sportCategoryRuleActions.changeNewEntityButtonEnabled({ enabled })
-        );
-    }
+  public dispatchAddEntityToParentAction(
+    sportCategoryRule: SportCategoryRuleEntityAdd,
+    parentEntityId: string
+  ): void {
+    this.store.dispatch(
+      sportCategoryRuleActions.addEntityToParent({
+        sportCategoryRule,
+        parentEntityId,
+      })
+    );
+  }
 
-    public dispatchGetEntityAction(uid: string): void {
-        this.store.dispatch(sportCategoryRuleActions.loadEntity({ uid }));
-    }
+  public dispatchChangeNewEntityButtonEnabled(enabled: boolean): void {
+    this.store.dispatch(
+      sportCategoryRuleActions.changeNewEntityButtonEnabled({ enabled })
+    );
+  }
 
-    public dispatchListEntitiesAction(pathParams?: string[],
-        queryParams?: KeyValue<string, string>[]): void {
-        this.store.dispatch(sportCategoryRuleActions.listEntities({
-            pathParams: pathParams || [],
-            queryParams: queryParams || [],
-        }));
-    }
+  public dispatchGetEntityAction(uid: string): void {
+    this.store.dispatch(sportCategoryRuleActions.loadEntity({ uid }));
+  }
 
-    public dispatchSelectEntityAction(sportCategoryRule: SportCategoryRuleEntity | null): void {
-        this.store.dispatch(sportCategoryRuleActions.selectEntity({ sportCategoryRule }));
-    }
+  public dispatchListEntitiesAction(
+    pathParams?: string[],
+    queryParams?: KeyValue<string, string>[]
+  ): void {
+    this.store.dispatch(
+      sportCategoryRuleActions.listEntities({
+        pathParams: pathParams || [],
+        queryParams: queryParams || [],
+      })
+    );
+  }
 
-    public dispatchUpdateEntityAction(sportCategoryRule: SportCategoryRuleEntityUpdate): void {
-        this.store.dispatch(sportCategoryRuleActions.updateEntity({ sportCategoryRule }));
-    }
+  public dispatchSelectEntityAction(
+    sportCategoryRule: SportCategoryRuleEntity | null
+  ): void {
+    this.store.dispatch(
+      sportCategoryRuleActions.selectEntity({ sportCategoryRule })
+    );
+  }
 
-    public isLoading$(): Observable<boolean> {
-        return this.store.pipe(select(SportCategoryRuleSelectors.getEntityLoading));
-    }
+  public dispatchUpdateEntityAction(
+    sportCategoryRule: SportCategoryRuleEntityUpdate
+  ): void {
+    this.store.dispatch(
+      sportCategoryRuleActions.updateEntity({ sportCategoryRule })
+    );
+  }
 
-    public selectEntity$(
-        uid: string
-    ): Observable<SportCategoryRuleEntity | undefined> {
-        return this.store.pipe(select(SportCategoryRuleSelectors.getEntityById(uid)));
-    }
+  public isLoading$(): Observable<boolean> {
+    return this.store.pipe(select(SportCategoryRuleSelectors.getEntityLoading));
+  }
 
-    public selectEntities$(): Observable<SportCategoryRuleEntity[]> {
-        return this.store.pipe(select(SportCategoryRuleSelectors.getAll));
-    }
+  public selectEntity$(
+    uid: string
+  ): Observable<SportCategoryRuleEntity | undefined> {
+    return this.store.pipe(
+      select(SportCategoryRuleSelectors.getEntityById(uid))
+    );
+  }
 
-    public override selectEntityById$(
-        entityId: string
-    ): Observable<SportCategoryRuleEntity | undefined> {
-        return this.store.pipe(select(SportCategoryRuleSelectors.getEntityById(entityId)));
-    }
+  public selectEntities$(): Observable<SportCategoryRuleEntity[]> {
+    return this.store.pipe(select(SportCategoryRuleSelectors.getAll));
+  }
 
-    public selectNewEntityButtonEnabled$(): Observable<boolean> {
-        return this.store.pipe(select(SportCategoryRuleSelectors.isNewEntityButtonEnabled));
-    }
+  public override selectEntityById$(
+    entityId: string
+  ): Observable<SportCategoryRuleEntity | undefined> {
+    return this.store.pipe(
+      select(SportCategoryRuleSelectors.getEntityById(entityId))
+    );
+  }
 
-    public selectSelectedEntity$(): Observable<SportCategoryRuleEntity | null> {
-        return this.store.pipe(select(SportCategoryRuleSelectors.getSelectedEntity));
-    }
+  public selectNewEntityButtonEnabled$(): Observable<boolean> {
+    return this.store.pipe(
+      select(SportCategoryRuleSelectors.isNewEntityButtonEnabled)
+    );
+  }
+
+  public selectSelectedEntity$(): Observable<SportCategoryRuleEntity | null> {
+    return this.store.pipe(
+      select(SportCategoryRuleSelectors.getSelectedEntity)
+    );
+  }
 }
