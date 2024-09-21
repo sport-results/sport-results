@@ -10,10 +10,10 @@
       <ng-template pTemplate="end">
         <div class="end">
           <ng-container *mcIsAuthenticated="true">
-            <sr-user-profile
+            <sr-user-avatar
               [user]="params.user"
               (logout)="logoutHandler()"
-            ></sr-user-profile>
+            ></sr-user-avatar>
           </ng-container>
   
           <ng-container *mcIsAuthenticated="false">
