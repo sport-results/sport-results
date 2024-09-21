@@ -2,7 +2,7 @@ import { of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
-
+import { ActionEnum } from '@app/api/common';
 import { ApplicationStoreService } from '@app/api/core/application';
 import { AuthorizationService } from '@app/api/core/authorization';
 import { RoleEntity } from '@app/api/domain/role';
@@ -59,6 +59,9 @@ export class UserEffects {
         this.userEffectService.loadExistedUser$(action.user).pipe(
           map((user) => {
             this.authorizationService.addRoles(user.roles as RoleEntity[]);
+            this.authorizationService.addPermission(
+              `${ActionEnum.SOME}${user.uid}`
+            );
             this.authenticationService.dispatchAuthenticated(user);
             return userActions.loadExistedUserSuccess({
               user,

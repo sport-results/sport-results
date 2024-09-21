@@ -67,7 +67,7 @@ export class UserAvatarComponent {
     const userItem = {
       icon: 'pi pi-cog',
       label: 'User',
-      routerLink: 'user',
+      routerLink: `user/${user?.uid}`,
     };
 
     if (
