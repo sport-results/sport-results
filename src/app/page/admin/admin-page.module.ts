@@ -10,6 +10,7 @@ import { AdminSportCategoryPermissionsService } from './permissions/admin-sport-
 import { AdminUserPermissionsService } from './permissions/admin-user-permissions.service';
 import { AdminRolePermissionsService } from './permissions/admin-role-permissions.service';
 import { AdminSportCategoryRulePermissionsService } from './permissions/admin-sport-category-rule-permissions.service';
+import { AdminSportNetworkPermissionsService } from './permissions/admin-sport-network-permissions.service';
 
 @NgModule({
   declarations: [AdminPageComponent],
@@ -20,6 +21,7 @@ import { AdminSportCategoryRulePermissionsService } from './permissions/admin-sp
     AdminSportCategoryPermissionsService,
     AdminUserPermissionsService,
     AdminSportCategoryRulePermissionsService,
+    AdminSportNetworkPermissionsService,
   ],
 })
 export class AdminPageModule {
@@ -28,6 +30,7 @@ export class AdminPageModule {
     adminRolePermissionsService: AdminRolePermissionsService,
     adminSportCategoryPermissionsService: AdminSportCategoryPermissionsService,
     adminSportCategoryRulePermissionsService: AdminSportCategoryRulePermissionsService,
-    adminUserPermissionsService: AdminUserPermissionsService
+    adminUserPermissionsService: AdminUserPermissionsService,
+    adminSportNetworkPermissionsService: AdminSportNetworkPermissionsService,
   ) {}
 }

@@ -11,6 +11,7 @@ import { SportCategoryAdminPermissionsService } from '@app/api/admin/sport-categ
 import { AdminPermissionsService } from '@app/api/module/admin';
 import { RoleAdminPermissionsService } from '@app/api/admin/role';
 import { UserAdminPermissionsService } from '@app/api/admin/user';
+import { SportNetworkAdminPermissionsService } from '@app/api/admin/sport-network';
 
 export type AdminPageViewModel = {
   menuItems: MenuItem[];
@@ -50,6 +51,18 @@ export class AdminPageService extends ComponentStore<AdminPageState> {
         label: 'Sport Category',
         routerLink: 'sport-category',
         tabindex: '1',
+      });
+    }
+
+    if (
+      this.authorizationService.hasPermission(RoleNames.ADMIN) ||
+      this.authorizationService.hasPermission(
+        SportNetworkAdminPermissionsService.viewSportNetworkAdminPage
+      )
+    ) {
+      items.push({
+        label: ' SportNetwork',
+        routerLink: 'sport-network',
       });
     }
 
