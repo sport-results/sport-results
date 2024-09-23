@@ -3,19 +3,16 @@ import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 
 import { inject, Injectable } from '@angular/core';
 import { RoleNames } from '@app/api/common';
-import { ApplicationStoreService } from '@app/api/core/application';
-import { AuthorizationService } from '@app/api/core/authorization';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import * as applicationActions from './application.actions';
 import { UserEntity, UserStoreService } from '../../../../../api/domain/user';
+import { SportNetworkStoreService, SportNetworkUtilService } from '@app/api/domain/sport-network';
 
 @Injectable()
 export class ApplicationEffects {
   private actions$ = inject(Actions);
-  private applicationStoreService = inject(ApplicationStoreService);
   private auth = inject(Auth);
-  private authorizationService$ = inject(AuthorizationService);
   private userStoreService = inject(UserStoreService);
 
   getAuthenticatedUser$ = createEffect(() =>

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { SportCategoryStoreService } from './api/domain/sport-category';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,10 @@ import { Component } from '@angular/core';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
+  private sportCategoryStoreService = inject(SportCategoryStoreService);
   title = 'sport-results';
+
+  ngOnInit(): void {
+    this.sportCategoryStoreService.dispatchListEntitiesAction();
+  }
 }

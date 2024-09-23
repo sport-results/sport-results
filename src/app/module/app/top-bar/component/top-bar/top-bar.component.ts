@@ -9,7 +9,6 @@ import {
 
 import { TopBarParams } from '../../api';
 import { TopBarService } from './top-bar.service';
-import { DropdownChangeEvent } from 'primeng/dropdown';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

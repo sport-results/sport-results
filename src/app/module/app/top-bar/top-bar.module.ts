@@ -6,7 +6,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { UserProfileModule } from '@app/domain/user';
+import { UserAvatarComponent } from '@app/domain/user';
 
 import { CoreApplicationViewModule } from '../../core/application/view';
 import { TopBarComponent } from './component';
@@ -21,7 +21,7 @@ import { TopBarComponent } from './component';
     MenubarModule,
     NgOptimizedImage,
     ToolbarModule,
-    UserProfileModule,
+    UserAvatarComponent,
     CoreApplicationViewModule,
     DropdownModule,
   ],

@@ -1,1 +1,1 @@
-export * from './user-profile.module';
+export * from './component/user-profile';

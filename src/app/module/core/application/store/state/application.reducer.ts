@@ -45,7 +45,7 @@ export const applicationReducer = createReducer(
       loading: false,
     };
   }),
-  on(applicationActions.loginSuccess, applicationActions.testLoginSuccess, (state, { user }) => ({
+  on(applicationActions.loginSuccess, (state, { user }) => ({
     ...state,
     authenticatedUser: user,
   })),

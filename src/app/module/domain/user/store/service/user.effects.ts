@@ -2,7 +2,7 @@ import { of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
-
+import { ActionEnum } from '@app/api/common';
 import { ApplicationStoreService } from '@app/api/core/application';
 import { AuthorizationService } from '@app/api/core/authorization';
 import { RoleEntity } from '@app/api/domain/role';
@@ -14,7 +14,7 @@ import * as userActions from './user.actions';
 @Injectable()
 export class UserEffects {
   private actions$ = inject(Actions);
-  private authenticationService = inject(ApplicationStoreService);
+  private applicationStoreService = inject(ApplicationStoreService);
   private authorizationService = inject(AuthorizationService);
   private userEffectService = inject(UserEffectService);
 
@@ -58,8 +58,12 @@ export class UserEffects {
       switchMap((action) =>
         this.userEffectService.loadExistedUser$(action.user).pipe(
           map((user) => {
+            this.authorizationService.removeAll();
             this.authorizationService.addRoles(user.roles as RoleEntity[]);
-            this.authenticationService.dispatchAuthenticated(user);
+            this.authorizationService.addPermission(
+              `${ActionEnum.SOME}${user.uid}`
+            );
+            this.applicationStoreService.dispatchAuthenticated(user);
             return userActions.loadExistedUserSuccess({
               user,
             });
@@ -80,7 +84,10 @@ export class UserEffects {
             userActions.loadEntitySuccess({
               user,
             })
-          )
+          ),
+          catchError((error) => {
+            return of(userActions.loadEntityFail({ error }));
+          })
         )
       )
     )

@@ -1,10 +1,22 @@
 import { ngxPermissionsGuard } from 'ngx-permissions';
 
 import { NgModule } from '@angular/core';
-import { ExtraOptions, RouterModule, Routes } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  ExtraOptions,
+  RouterModule,
+  RouterStateSnapshot,
+  Routes,
+} from '@angular/router';
 
-import { RoleNames } from '@app/api/common';
+import { ActionEnum, RoleNames } from '@app/api/common';
 import { AdminPermissionsService } from '@app/api/module/admin';
+
+const calculateUserPermission = (
+  route: ActivatedRouteSnapshot,
+) => {
+  return [`${ActionEnum.SOME}${route.params['userId']}`];
+};
 
 const routes: Routes = [
   {
@@ -20,15 +32,22 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'user',
+    path: 'user/:userId',
+    canActivate: [ngxPermissionsGuard],
+    data: {
+      permissions: {
+        only: calculateUserPermission,
+        redirectTo: '/error',
+      },
+    },
     loadChildren: () =>
       import('./page/user/user-page.module').then(
         (module) => module.UserPageModule
       ),
   },
   {
-    canActivate: [ngxPermissionsGuard],
     path: 'admin',
+    canActivate: [ngxPermissionsGuard],
     data: {
       permissions: {
         only: [RoleNames.ADMIN, AdminPermissionsService.viewAdminPage],

@@ -1,4 +1,5 @@
+export * from './avatar';
 export * from './user.module';
-export * from './profile';
 export * from './collection';
 export * from './form';
+export * from './profile';

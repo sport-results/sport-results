@@ -1,19 +1,5 @@
 <div class="user-profile">
-	<ng-container *ngIf="userMenuItems$ | async as userMenuItems">
-		<p-avatar
-			shape="circle"
-			size="large"
-			icon="pi pi-user"
-			(click)="menu.toggle($event)"
-		></p-avatar>
-
-		<p-menu
-			[showTransitionOptions]="'0ms'"
-			[hideTransitionOptions]="'0ms'"
-			#menu
-			[popup]="true"
-			[model]="userMenuItems"
-		>
-		</p-menu>
-	</ng-container>
+  @if(user$$$) {
+  <sr-user-dashboard [user]="user$$$()" />
+  }
 </div>

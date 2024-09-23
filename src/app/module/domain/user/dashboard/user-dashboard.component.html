@@ -1,0 +1,8 @@
+@if(userDashboardViewModel$$$(); as userDashboardViewModel) {
+  @for(sportNetwork
+    of userDashboardViewModel.sportNetworks; track sportNetwork.uid) {
+    <p-card [header]="sportNetwork.name">
+
+    </p-card>
+  }
+}

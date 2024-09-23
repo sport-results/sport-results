@@ -1,9 +1,7 @@
-import { Role } from '../../common/role';
 import { User } from '../../common/user';
 import { Entity } from '../../core/entity';
 
 export type UserEntity = User & Entity & {
-    roles?: Role[];
 };
 
 export type UserEntityAdd = Omit<UserEntity, 'uid'>;
@@ -25,4 +23,4 @@ export enum UserResourceEnum {
     USER_ADMIN_PAGE = 'UserAdminPage',
     USER_EDIT_PAGE  = 'UserEditPage',
     USER_LIST_PAGE  = 'UserListPage',
-} 
+}

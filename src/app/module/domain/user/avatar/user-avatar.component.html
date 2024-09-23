@@ -1,0 +1,18 @@
+@if(userMenuItems$$$(); as userMenuItems) {
+<div class="user-avatar">
+  <p-avatar
+    shape="circle"
+    size="large"
+    icon="pi pi-user"
+    (click)="menu.toggle($event)"
+  />
+
+  <p-menu
+    [showTransitionOptions]="'0ms'"
+    [hideTransitionOptions]="'0ms'"
+    #menu
+    [popup]="true"
+    [model]="userMenuItems"
+  />
+</div>
+}
