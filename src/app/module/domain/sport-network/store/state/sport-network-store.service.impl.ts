@@ -22,9 +22,9 @@ export class SportNetworkStoreServiceImpl extends SportNetworkStoreService {
 
     public dispatchAddEntityAction(
         sportNetwork: SportNetworkEntityAdd,
-        parentEntityId?: string
+        subCollectionPath?: string
     ): void {
-        this.store.dispatch(sportNetworkActions.addEntity({ sportNetwork,  parentEntityId }));
+        this.store.dispatch(sportNetworkActions.addEntity({ sportNetwork,  subCollectionPath }));
     }
 
     public dispatchChangeNewEntityButtonEnabled(enabled: boolean): void {
@@ -90,4 +90,10 @@ export class SportNetworkStoreServiceImpl extends SportNetworkStoreService {
     public selectSelectedEntity$(): Observable<SportNetworkEntity | null> {
         return this.store.pipe(select(SportNetworkSelectors.getSelectedEntity));
     }
+
+    public selectSportNetworksByUserId$(
+      userId: string
+  ): Observable<SportNetworkEntity[]> {
+      return this.store.pipe(select(SportNetworkSelectors.getNetworksByUserId(userId)));
+  }
 }

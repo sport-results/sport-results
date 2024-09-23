@@ -24,10 +24,10 @@ export class SportCategoryRuleStoreServiceImpl extends SportCategoryRuleStoreSer
 
   public dispatchAddEntityAction(
     sportCategoryRule: SportCategoryRuleEntityAdd,
-    parentEntityId?: string
+    subCollectionPath?: string
   ): void {
     this.store.dispatch(
-      sportCategoryRuleActions.addEntity({ sportCategoryRule, parentEntityId })
+      sportCategoryRuleActions.addEntity({ sportCategoryRule, subCollectionPath })
     );
   }
 

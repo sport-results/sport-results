@@ -19,7 +19,7 @@ export class SportCategoryRuleEffects {
       ofType(sportCategoryRuleActions.addEntity),
       switchMap((action) =>
         this.sportCategoryRuleEffectService
-          .addEntity$(action.sportCategoryRule, `${SPORT_CATEGORY_FEATURE_KEY}/${action.parentEntityId}`)
+          .addEntity$(action.sportCategoryRule, action.subCollectionPath)
           .pipe(
             map((entity) =>
               sportCategoryRuleActions.addEntitySuccess({

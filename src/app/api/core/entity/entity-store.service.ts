@@ -31,7 +31,7 @@ export abstract class EntityStoreService<R, S, T> extends StoreService {
 
   public abstract dispatchAddEntityAction(
     entity: S,
-    parentEntityId?: string
+    subCollectionPath?: string
   ): void;
   public abstract dispatchListEntitiesAction(
     subCollectionPath?: string,

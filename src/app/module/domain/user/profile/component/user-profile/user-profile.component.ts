@@ -1,81 +1,34 @@
-import { MenuItem } from 'primeng/api';
-import { combineLatest, map, Observable } from 'rxjs';
-
 import {
-    ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Signal,
 } from '@angular/core';
-import { RoleNames, User } from '@app/api/common';
+import { UserDashboardComponent } from '../../../dashboard/user-dashboard.component';
 import { ApplicationStoreService } from '@app/api/core/application';
-import { AuthorizationService } from '@app/api/core/authorization';
-import { AdminPermissionsService } from '@app/api/module/admin';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { User } from '@app/api/common';
+import { map } from 'rxjs';
+import { UserEntity } from '@app/api/domain/user';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [UserDashboardComponent],
   selector: 'sr-user-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss'],
 })
-export class UserProfileComponent implements OnInit {
-    @Output()
-  public logout: EventEmitter<boolean>;
-  @Input()
-  public user: User | null = null;
-    public userMenuItems$!: Observable<MenuItem[]>;
+export class UserProfileComponent {
+  private applicationStoreService = inject(ApplicationStoreService);
 
-    public constructor(
-    private authorizationService: AuthorizationService,
-    private applicationStoreService: ApplicationStoreService
-  ) {
-    this.logout = new EventEmitter();
-  }
+  public user$$$?: Signal<UserEntity | undefined>;
 
-    public ngOnInit(): void {
-    this.userMenuItems$ = combineLatest([
-      this.applicationStoreService.selectAuthenticatedUser$(),
-    ]).pipe(
-      map(([authenticatedUser]) => { this.user = authenticatedUser;
-        const userMenuItems: MenuItem[] = [
-          {
-            label: 'Log out',
-            icon: 'pi pi-sign-out',
-            command: () => {
-              this.logout.emit(true);
-            },
-          },
-        ];
-
-        const adminItem = {
-          icon: 'pi pi-cog',
-          label: 'Admin',
-          routerLink: 'admin',
-        };
-
-        const userItem = {
-          icon: 'pi pi-cog',
-          label: 'User',
-          routerLink: 'user',
-        }
-
-        if (
-          this.authorizationService.hasPermission('ADMIN') ||
-          this.authorizationService.hasPermission(
-            AdminPermissionsService.viewAdminPage
-          )
-        ) {
-          userMenuItems.unshift(adminItem);
-        }
-
-        if (
-          this.authorizationService.hasPermission(RoleNames.USER) ||
-          this.authorizationService.hasPermission(
-            AdminPermissionsService.viewAdminPage
-          )
-        ) {
-          userMenuItems.unshift(userItem);
-        }
-
-        return userMenuItems;
-      })
+  constructor() {
+    this.user$$$ = toSignal(
+      this.applicationStoreService
+        .selectAuthenticatedUser$()
+        .pipe(map((user) => user as UserEntity))
     );
   }
 }

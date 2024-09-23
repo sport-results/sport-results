@@ -14,7 +14,7 @@ import * as userActions from './user.actions';
 @Injectable()
 export class UserEffects {
   private actions$ = inject(Actions);
-  private authenticationService = inject(ApplicationStoreService);
+  private applicationStoreService = inject(ApplicationStoreService);
   private authorizationService = inject(AuthorizationService);
   private userEffectService = inject(UserEffectService);
 
@@ -58,11 +58,12 @@ export class UserEffects {
       switchMap((action) =>
         this.userEffectService.loadExistedUser$(action.user).pipe(
           map((user) => {
+            this.authorizationService.removeAll();
             this.authorizationService.addRoles(user.roles as RoleEntity[]);
             this.authorizationService.addPermission(
               `${ActionEnum.SOME}${user.uid}`
             );
-            this.authenticationService.dispatchAuthenticated(user);
+            this.applicationStoreService.dispatchAuthenticated(user);
             return userActions.loadExistedUserSuccess({
               user,
             });
@@ -83,7 +84,10 @@ export class UserEffects {
             userActions.loadEntitySuccess({
               user,
             })
-          )
+          ),
+          catchError((error) => {
+            return of(userActions.loadEntityFail({ error }));
+          })
         )
       )
     )

@@ -158,7 +158,7 @@ export class SportCategoryRuleFormService extends ComponentStore<SportCategoryRu
       this.sportCategoryRuleFormUtil.createEntity(
         formGroup, parentEntity
       ) as SportCategoryRuleEntityAdd,
-      parentEntity.uid
+      `${SPORT_CATEGORY_FEATURE_KEY}/${parentEntity.uid}`
     );
   }
 

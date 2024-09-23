@@ -1,7 +1,10 @@
 import { Entity } from '../../core/entity';
+import { SportCategorySimple } from '../sport-category';
 
 export interface SportNetwork {
     name: string;
+    sportCategories: SportCategorySimple[]
+    userId: string;
 }
 
 export type SportNetworkEntity = SportNetwork & Entity;
@@ -23,4 +26,4 @@ export enum SportNetworkResourceEnum {
     SPORT_NETWORK_ADMIN_PAGE = 'SportNetworkAdminPage',
     SPORT_NETWORK_EDIT_PAGE  = 'SportNetworkEditPage',
     SPORT_NETWORK_LIST_PAGE  = 'SportNetworkListPage',
-} 
+}

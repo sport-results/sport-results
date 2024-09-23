@@ -29,14 +29,18 @@ export class SportNetworkFormUtilImpl extends SportNetworkFormUtil {
                 lastUpdated: now,
             },
             name: formGroup.value['name'],
+            sportCategories: formGroup.value['sportCategories'],
+            userId: formGroup.value['userId'],
         };
     }
 
     public createFormGroup(sportNetwork: SportNetworkEntity | undefined): FormGroup {
         return this.formBuilder.group({
             uid: [sportNetwork?.uid],
+            userId: [sportNetwork?.userId],
             meta: [sportNetwork?.meta],
             name: [sportNetwork?.name, Validators.required],
+            sportCategories: [sportNetwork?.sportCategories, Validators.required],
         });
     }
 
@@ -45,6 +49,8 @@ export class SportNetworkFormUtilImpl extends SportNetworkFormUtil {
             uid: formGroup.value['uid'],
             meta: formGroup.value['meta'],
             name: formGroup.value['name'],
+            sportCategories: formGroup.value['sportCategories'],
+            userId: formGroup.value['userId'],
         };
     }
 }

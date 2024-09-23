@@ -12,7 +12,7 @@ export const addEntity = createAction(
   '[SportCategoryRule Admin] Add SportCategoryRule',
   props<{
     sportCategoryRule: SportCategoryRuleEntityAdd;
-    parentEntityId?: string;
+    subCollectionPath?: string;
   }>()
 );
 
