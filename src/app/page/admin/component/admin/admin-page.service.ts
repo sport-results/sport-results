@@ -1,17 +1,15 @@
-import { MenuItem } from 'primeng/api';
-import { Observable, of } from 'rxjs';
-
 import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { ComponentStore } from '@ngrx/component-store';
-import { AuthorizationService } from '@app/api/core/authorization';
-import { RoleNames } from '@app/api/common';
-import { SportCategoryAdminPermissionsService } from '@app/api/admin/sport-category';
-import { AdminPermissionsService } from '@app/api/module/admin';
 import { RoleAdminPermissionsService } from '@app/api/admin/role';
-import { UserAdminPermissionsService } from '@app/api/admin/user';
+import { SportCategoryAdminPermissionsService } from '@app/api/admin/sport-category';
 import { SportNetworkAdminPermissionsService } from '@app/api/admin/sport-network';
+import { SportPlayerAdminPermissionsService } from '@app/api/admin/sport-player';
+import { UserAdminPermissionsService } from '@app/api/admin/user';
+import { RoleNames } from '@app/api/common';
+import { AuthorizationService } from '@app/api/core/authorization';
+import { ComponentStore } from '@ngrx/component-store';
+import { MenuItem } from 'primeng/api';
+import { Observable, of } from 'rxjs';
 
 export type AdminPageViewModel = {
   menuItems: MenuItem[];
@@ -57,11 +55,23 @@ export class AdminPageService extends ComponentStore<AdminPageState> {
     if (
       this.authorizationService.hasPermission(RoleNames.ADMIN) ||
       this.authorizationService.hasPermission(
+        SportPlayerAdminPermissionsService.viewSportPlayerAdminPage
+      )
+    ) {
+      items.push({
+        label: 'Sport Player',
+        routerLink: 'sport-player',
+      });
+    }
+
+    if (
+      this.authorizationService.hasPermission(RoleNames.ADMIN) ||
+      this.authorizationService.hasPermission(
         SportNetworkAdminPermissionsService.viewSportNetworkAdminPage
       )
     ) {
       items.push({
-        label: ' SportNetwork',
+        label: 'Sport Network',
         routerLink: 'sport-network',
       });
     }

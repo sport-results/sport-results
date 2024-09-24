@@ -1,0 +1,22 @@
+<section class="sport-player-form" *ngIf="entityFormViewModel$ | async as entityFormViewModel">
+	<form [formGroup]="entityFormViewModel.formGroup">
+		<input name="uid" formControlName="uid" hidden />
+		<input name="meta" formControlName="meta" hidden />
+
+		<div class="field">
+			<span class="p-float-label">
+				<input id="name" type="text" pInputText formControlName="name" />
+
+				<label for="name">Name</label>
+			</span>
+		</div>
+
+
+		<div style="margin-top: 10px" fxLayout="row" fxLayoutAlign="space-around">
+			<button pButton type="button" label="Submit" (click)="entityFormViewModel.submit$$.next()"
+				[disabled]="!entityFormViewModel.formGroup.valid"></button>
+
+			<button pButton type="button" label="Cancel" (click)="entityFormViewModel.cancel$$.next()"></button>
+		</div>
+	</form>
+</section>

@@ -8,6 +8,7 @@ import { AdminPageComponent } from './component';
 import {
   AdminSportCategoryPermissionsService,
   AdminSportNetworkPermissionsService,
+  AdminSportPlayerPermissionsService,
 } from './permissions';
 import { AdminUserPermissionsService } from './permissions/admin-user-permissions.service';
 import { AdminRolePermissionsService } from './permissions/admin-role-permissions.service';
@@ -68,6 +69,23 @@ function createRoutes(): Routes {
             import('../../module/admin/user/admin/admin-user.module').then(
               (lib) => lib.AdminUserModule
             ),
+        },
+        {
+          canActivate: [ngxPermissionsGuard],
+          data: {
+            permissions: {
+              only: [
+                RoleNames.ADMIN,
+                AdminSportPlayerPermissionsService.viewSportPlayerAdminPage,
+              ],
+              redirectTo: '/error',
+            },
+          },
+          path: 'sport-player',
+          loadChildren: () =>
+            import(
+              '../../module/admin/sport-player/admin/sport-player-admin-page.module'
+            ).then((lib) => lib.SportPlayerAdminPageModule),
         },
         {
           canActivate: [ngxPermissionsGuard],
