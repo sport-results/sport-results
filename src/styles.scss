@@ -1,5 +1,9 @@
 @import "primeicons/primeicons.css";
 
+body {
+  margin: 1.2rem;
+}
+
 form {
   .field {
     display: block;
@@ -45,7 +49,7 @@ table {
     font-size: large;
   }
 
-  tr.data-row-sub{
+  tr.data-row-sub {
     font-weight: 600;
     font-size: large;
   }
@@ -53,4 +57,26 @@ table {
   td.sub-content {
     background-color: #abc9fb;
   }
+}
+
+.p-menu {
+  border: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+.p-menubar {
+  border: none;
+  border-radius: none;
+  padding: 0;
+}
+
+.p-panel {
+  border: none;
+  border-radius: none;
+}
+
+.p-tabview .p-tabview-nav {
+  border: none;
+  border-width: none;
 }

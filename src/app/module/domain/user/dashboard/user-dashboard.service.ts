@@ -1,31 +1,19 @@
-import { filter, map, Observable, switchMap, tap, withLatestFrom } from 'rxjs';
-
 import { inject, Injectable, Signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import {
-  USER_FEATURE_KEY,
-  UserEntity,
-  UserPermissionsService,
-  UserStoreService,
-} from '@app/api/domain/user';
-import { ComponentStore } from '@ngrx/component-store';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { SportCategoryStoreService } from '@app/api/domain/sport-category';
 import {
   SportNetworkEntity,
-  SportNetworkEntityAdd,
   SportNetworkStoreService,
   SportNetworkUtilService,
 } from '@app/api/domain/sport-network';
-import { toSignal } from '@angular/core/rxjs-interop';
-import {
-  SportCategoryEntity,
-  SportCategoryStoreService,
-} from '@app/api/domain/sport-category';
+import { USER_FEATURE_KEY, UserEntity } from '@app/api/domain/user';
+import { ComponentStore } from '@ngrx/component-store';
+import { filter, map, Observable, switchMap, tap, withLatestFrom } from 'rxjs';
 
 export type UserDashboardState = {
   user: UserEntity | undefined;
   sportNetworks: SportNetworkEntity[];
 };
-
 export type UserDashboardViewModel = {
   sportNetworks: SportNetworkEntity[];
 };
