@@ -12,12 +12,17 @@ import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentStore } from '@ngrx/component-store';
 import { UserEntity, UserStoreService } from '@app/api/domain/user';
+import {
+  SportCategorySimple,
+  SportCategoryStoreService,
+} from '@app/api/domain/sport-category';
 
 export interface SportPlayerFormState {
   formGroup: FormGroup | undefined;
   entity: SportPlayerEntity | undefined;
   entityId: string | undefined;
   users: UserEntity[];
+  sportCategories: SportCategorySimple[];
 }
 
 export type EntityFormViewModel = {
@@ -25,11 +30,15 @@ export type EntityFormViewModel = {
   cancel$$: Subject<void>;
   submit$$: Subject<void>;
   users: UserEntity[];
+  sportCategories: SportCategorySimple[];
 };
 
 @Injectable()
 export class SportPlayerFormService extends ComponentStore<SportPlayerFormState> {
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly sportCategoryStoreService = inject(
+    SportCategoryStoreService
+  );
   private readonly sportPlayerStoreService = inject(SportPlayerStoreService);
   private readonly sportPlayerFormUtil = inject(SportPlayerFormUtil);
   private readonly router = inject(Router);
@@ -39,6 +48,9 @@ export class SportPlayerFormService extends ComponentStore<SportPlayerFormState>
   private readonly entityId$ = this.select((state) => state.entityId);
   private readonly formGroup$ = this.select((state) => state.formGroup);
   private readonly users$ = this.select((state) => state.users);
+  private readonly sportCategories$ = this.select(
+    (state) => state.sportCategories
+  );
 
   private readonly fetchEntity = this.effect(
     (entityId$: Observable<string | undefined>) => {
@@ -65,9 +77,25 @@ export class SportPlayerFormService extends ComponentStore<SportPlayerFormState>
     );
   });
 
+  private readonly fetchSportCategories = this.effect(() => {
+    return this.sportCategoryStoreService.selectEntities$().pipe(
+      tap((sportCategories) => {
+        this.updateSportCategoriesState(
+          sportCategories.map((sportCategory) => ({
+            uid: sportCategory.uid,
+            name: sportCategory.name,
+          }))
+        );
+      })
+    );
+  });
+
   private readonly getDataForSubmit$ = this.select({
-    entity: this.entity$.pipe(map((entity) => entity as SportPlayerEntity)),
-    formGroup: this.formGroup$.pipe(map((formGroup) => formGroup as FormGroup)),
+    entity: this.entity$.pipe(map((entity) => entity)),
+    formGroup: this.formGroup$.pipe(map((formGroup) => formGroup)),
+    sportCategories: this.sportCategories$.pipe(
+      map((sportCategories) => sportCategories)
+    ),
   }).pipe(
     map((params) => ({
       ...this.extendsEntityFormViewModel(params),
@@ -99,6 +127,9 @@ export class SportPlayerFormService extends ComponentStore<SportPlayerFormState>
         map((formGroup) => formGroup as FormGroup)
       ),
       users: this.users$.pipe(map((users) => users as UserEntity[])),
+      sportCategories: this.sportCategories$.pipe(
+        map((sportCategories) => sportCategories as SportCategorySimple[])
+      ),
     }).pipe(
       map((entityFormViewModel) =>
         this.extendsEntityFormViewModel(entityFormViewModel)
@@ -111,6 +142,7 @@ export class SportPlayerFormService extends ComponentStore<SportPlayerFormState>
       entity: undefined,
       entityId: undefined,
       users: [],
+      sportCategories: [],
     });
 
     this.cancel$$ = new Subject();
@@ -127,6 +159,7 @@ export class SportPlayerFormService extends ComponentStore<SportPlayerFormState>
     this.updateEntityIdState(entityId);
     this.fetchEntity(this.entityId$);
     this.fetchUsers();
+    this.fetchSportCategories();
     this.handleCancel(this.cancel$$.asObservable());
     this.handleSubmit(this.submit$$.asObservable());
   }
@@ -145,6 +178,8 @@ export class SportPlayerFormService extends ComponentStore<SportPlayerFormState>
       cancel$$: this.cancel$$,
       submit$$: this.submit$$,
       users: entityFormViewModel.users as UserEntity[],
+      sportCategories:
+        entityFormViewModel.sportCategories as SportCategorySimple[],
     };
   }
 
@@ -201,6 +236,17 @@ export class SportPlayerFormService extends ComponentStore<SportPlayerFormState>
       return {
         ...state,
         users,
+      };
+    });
+  }
+
+  private updateSportCategoriesState(
+    sportCategories: SportCategorySimple[]
+  ): void {
+    this.setState((state) => {
+      return {
+        ...state,
+        sportCategories,
       };
     });
   }

@@ -1,8 +1,10 @@
 import { Entity } from '../../core/entity';
+import { SportCategorySimple } from '../sport-category';
 
 export interface SportPlayer {
     name: string;
     userId: string | null;
+    skills: SportCategorySimple[];
 }
 
 export type SportPlayerEntity = SportPlayer & Entity;

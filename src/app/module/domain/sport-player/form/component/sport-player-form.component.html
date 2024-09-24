@@ -15,7 +15,22 @@
         >
         </p-dropdown>
 
-        <label class="required" for="userId">Type</label>
+        <label for="userId">Type</label>
+      </span>
+    </div>
+
+    <div class="field">
+      <span class="p-float-label">
+        <p-multiSelect
+          id="skills"
+          [options]="entityFormViewModel.sportCategories"
+          optionLabel="name"
+          placeholder="Select sport categories"
+          [filter]="false"
+          formControlName="skills"
+          display="chip"
+        ></p-multiSelect>
+        <label for="skills">Skills</label>
       </span>
     </div>
 
@@ -23,7 +38,7 @@
 			<span class="p-float-label">
 				<input id="name" type="text" pInputText formControlName="name" />
 
-				<label for="name">Name</label>
+				<label class="required" for="name">Name</label>
 			</span>
 		</div>
 

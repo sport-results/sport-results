@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 import { SportPlayerFormComponent } from './component';
 import { SportPlayerFormUtilImpl } from './util';
@@ -21,6 +22,7 @@ import { SportPlayerFormUtilImpl } from './util';
     DropdownModule,
     InputTextModule,
     InputTextareaModule,
+    MultiSelectModule,
   ],
   providers: [
     {
