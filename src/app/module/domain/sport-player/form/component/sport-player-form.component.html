@@ -3,6 +3,22 @@
 		<input name="uid" formControlName="uid" hidden />
 		<input name="meta" formControlName="meta" hidden />
 
+    <div class="field">
+      <span class="p-float-label">
+        <p-dropdown
+          id="userId"
+          [options]="entityFormViewModel.users"
+          formControlName="userId"
+          optionLabel="displayName"
+          optionValue="uid"
+          dataKey="uid"
+        >
+        </p-dropdown>
+
+        <label class="required" for="userId">Type</label>
+      </span>
+    </div>
+
 		<div class="field">
 			<span class="p-float-label">
 				<input id="name" type="text" pInputText formControlName="name" />

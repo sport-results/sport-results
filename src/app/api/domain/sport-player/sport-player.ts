@@ -2,6 +2,7 @@ import { Entity } from '../../core/entity';
 
 export interface SportPlayer {
     name: string;
+    userId: string | null;
 }
 
 export type SportPlayerEntity = SportPlayer & Entity;
@@ -23,4 +24,4 @@ export enum SportPlayerResourceEnum {
     SPORT_PLAYER_ADMIN_PAGE = 'SportPlayerAdminPage',
     SPORT_PLAYER_EDIT_PAGE  = 'SportPlayerEditPage',
     SPORT_PLAYER_LIST_PAGE  = 'SportPlayerListPage',
-} 
+}

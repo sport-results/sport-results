@@ -29,6 +29,7 @@ export class SportPlayerFormUtilImpl extends SportPlayerFormUtil {
                 lastUpdated: now,
             },
             name: formGroup.value['name'],
+            userId: formGroup.value['userId'] || null,
         };
     }
 
@@ -37,6 +38,7 @@ export class SportPlayerFormUtilImpl extends SportPlayerFormUtil {
             uid: [sportPlayer?.uid],
             meta: [sportPlayer?.meta],
             name: [sportPlayer?.name, Validators.required],
+            userId: [sportPlayer?.userId]
         });
     }
 
