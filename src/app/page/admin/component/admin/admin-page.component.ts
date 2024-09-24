@@ -8,13 +8,19 @@ import {
 } from '@angular/core';
 
 import { AdminPageService, AdminPageViewModel } from './admin-page.service';
-import { AdminSportCategoryPermissionsService, AdminSportCategoryRulePermissionsService, AdminSportNetworkPermissionsService } from '../../permissions';
+import {
+  AdminSportCategoryPermissionsService,
+  AdminSportCategoryRulePermissionsService,
+  AdminSportNetworkPermissionsService,
+  AdminSportPlayerPermissionsService,
+} from '../../permissions';
 import { AuthorizationService } from '@app/api/core/authorization';
 import { AdminRolePermissionsService } from '../../permissions/admin-role-permissions.service';
 import { AdminUserPermissionsService } from '../../permissions/admin-user-permissions.service';
 import { AdminPermissionsService } from '@app/api/module/admin';
 import { SportCategoryRuleAdminPermissionsService } from '@app/api/admin/sport-category-rule';
 import { SportNetworkAdminPermissionsService } from '@app/api/admin/sport-network';
+import { SportPlayerAdminPermissionsService } from '@app/api/admin/sport-player';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,7 +31,6 @@ import { SportNetworkAdminPermissionsService } from '@app/api/admin/sport-networ
 })
 export class AdminPageComponent implements OnInit {
   private componentService = inject(AdminPageService);
-  private authorizationService = inject(AuthorizationService);
 
   public adminPageViewModel$!: Observable<AdminPageViewModel>;
 
