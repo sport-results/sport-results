@@ -94,7 +94,7 @@
         "./src/app/module/domain/network-player/index.ts"
       ],
       "@app/admin/network-player": [
-        "./src/app/module/admin/network-player/index.ts"
+        "./src/app/module/admin/network-player/admin/index.ts"
       ]
     }
   },

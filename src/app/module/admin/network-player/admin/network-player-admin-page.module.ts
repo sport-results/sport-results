@@ -21,7 +21,6 @@ import { NetworkPlayerAdminPageRoutingModule } from './network-player-admin-page
 @NgModule({
     declarations: [
         NetworkPlayerAdminPageComponent,
-        NetworkPlayerEditPageComponent,
         NetworkPlayerListPageComponent,
     ],
     imports: [

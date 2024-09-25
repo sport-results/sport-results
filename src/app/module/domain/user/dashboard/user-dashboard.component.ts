@@ -28,7 +28,7 @@ export class UserDashboardComponent {
   public userDashboardViewModel$$$!: Signal<UserDashboardViewModel | undefined>;
 
   public clickHandler(): void {
-    this.router.navigate(['../network-player'], { relativeTo: this.activatedRoute });
+    this.router.navigate(['../network-player/edit', 0], { relativeTo: this.activatedRoute });
   }
 
   public ngOnInit(): void {

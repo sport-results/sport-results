@@ -51,7 +51,7 @@ export class NetworkPlayerFormService extends ComponentStore<NetworkPlayerFormSt
             );
         }
     );
-    
+
     private readonly getDataForSubmit$ = this.select((state) => ({
         entity: state.entity,
         formGroup: state.formGroup,
@@ -98,7 +98,7 @@ export class NetworkPlayerFormService extends ComponentStore<NetworkPlayerFormSt
     }
 
     public cancel(): void {
-        this.router.navigate(['../../list'], {
+        this.router.navigate(['../../../'], {
             relativeTo: this.activatedRoute,
         });
     }

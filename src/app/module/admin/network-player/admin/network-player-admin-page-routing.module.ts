@@ -20,11 +20,6 @@ const routes: Routes = [
         component: NetworkPlayerAdminPageComponent,
         children: [
             {
-                path: '',
-                pathMatch: 'full',
-                redirectTo: 'list',
-            },
-            {
                 component: NetworkPlayerEditPageComponent,
                 canActivate: [ngxPermissionsGuard],
                 path: 'edit/:networkPlayerId',

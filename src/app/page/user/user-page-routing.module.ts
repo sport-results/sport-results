@@ -8,7 +8,6 @@ import { UserDashboardComponent } from '../../module/domain/user/dashboard';
 const routes: Routes = [
   {
     path: '',
-    pathMatch: 'full',
     component: UserPageComponent,
     children: [
       {
@@ -22,10 +21,16 @@ const routes: Routes = [
         pathMatch: 'full',
       },
       {
-        path: 'network-player',
-        loadChildren: () =>
-          import('@app/domain/network-player').then(
-            (module) => module.NetworkPlayerModule
+        component: UserDashboardComponent,
+        path: 'dashboard',
+        pathMatch: 'full',
+      },
+      {
+        path: 'network-player/edit/:networkPlayerId',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('@app/admin/network-player').then(
+            (module) => module.NetworkPlayerEditPageComponent
           ),
       },
     ],
