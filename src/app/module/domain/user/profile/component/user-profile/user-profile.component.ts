@@ -10,11 +10,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { User } from '@app/api/common';
 import { map } from 'rxjs';
 import { UserEntity } from '@app/api/domain/user';
+import { RouterModule } from '@angular/router';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [UserDashboardComponent],
+  imports: [UserDashboardComponent, ],
   selector: 'sr-user-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss'],

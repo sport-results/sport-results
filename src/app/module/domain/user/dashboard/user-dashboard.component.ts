@@ -1,5 +1,7 @@
 import { Component, inject, Input, Signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserEntity } from '@app/api/domain/user';
+import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { PanelModule } from 'primeng/panel';
 import { TabViewModule } from 'primeng/tabview';
@@ -8,7 +10,6 @@ import {
   UserDashboardService,
   UserDashboardViewModel,
 } from './user-dashboard.service';
-import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'sr-user-dashboard',
@@ -19,10 +20,16 @@ import { ButtonModule } from 'primeng/button';
   providers: [UserDashboardService],
 })
 export class UserDashboardComponent {
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
   private userDashboardService = inject(UserDashboardService);
 
   @Input() public user?: UserEntity;
   public userDashboardViewModel$$$!: Signal<UserDashboardViewModel | undefined>;
+
+  public clickHandler(): void {
+    this.router.navigate(['../network-player'], { relativeTo: this.activatedRoute });
+  }
 
   public ngOnInit(): void {
     this.userDashboardService.init$(this.user);
