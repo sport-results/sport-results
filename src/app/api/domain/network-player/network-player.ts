@@ -1,23 +1,26 @@
 import { Entity } from '../../core/entity';
+import { SportNetworkEntity } from '../sport-network';
+import { SportPlayerEntity } from '../sport-player';
 
 export interface NetworkPlayer {
-  newtworkId: string;
-  playerId: string;
+  sportNetworkId: string;
 }
 
 export type NetworkPlayerEntity = NetworkPlayer &
   Entity & {
+    sportPlayer: SportPlayerEntity;
     startDate: Date;
-    endDate?: Date;
-  };
+    endDate: Date | null;
+  };;
 
 export type NetworkPlayerEntityAdd = Omit<NetworkPlayerEntity, 'uid'>;
 
 export type NetworkPlayerEntityUpdate = Partial<NetworkPlayerEntity> & Entity;
 
-export type NetworkPlayerModel = NetworkPlayer & Entity & {
+export type NetworkPlayerModel = Entity & NetworkPlayer & {
+    sportPlayerId: string;
     startDate: string;
-    endDate?: string;
+    endDate: string | null;
 };
 
 export type NetworkPlayerModelAdd = Omit<NetworkPlayerModel, 'uid'>;

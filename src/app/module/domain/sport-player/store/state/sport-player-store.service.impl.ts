@@ -49,6 +49,10 @@ export class SportPlayerStoreServiceImpl extends SportPlayerStoreService {
         }));
     }
 
+    public override dispatchLoadEntityAction(uid: string): void {
+      this.store.dispatch(sportPlayerActions.loadEntity({ uid }));
+    }
+
     public dispatchSelectEntityAction(sportPlayer: SportPlayerEntity | null): void {
         this.store.dispatch(sportPlayerActions.selectEntity({ sportPlayer }));
     }

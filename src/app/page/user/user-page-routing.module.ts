@@ -26,7 +26,7 @@ const routes: Routes = [
         pathMatch: 'full',
       },
       {
-        path: 'network-player/edit/:networkPlayerId',
+        path: ':sportNetworkId/network-player/edit/:networkPlayerId',
         pathMatch: 'full',
         loadComponent: () =>
           import('@app/admin/network-player').then(

@@ -12,7 +12,7 @@ export const addEntity = createAction(
     '[NetworkPlayer Admin] Add NetworkPlayer',
     props<{
         networkPlayer: NetworkPlayerEntityAdd,
-        parentEntityId?: string;
+        subCollectionPath?: string;
     }>()
 );
 
@@ -44,7 +44,7 @@ export const loadEntityFail = createAction(
 export const changeNewEntityButtonEnabled = createAction(
 	'[NetworkPlayer Admin] Change new Entity Button Enabled',
 	props<{ enabled: boolean }>()
-); 
+);
 
 export const listEntities = createAction(
     '[NetworkPlayer Admin] List NetworkPlayers',

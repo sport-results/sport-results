@@ -2,14 +2,39 @@
 	<form [formGroup]="entityFormViewModel.formGroup">
 		<input name="uid" formControlName="uid" hidden />
 		<input name="meta" formControlName="meta" hidden />
+    <input name="startDate" formControlName="startDate" hidden />
+    <input name="endDate" formControlName="endDate" hidden />
 
-		<div class="field">
-			<span class="p-float-label">
-				<input id="name" type="text" pInputText formControlName="name" />
+    <div class="field">
+      <span class="p-float-label">
+        <p-dropdown
+          id="sportNetworkId"
+          [options]="entityFormViewModel.sportNetworks"
+          formControlName="sportNetworkId"
+          optionLabel="name"
+          optionValue="uid"
+          dataKey="uid"
+        >
+        </p-dropdown>
 
-				<label for="name">Name</label>
-			</span>
-		</div>
+        <label for="sportNetworkId">Network</label>
+      </span>
+    </div>
+
+    <div class="field">
+      <span class="p-float-label">
+        <p-dropdown
+          id="sportPlayer"
+          [options]="entityFormViewModel.sportPlayers"
+          formControlName="sportPlayer"
+          optionLabel="name"
+          dataKey="uid"
+        >
+        </p-dropdown>
+
+        <label for="sportPlayer">Player</label>
+      </span>
+    </div>
 
 
 		<div style="margin-top: 10px" fxLayout="row" fxLayoutAlign="space-around">

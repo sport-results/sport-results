@@ -9,6 +9,7 @@ import { NetworkPlayerFormUtil } from '@app/api/domain/network-player';
 
 import { NetworkPlayerFormComponent } from './component';
 import { NetworkPlayerFormUtilImpl } from './util';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
     declarations: [NetworkPlayerFormComponent],
@@ -18,6 +19,7 @@ import { NetworkPlayerFormUtilImpl } from './util';
         FormsModule,
         ReactiveFormsModule,
         ButtonModule,
+        DropdownModule,
         InputTextModule,
         InputTextareaModule
     ],

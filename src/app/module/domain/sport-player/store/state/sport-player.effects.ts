@@ -1,4 +1,4 @@
-import { catchError, map, of, switchMap } from 'rxjs';
+import { catchError, map, mergeMap, of, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 import {
@@ -56,7 +56,7 @@ export class SportPlayerEffects {
   loadEntity$ = createEffect(() =>
     this.actions$.pipe(
       ofType(sportPlayerActions.loadEntity),
-      switchMap((action) =>
+      mergeMap((action) =>
         this.sportPlayerEffectService.loadEntity$(action.uid).pipe(
           map((entity) =>
             sportPlayerActions.loadEntitySuccess({

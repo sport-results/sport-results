@@ -1,5 +1,8 @@
 <section class="user-dashboard">
-  <p-tabView>
+  <p-tabView
+    (onChange)="onChangeHandler($event)"
+    (activeIndexChange)="onActiveIndexChangeHandler($event)"
+  >
     @if(userDashboardViewModel$$$(); as userDashboardViewModel) {
     @for(sportNetwork of userDashboardViewModel.sportNetworks; track
     sportNetwork.uid) {
@@ -12,8 +15,20 @@
             </ng-template>
 
             <ng-template pTemplate="icons">
-              <p-button label="Add player" icon="pi pi-plus-circle" size="small" (onClick)="clickHandler()" />
+              <p-button
+                label="Add player"
+                icon="pi pi-plus-circle"
+                size="small"
+                (onClick)="userDashboardViewModel.addNetworkPlayer$$.next()"
+              />
             </ng-template>
+
+            @for(networkPlayer of userDashboardViewModel.networkPlayers; track
+            networkPlayer.uid) {
+            <div>
+              {{ networkPlayer.sportPlayer.name }}
+            </div>
+            }
           </p-panel>
         </div>
 
@@ -24,7 +39,11 @@
             </ng-template>
 
             <ng-template pTemplate="icons">
-              <p-button label="Add event" icon="pi pi-plus-circle" size="small" />
+              <p-button
+                label="Add event"
+                icon="pi pi-plus-circle"
+                size="small"
+              />
             </ng-template>
           </p-panel>
         </div>
