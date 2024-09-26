@@ -1,4 +1,4 @@
-import { first, forkJoin, Observable, switchMap } from 'rxjs';
+import { forkJoin, mergeMap, Observable, of, switchMap } from 'rxjs';
 
 import { KeyValue } from '@angular/common';
 import { Injectable } from '@angular/core';
@@ -80,13 +80,13 @@ export class EntityEffectServiceImpl extends EntityEffectService<
     return this.entityDataService
       .list$(subCollectionPath, pathParams, queryParams)
       .pipe(
-        switchMap((models) =>
-          forkJoin(
-            models.map((model) =>
-              this.entityUtilService.convertModelToEntity$(model).pipe(first())
+        mergeMap((models) =>models && models.length
+        ? forkJoin(
+            models.map((model) => this.entityUtilService.convertModelToEntity$(model)
+
             )
           )
-        )
+        : of(models as Entity[]))
       );
   }
 

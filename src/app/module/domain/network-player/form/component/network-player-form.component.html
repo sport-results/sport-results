@@ -1,0 +1,47 @@
+<section class="network-player-form" *ngIf="entityFormViewModel$ | async as entityFormViewModel">
+	<form [formGroup]="entityFormViewModel.formGroup">
+		<input name="uid" formControlName="uid" hidden />
+		<input name="meta" formControlName="meta" hidden />
+    <input name="startDate" formControlName="startDate" hidden />
+    <input name="endDate" formControlName="endDate" hidden />
+
+    <div class="field">
+      <span class="p-float-label">
+        <p-dropdown
+          id="sportNetworkId"
+          [options]="entityFormViewModel.sportNetworks"
+          formControlName="sportNetworkId"
+          optionLabel="name"
+          optionValue="uid"
+          dataKey="uid"
+        >
+        </p-dropdown>
+
+        <label for="sportNetworkId">Network</label>
+      </span>
+    </div>
+
+    <div class="field">
+      <span class="p-float-label">
+        <p-dropdown
+          id="sportPlayer"
+          [options]="entityFormViewModel.sportPlayers"
+          formControlName="sportPlayer"
+          optionLabel="name"
+          dataKey="uid"
+        >
+        </p-dropdown>
+
+        <label for="sportPlayer">Player</label>
+      </span>
+    </div>
+
+
+		<div style="margin-top: 10px" fxLayout="row" fxLayoutAlign="space-around">
+			<button pButton type="button" label="Submit" (click)="entityFormViewModel.submit$$.next()"
+				[disabled]="!entityFormViewModel.formGroup.valid"></button>
+
+			<button pButton type="button" label="Cancel" (click)="entityFormViewModel.cancel$$.next()"></button>
+		</div>
+	</form>
+</section>

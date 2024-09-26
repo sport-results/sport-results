@@ -22,6 +22,7 @@ import { SportCategoryRuleModule } from './module/domain/sport-category-rule';
 import { MessageService } from 'primeng/api';
 import { SportNetworkModule } from './module/domain/sport-network';
 import { SportPlayerModule } from './module/domain/sport-player';
+import { NetworkPlayerModule } from './module/domain/network-player';
 
 @NgModule({
   declarations: [AppComponent],
@@ -41,6 +42,7 @@ import { SportPlayerModule } from './module/domain/sport-player';
     ToastModule,
     SportNetworkModule,
     SportPlayerModule,
+    NetworkPlayerModule,
   ],
   providers: [
     provideFirebaseApp(() => initializeApp(environment.firebase)),

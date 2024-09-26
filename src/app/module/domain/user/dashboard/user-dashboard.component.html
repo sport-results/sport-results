@@ -1,8 +1,54 @@
-@if(userDashboardViewModel$$$(); as userDashboardViewModel) {
-  @for(sportNetwork
-    of userDashboardViewModel.sportNetworks; track sportNetwork.uid) {
-    <p-card [header]="sportNetwork.name">
+<section class="user-dashboard">
+  <p-tabView
+    (onChange)="onChangeHandler($event)"
+    (activeIndexChange)="onActiveIndexChangeHandler($event)"
+  >
+    @if(userDashboardViewModel$$$(); as userDashboardViewModel) {
+    @for(sportNetwork of userDashboardViewModel.sportNetworks; track
+    sportNetwork.uid) {
+    <p-tabPanel [header]="sportNetwork.name">
+      <div class="tab-panel">
+        <div class="tab-panel-content">
+          <p-panel>
+            <ng-template pTemplate="header">
+              <div class="panel-content__header">Players</div>
+            </ng-template>
 
-    </p-card>
-  }
-}
+            <ng-template pTemplate="icons">
+              <p-button
+                label="Add player"
+                icon="pi pi-plus-circle"
+                size="small"
+                (onClick)="userDashboardViewModel.addNetworkPlayer$$.next()"
+              />
+            </ng-template>
+
+            @for(networkPlayer of userDashboardViewModel.networkPlayers; track
+            networkPlayer.uid) {
+            <div>
+              {{ networkPlayer.sportPlayer.name }}
+            </div>
+            }
+          </p-panel>
+        </div>
+
+        <div class="tab-panel-content">
+          <p-panel>
+            <ng-template pTemplate="header">
+              <div class="panel-content__header">Events</div>
+            </ng-template>
+
+            <ng-template pTemplate="icons">
+              <p-button
+                label="Add event"
+                icon="pi pi-plus-circle"
+                size="small"
+              />
+            </ng-template>
+          </p-panel>
+        </div>
+      </div>
+    </p-tabPanel>
+    } }
+  </p-tabView>
+</section>

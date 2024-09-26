@@ -3,12 +3,37 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { UserPageComponent } from './component';
 import { UserProfileComponent } from '@app/domain/user';
+import { UserDashboardComponent } from '../../module/domain/user/dashboard';
 
 const routes: Routes = [
   {
     path: '',
-    pathMatch: 'full',
     component: UserPageComponent,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'profile',
+      },
+      {
+        component: UserProfileComponent,
+        path: 'profile',
+        pathMatch: 'full',
+      },
+      {
+        component: UserDashboardComponent,
+        path: 'dashboard',
+        pathMatch: 'full',
+      },
+      {
+        path: ':sportNetworkId/network-player/edit/:networkPlayerId',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('@app/admin/network-player').then(
+            (module) => module.NetworkPlayerEditPageComponent
+          ),
+      },
+    ],
   },
 ];
 

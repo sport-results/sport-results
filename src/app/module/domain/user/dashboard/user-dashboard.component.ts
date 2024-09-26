@@ -1,6 +1,9 @@
-import { Component, inject, Input, Signal, OnInit } from '@angular/core';
+import { Component, inject, Input, Signal } from '@angular/core';
 import { UserEntity } from '@app/api/domain/user';
+import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
+import { PanelModule } from 'primeng/panel';
+import { TabViewChangeEvent, TabViewModule } from 'primeng/tabview';
 
 import {
   UserDashboardService,
@@ -10,7 +13,7 @@ import {
 @Component({
   selector: 'sr-user-dashboard',
   standalone: true,
-  imports: [CardModule],
+  imports: [ButtonModule, CardModule, TabViewModule, PanelModule],
   templateUrl: './user-dashboard.component.html',
   styleUrl: './user-dashboard.component.scss',
   providers: [UserDashboardService],
@@ -18,12 +21,20 @@ import {
 export class UserDashboardComponent {
   private userDashboardService = inject(UserDashboardService);
 
-  @Input() user?: UserEntity;
+  @Input() public user?: UserEntity;
   public userDashboardViewModel$$$!: Signal<UserDashboardViewModel | undefined>;
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.userDashboardService.init$(this.user);
     this.userDashboardViewModel$$$ =
       this.userDashboardService.userDashboardViewModel$$$;
+  }
+
+  onChangeHandler(event: TabViewChangeEvent): void {
+    console.log(event)
+  }
+
+  onActiveIndexChangeHandler(index: number): void {
+    console.log(index)
   }
 }

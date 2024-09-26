@@ -83,6 +83,18 @@
       ],
       "@app/module/admin/sport-player": [
         "./src/app/module/admin/sport-player/index.ts"
+      ],
+      "@app/api/domain/network-player": [
+        "./src/app/api/domain/network-player/index.ts"
+      ],
+      "@app/api/admin/network-player": [
+        "./src/app/api/admin/network-player/index.ts"
+      ],
+      "@app/domain/network-player": [
+        "./src/app/module/domain/network-player/index.ts"
+      ],
+      "@app/admin/network-player": [
+        "./src/app/module/admin/network-player/admin/index.ts"
       ]
     }
   },

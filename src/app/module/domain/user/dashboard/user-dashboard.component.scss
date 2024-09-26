@@ -1,0 +1,17 @@
+section.user-dashboard {
+  .tab-panel {
+    display: flex;
+    gap: 2rem;
+    margin: 1.2rem 0;
+
+    .tab-panel-content {
+      flex: 1;
+
+      .panel-content {
+        &__header {
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}

@@ -5,7 +5,6 @@ import {
   ActivatedRouteSnapshot,
   ExtraOptions,
   RouterModule,
-  RouterStateSnapshot,
   Routes,
 } from '@angular/router';
 
