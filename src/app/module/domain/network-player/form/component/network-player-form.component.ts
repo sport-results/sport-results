@@ -33,9 +33,12 @@ export class NetworkPlayerFormComponent implements OnInit {
   public sportNetworkId: string | undefined;
   @Input()
   public userId: string | undefined;
+  @Input()
+  backUrl!: string;
 
   public ngOnInit(): void {
     const params = this.extractAllRouteParams(this.router);
+
     this.userId = params['userId'];
     this.sportNetworkId = params['sportNetworkId'];
 
@@ -43,6 +46,7 @@ export class NetworkPlayerFormComponent implements OnInit {
       this.entityId,
       this.sportNetworkId,
       this.userId,
+      this.backUrl,
     );
     this.entityFormViewModel$ = this.componentService.entityFormViewModel$;
   }

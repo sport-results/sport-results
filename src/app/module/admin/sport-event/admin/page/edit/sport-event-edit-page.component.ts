@@ -17,5 +17,4 @@ export class SportEventEditPageComponent {
   public sportEventId!: string;
   @Input()
   backUrl!: string;
-
 }

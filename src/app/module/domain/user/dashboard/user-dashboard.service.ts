@@ -12,7 +12,6 @@ import {
   SPORT_NETWORK_FEATURE_KEY,
   SportNetworkEntity,
   SportNetworkStoreService,
-  SportNetworkUtilService,
 } from '@app/api/domain/sport-network';
 import { USER_FEATURE_KEY, UserEntity } from '@app/api/domain/user';
 import { ComponentStore } from '@ngrx/component-store';
@@ -44,7 +43,6 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
   private networkPlayerStoreService = inject(NetworkPlayerStoreService);
   private sportCategoryStoreService = inject(SportCategoryStoreService);
   private sportNetworkStoreService = inject(SportNetworkStoreService);
-  private sportNetworkUtilService = inject(SportNetworkUtilService);
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -161,7 +159,10 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
           this.selectedNetworkId$.pipe(
             tap((selectedNetworkId) =>
               this.router.navigate(
-                [`../${selectedNetworkId}/${NETWORK_PLAYER_FEATURE_KEY}/edit`, 0],
+                [
+                  `../${selectedNetworkId}/${NETWORK_PLAYER_FEATURE_KEY}/edit`,
+                  0,
+                ],
                 {
                   relativeTo: this.activatedRoute,
                 }

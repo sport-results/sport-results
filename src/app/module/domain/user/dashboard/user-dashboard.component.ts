@@ -21,7 +21,8 @@ import {
 export class UserDashboardComponent {
   private userDashboardService = inject(UserDashboardService);
 
-  @Input() public user?: UserEntity;
+  @Input()
+  public user?: UserEntity;
   public userDashboardViewModel$$$!: Signal<UserDashboardViewModel | undefined>;
 
   public ngOnInit(): void {

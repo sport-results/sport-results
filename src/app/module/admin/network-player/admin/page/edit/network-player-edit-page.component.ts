@@ -14,4 +14,6 @@ import { NetworkPlayerEditPageResolverService } from './network-player-edit-page
 export class NetworkPlayerEditPageComponent {
   @Input()
   public networkPlayerId!: string;
+  @Input()
+  backUrl!: string;
 }
