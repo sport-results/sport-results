@@ -7,6 +7,7 @@ import {
   NetworkPlayerStoreService,
 } from '@app/api/domain/network-player';
 import { SportCategoryStoreService } from '@app/api/domain/sport-category';
+import { SPORT_EVENT_FEATURE_KEY } from '@app/api/domain/sport-event';
 import {
   SPORT_NETWORK_FEATURE_KEY,
   SportNetworkEntity,
@@ -34,6 +35,7 @@ export type UserDashboardState = {
 export type UserDashboardViewModel = {
   sportNetworks: SportNetworkEntity[];
   addNetworkPlayer$$: Subject<void>;
+  addSportEvent$$: Subject<void>;
   networkPlayers: NetworkPlayerEntity[];
 };
 
@@ -87,11 +89,13 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
       map((userDashboardViewModel) => ({
         ...userDashboardViewModel,
         addNetworkPlayer$$: this.addNetworkPlayer$$,
+        addSportEvent$$: this.addSportEvent$$,
       }))
     )
   );
 
   private addNetworkPlayer$$: Subject<void>;
+  private addSportEvent$$: Subject<void>;
 
   public constructor() {
     super({
@@ -102,6 +106,7 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
     });
 
     this.addNetworkPlayer$$ = new Subject<void>();
+    this.addSportEvent$$ = new Subject<void>();
   }
 
   public init$(user: UserEntity | undefined): void {
@@ -116,6 +121,7 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
     this.fetchNetworkPlayers(this.selectedNetworkId$);
     this.fetchSportNetworks(this.user$);
     this.handleAddNetworkPlayer(this.addNetworkPlayer$$.asObservable());
+    this.handleAddSportEvent(this.addSportEvent$$.asObservable());
     this.dispatchListNetworkPlayers(this.selectedNetworkId$);
   }
 
@@ -155,7 +161,26 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
           this.selectedNetworkId$.pipe(
             tap((selectedNetworkId) =>
               this.router.navigate(
-                [`../${selectedNetworkId}/network-player/edit`, 0],
+                [`../${selectedNetworkId}/${NETWORK_PLAYER_FEATURE_KEY}/edit`, 0],
+                {
+                  relativeTo: this.activatedRoute,
+                }
+              )
+            )
+          )
+        )
+      );
+    }
+  );
+
+  private readonly handleAddSportEvent = this.effect(
+    (addSportEvent$: Observable<void>) => {
+      return addSportEvent$.pipe(
+        switchMap(() =>
+          this.selectedNetworkId$.pipe(
+            tap((selectedNetworkId) =>
+              this.router.navigate(
+                [`../${selectedNetworkId}/${SPORT_EVENT_FEATURE_KEY}/edit`, 0],
                 {
                   relativeTo: this.activatedRoute,
                 }

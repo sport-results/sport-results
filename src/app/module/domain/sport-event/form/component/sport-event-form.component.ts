@@ -17,10 +17,13 @@ export class SportEventFormComponent implements OnInit {
     @Input()
     public entityId: string | undefined;
 
+    @Input()
+    backUrl = '../../list';
+
     public constructor(private componentService: SportEventFormService) {}
 
     public ngOnInit(): void {
-        this.componentService.init$(this.entityId);
+        this.componentService.init$(this.entityId, this.backUrl);
         this.entityFormViewModel$ = this.componentService.entityFormViewModel$;
     }
 }

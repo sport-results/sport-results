@@ -1,5 +1,5 @@
 import { Observable, Subject, tap } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
     SportEventEntity,
     SportEventEntityAdd,
@@ -16,6 +16,7 @@ export interface SportEventFormState {
     formGroup: FormGroup | undefined;
     entity: SportEventEntity | undefined;
     entityId: string | undefined;
+    backUrl: string;
 }
 
 export type EntityFormViewModel = {
@@ -32,6 +33,7 @@ export class SportEventFormService extends ComponentStore<SportEventFormState> {
     private router = inject(Router);
 
     private readonly entity$ = this.select((state) => state.entity);
+    private readonly backUrl$ = this.select((state) => state.backUrl);
     readonly entityId$ = this.select((state) => state.entityId);
     private readonly formGroup$ = this.select((state) => state.formGroup);
 
@@ -51,15 +53,18 @@ export class SportEventFormService extends ComponentStore<SportEventFormState> {
             );
         }
     );
-    
+
     private readonly getDataForSubmit$ = this.select((state) => ({
         entity: state.entity,
         formGroup: state.formGroup,
     }));
 
     private readonly handleCancel = this.effect((cancel$: Observable<void>) => {
-        return cancel$.pipe(tap(() => this.cancel()));
+        return cancel$.pipe(
+          withLatestFrom(this.backUrl$),
+          tap(([_, backUrl]) => this.cancel(backUrl)));
     });
+
     private readonly handleSubmit = this.effect((submit$: Observable<void>) => {
         return submit$.pipe(
             switchMap(() =>
@@ -91,20 +96,22 @@ export class SportEventFormService extends ComponentStore<SportEventFormState> {
             formGroup: undefined,
             entity: undefined,
             entityId: undefined,
+            backUrl: '',
         });
 
         this.cancel$$ = new Subject();
         this.submit$$ = new Subject();
     }
 
-    public cancel(): void {
-        this.router.navigate(['../../list'], {
+    public cancel(backUrl: string): void {
+        this.router.navigate([backUrl], {
             relativeTo: this.activatedRoute,
         });
     }
 
-    public init$(entityId: string | undefined): void {
+    public init$(entityId: string | undefined, backUrl: string): void {
         this.updateEntityIdState(entityId);
+        this.updateBackUrlState(backUrl);
         this.fetchEntity(this.entityId$);
         this.handleCancel(this.cancel$$.asObservable());
         this.handleSubmit(this.submit$$.asObservable());
@@ -163,6 +170,15 @@ export class SportEventFormService extends ComponentStore<SportEventFormState> {
             };
         });
     }
+
+    private updateBackUrlState(backUrl: string): void {
+      this.setState((state) => {
+          return {
+              ...state,
+              backUrl,
+          };
+      });
+  }
 
     private updateEntityIdState(entityId: string | undefined): void {
         this.setState((state) => {

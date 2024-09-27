@@ -102,10 +102,10 @@
       "@app/api/admin/sport-event": [
         "./src/app/api/admin/sport-event/index.ts"
       ],
-      "@app/module/domain/sport-event": [
+      "@app/domain/sport-event": [
         "./src/app/module/domain/sport-event/index.ts"
       ],
-      "@app/module/admin/sport-event": [
+      "@app/admin/sport-event": [
         "./src/app/module/admin/sport-event/index.ts"
       ]
     }
