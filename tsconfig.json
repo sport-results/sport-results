@@ -95,6 +95,18 @@
       ],
       "@app/admin/network-player": [
         "./src/app/module/admin/network-player/admin/index.ts"
+      ],
+      "@app/api/domain/sport-event": [
+        "./src/app/api/domain/sport-event/index.ts"
+      ],
+      "@app/api/admin/sport-event": [
+        "./src/app/api/admin/sport-event/index.ts"
+      ],
+      "@app/module/domain/sport-event": [
+        "./src/app/module/domain/sport-event/index.ts"
+      ],
+      "@app/module/admin/sport-event": [
+        "./src/app/module/admin/sport-event/index.ts"
       ]
     }
   },

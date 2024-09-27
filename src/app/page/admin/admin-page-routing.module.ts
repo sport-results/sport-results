@@ -8,7 +8,9 @@ import { AdminPageComponent } from './component';
 import {
   AdminSportCategoryPermissionsService,
   AdminSportNetworkPermissionsService,
-  AdminSportPlayerPermissionsService, AdminNetworkPlayerPermissionsService,
+  AdminSportPlayerPermissionsService,
+  AdminNetworkPlayerPermissionsService,
+  AdminSportEventPermissionsService,
 } from './permissions';
 import { AdminUserPermissionsService } from './permissions/admin-user-permissions.service';
 import { AdminRolePermissionsService } from './permissions/admin-role-permissions.service';
