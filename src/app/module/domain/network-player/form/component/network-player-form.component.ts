@@ -10,7 +10,7 @@ import {
 
 import {
   NetworkPlayerFormService,
-  EntityFormViewModel,
+  NetworkPlayerFormViewModel,
 } from './network-player-form.service';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 
@@ -22,7 +22,9 @@ import { ActivatedRouteSnapshot, Router } from '@angular/router';
   styleUrls: ['./network-player-form.component.scss'],
 })
 export class NetworkPlayerFormComponent implements OnInit {
-  public entityFormViewModel$!: Observable<EntityFormViewModel>;
+  public entityFormViewModel$!: Observable<NetworkPlayerFormViewModel>;
+
+  private componentService = inject(NetworkPlayerFormService);
   private router = inject(Router);
 
   @Input()
@@ -31,8 +33,6 @@ export class NetworkPlayerFormComponent implements OnInit {
   public sportNetworkId: string | undefined;
   @Input()
   public userId: string | undefined;
-
-  public constructor(private componentService: NetworkPlayerFormService) {}
 
   public ngOnInit(): void {
     const params = this.extractAllRouteParams(this.router);
