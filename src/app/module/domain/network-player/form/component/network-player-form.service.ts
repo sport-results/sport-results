@@ -1,81 +1,56 @@
-import { Observable, Subject, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import {
   NetworkPlayerEntity,
-  NetworkPlayerEntityAdd,
   NetworkPlayerStoreService,
   NetworkPlayerFormUtil,
+  NetworkPlayerEntityAdd,
+  NetworkPlayerEntityUpdate,
 } from '@app/api/domain/network-player';
 
 import { inject, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ComponentStore } from '@ngrx/component-store';
 import {
   SPORT_NETWORK_FEATURE_KEY,
   SportNetworkEntity,
   SportNetworkStoreService,
 } from '@app/api/domain/sport-network';
-import {
-  USER_FEATURE_KEY,
-  UserEntity,
-  UserStoreService,
-} from '@app/api/domain/user';
+import { USER_FEATURE_KEY, UserEntity } from '@app/api/domain/user';
 import {
   SportPlayerEntity,
   SportPlayerStoreService,
 } from '@app/api/domain/sport-player';
+import {
+  EntityFormComponentState,
+  EntityFormComponentStore,
+  EntityFormViewModel,
+} from '@app/core/entity';
 
-export interface NetworkPlayerFormState {
-  formGroup: FormGroup | undefined;
-  entity: NetworkPlayerEntity | undefined;
-  entityId: string | undefined;
+export interface NetworkPlayerFormState
+  extends EntityFormComponentState<NetworkPlayerEntity> {
   sportNetwork: SportNetworkEntity | undefined;
   sportPlayers: SportPlayerEntity[];
-  user: UserEntity | undefined;
 }
 
-export type EntityFormViewModel = {
-  formGroup: FormGroup;
-  cancel$$: Subject<void>;
-  submit$$: Subject<void>;
+export interface NetworkPlayerFormViewModel extends EntityFormViewModel {
   sportPlayers: SportPlayerEntity[];
   sportNetworks: SportNetworkEntity[];
-};
+}
 
 @Injectable()
-export class NetworkPlayerFormService extends ComponentStore<NetworkPlayerFormState> {
-  private activatedRoute = inject(ActivatedRoute);
-  private networkPlayerStoreService = inject(NetworkPlayerStoreService);
+export class NetworkPlayerFormService extends EntityFormComponentStore<
+  NetworkPlayerFormState,
+  NetworkPlayerEntityAdd,
+  NetworkPlayerEntity,
+  NetworkPlayerEntityUpdate
+> {
+  protected override entityStoreService = inject(NetworkPlayerStoreService);
   private networkPlayerFormUtil = inject(NetworkPlayerFormUtil);
-  private router = inject(Router);
   private sportNetworkStoreService = inject(SportNetworkStoreService);
   private sportPlayerStoreService = inject(SportPlayerStoreService);
-  private userStoreService = inject(UserStoreService);
 
-  private readonly entity$ = this.select((state) => state.entity);
-  private readonly entityId$ = this.select((state) => state.entityId);
-  private readonly formGroup$ = this.select((state) => state.formGroup);
   private readonly sportNetwork$ = this.select((state) => state.sportNetwork);
   private readonly sportPlayers$ = this.select((state) => state.sportPlayers);
-  private readonly user$ = this.select((state) => state.user);
-
-  private readonly fetchEntity = this.effect(
-    (entityId$: Observable<string | undefined>) => {
-      return entityId$.pipe(
-        switchMap((entityId) =>
-          this.networkPlayerStoreService.selectEntityById$(entityId || '').pipe(
-            tap((entity) => {
-              this.updateEntityState(entity);
-              this.updateFormGroupState(
-                this.networkPlayerFormUtil.createFormGroup(entity)
-              );
-            })
-          )
-        )
-      );
-    }
-  );
 
   private readonly fetchSportPlayers = this.effect(() => {
     return this.sportPlayerStoreService.selectEntities$().pipe(
@@ -96,46 +71,14 @@ export class NetworkPlayerFormService extends ComponentStore<NetworkPlayerFormSt
         );
     });
 
-  private readonly fetchUser = (userId: string | undefined) =>
-    this.effect(() => {
-      return this.userStoreService.selectEntityById$(userId || '').pipe(
-        tap((user) => {
-          this.updateUserState(user);
-        })
-      );
-    });
-
   private readonly getDataForSubmit$ = this.select((state) => ({
     entity: state.entity,
-    formGroup: state.formGroup,
+    formGroup: state.formGroup as FormGroup,
     user: state.user,
     sportNetwork: state.sportNetwork,
   }));
 
-  private readonly handleCancel = this.effect((cancel$: Observable<void>) => {
-    return cancel$.pipe(tap(() => this.cancel()));
-  });
-  private readonly handleSubmit = this.effect((submit$: Observable<void>) => {
-    return submit$.pipe(
-      switchMap(() =>
-        this.getDataForSubmit$.pipe(
-          tap(({ entity, formGroup, user, sportNetwork }) =>
-            this.submit(
-              entity,
-              formGroup as FormGroup,
-              user as UserEntity,
-              sportNetwork as SportNetworkEntity
-            )
-          )
-        )
-      )
-    );
-  });
-
-  private cancel$$: Subject<void>;
-  private submit$$: Subject<void>;
-
-  public readonly entityFormViewModel$: Observable<EntityFormViewModel> =
+  public readonly entityFormViewModel$: Observable<NetworkPlayerFormViewModel> =
     this.select({
       formGroup: this.formGroup$.pipe(
         map((formGroup) => formGroup as FormGroup)
@@ -159,34 +102,56 @@ export class NetworkPlayerFormService extends ComponentStore<NetworkPlayerFormSt
       sportPlayers: [],
       user: undefined,
     });
-
-    this.cancel$$ = new Subject();
-    this.submit$$ = new Subject();
   }
 
-  public cancel(): void {
-    this.router.navigate(['../../../../'], {
-      relativeTo: this.activatedRoute,
-    });
-  }
-
-  public init$(
+  init$(
     entityId: string | undefined,
     sportNetworkId: string | undefined,
     userId: string | undefined
   ): void {
+    super.init(entityId, userId);
+
     this.sportPlayerStoreService.dispatchListEntitiesAction();
-    this.updateEntityIdState(entityId);
-    this.fetchEntity(this.entityId$);
+
     this.fetchSportNetwork(sportNetworkId);
     this.fetchSportPlayers();
-    this.fetchUser(userId);
-    this.handleCancel(this.cancel$$.asObservable());
+
     this.handleSubmit(this.submit$$.asObservable());
+
+    this.createFormGroup(this.entity$);
   }
 
+  private readonly handleSubmit = this.effect((submit$: Observable<void>) => {
+    return submit$.pipe(
+      switchMap(() =>
+        this.getDataForSubmit$.pipe(
+          tap(({ entity, formGroup, user, sportNetwork }) =>
+            this.submit(
+              entity,
+              formGroup as FormGroup,
+              user as UserEntity,
+              sportNetwork as SportNetworkEntity
+            )
+          )
+        )
+      )
+    );
+  });
+
+  private readonly createFormGroup = this.effect(
+    (entity$: Observable<NetworkPlayerEntity | undefined>) => {
+      return entity$.pipe(
+        tap((entity) =>
+          this.updateFormGroupState(
+            this.networkPlayerFormUtil.createFormGroup(entity)
+          )
+        )
+      );
+    }
+  );
+
   private addEntity(formGroup: FormGroup, subCollectionGroup: string): void {
-    this.networkPlayerStoreService.dispatchAddEntityAction(
+    this.entityStoreService.dispatchAddEntityAction(
       this.networkPlayerFormUtil.createEntity(
         formGroup
       ) as NetworkPlayerEntityAdd,
@@ -195,8 +160,8 @@ export class NetworkPlayerFormService extends ComponentStore<NetworkPlayerFormSt
   }
 
   private extendsEntityFormViewModel(
-    entityFormViewModel: Partial<EntityFormViewModel>
-  ): EntityFormViewModel {
+    entityFormViewModel: Partial<NetworkPlayerFormViewModel>
+  ): NetworkPlayerFormViewModel {
     return {
       formGroup: entityFormViewModel.formGroup as FormGroup,
       cancel$$: this.cancel$$,
@@ -225,37 +190,10 @@ export class NetworkPlayerFormService extends ComponentStore<NetworkPlayerFormSt
     });
   }
 
-  private updateFormGroupState(formGroup: FormGroup): void {
-    this.setState((state) => {
-      return {
-        ...state,
-        formGroup,
-      };
-    });
-  }
-
   private updateEntity(formGroup: FormGroup): void {
-    this.networkPlayerStoreService.dispatchUpdateEntityAction(
+    this.entityStoreService.dispatchUpdateEntityAction(
       this.networkPlayerFormUtil.updateEntity(formGroup)
     );
-  }
-
-  private updateEntityState(entity: NetworkPlayerEntity | undefined): void {
-    this.setState((state) => {
-      return {
-        ...state,
-        entity,
-      };
-    });
-  }
-
-  private updateEntityIdState(entityId: string | undefined): void {
-    this.setState((state) => {
-      return {
-        ...state,
-        entityId,
-      };
-    });
   }
 
   private updateSportNetworkState(
@@ -274,15 +212,6 @@ export class NetworkPlayerFormService extends ComponentStore<NetworkPlayerFormSt
       return {
         ...state,
         sportPlayers,
-      };
-    });
-  }
-
-  private updateUserState(user: UserEntity | undefined): void {
-    this.setState((state) => {
-      return {
-        ...state,
-        user,
       };
     });
   }
