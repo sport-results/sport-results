@@ -90,6 +90,22 @@ export class EntityEffectServiceImpl extends EntityEffectService<
       );
   }
 
+  public listGroupEntities$(
+    ids?: string[],
+  ): Observable<Entity[]> {
+    return this.entityDataService
+      .listByGroup$(ids)
+      .pipe(
+        mergeMap((models) =>models && models.length
+        ? forkJoin(
+            models.map((model) => this.entityUtilService.convertModelToEntity$(model)
+
+            )
+          )
+        : of(models as Entity[]))
+      );
+  }
+
   public searchEntities$(params: SearchParams): Observable<Entity[]> {
     return this.entityDataService
       .search$(params)

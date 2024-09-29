@@ -121,13 +121,17 @@ export class FirestoreDataEngine extends DataEngine {
     });
   }
 
-  public listByIdsFromCollectionGroup$(
-    ids: string[]
+  public listByGroup$(
+    ids?: string[]
   ): Observable<EntityModel[]> {
-    const entitiesQuery = query(
-      collectionGroup(this.firestore, this.featureKey),
-      where('uid', 'in', ids)
+    const entityCollectionGroup = collectionGroup(
+      this.firestore,
+      this.featureKey
     );
+    const entitiesQuery =
+      ids && ids.length > 0
+        ? query(entityCollectionGroup, where('uid', 'in', ids))
+        : query(entityCollectionGroup);
 
     return new Observable((subscriber) => {
       getDocs(entitiesQuery)

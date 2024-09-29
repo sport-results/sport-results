@@ -17,7 +17,7 @@ export abstract class EntityDataServiceImpl extends EntityDataService<
   EntityModelAdd,
   EntityModelUpdate
 > {
-  public constructor(private dataEngine: DataEngine) {
+  public constructor(protected dataEngine: DataEngine) {
     super();
   }
 
@@ -42,6 +42,12 @@ export abstract class EntityDataServiceImpl extends EntityDataService<
 
   public override listByIds$(ids: string[]): Observable<EntityModel[]> {
     return this.dataEngine.listByIds$(ids);
+  }
+
+  public override listByGroup$(
+    ids?: string[]
+  ): Observable<EntityModel[]> {
+    return this.dataEngine.listByGroup$(ids);
   }
 
   public override load$(id: string): Observable<EntityModel | undefined> {
