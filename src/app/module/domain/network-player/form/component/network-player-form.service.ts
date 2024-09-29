@@ -152,12 +152,12 @@ export class NetworkPlayerFormService extends EntityFormComponentStore<
     }
   );
 
-  private addEntity(formGroup: FormGroup, subCollectionGroup: string): void {
+  private addEntity(formGroup: FormGroup, subCollectionPath: string): void {
     this.entityStoreService.dispatchAddEntityAction(
       this.entityFormUtil.createEntity(
         formGroup
       ) as NetworkPlayerEntityAdd,
-      subCollectionGroup
+      subCollectionPath
     );
   }
 

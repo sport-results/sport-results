@@ -1,16 +1,28 @@
 import { Entity } from '../../core/entity';
+import { SportCategoryEntity } from '../sport-category';
+import { SportCategoryRuleEntity } from '../sport-category-rule';
+import { Participant } from '../sport-player';
 
 export interface SportEvent {
-    name: string;
+    location: string | null;
+    sportCategoryRule: SportCategoryRuleEntity
 }
 
-export type SportEventEntity = SportEvent & Entity;
+export type SportEventEntity = SportEvent & Entity & {
+  dateTime: Date;
+  participants: Participant[];
+  sportCategory: SportCategoryEntity;
+};
 
 export type SportEventEntityAdd = Omit<SportEventEntity, 'uid'>;
 
 export type SportEventEntityUpdate = Partial<SportEventEntity> & Entity;
 
-export type SportEventModel = SportEvent & Entity;
+export type SportEventModel = SportEvent & Entity & {
+  dateTime: string;
+  participantIds: string[];
+  sportCategoryId: string;
+};
 
 export type SportEventModelAdd = Omit<SportEventModel, 'uid'>;
 
@@ -23,4 +35,4 @@ export enum SportEventResourceEnum {
     SPORT_EVENT_ADMIN_PAGE = 'SportEventAdminPage',
     SPORT_EVENT_EDIT_PAGE  = 'SportEventEditPage',
     SPORT_EVENT_LIST_PAGE  = 'SportEventListPage',
-} 
+}

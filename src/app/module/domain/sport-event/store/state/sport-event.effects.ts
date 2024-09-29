@@ -20,7 +20,7 @@ export class SportEventEffects {
             switchMap((action) =>
                 this.sportEventEffectService.addEntity$(
                     action.sportEvent,
-                    `${SPORT_EVENT_FEATURE_KEY}/${action.parentEntityId}`
+                    action.subCollectionPath
                 ).pipe(
                     map((entity) =>
                         sportEventActions.addEntitySuccess({
@@ -65,7 +65,7 @@ export class SportEventEffects {
             )
         )
     );
-    
+
     updateEntity$ = createEffect(() =>
         this.actions$.pipe(
             ofType(sportEventActions.updateEntity),

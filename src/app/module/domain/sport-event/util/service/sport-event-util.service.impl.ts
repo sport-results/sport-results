@@ -1,11 +1,12 @@
 import { map, Observable, of, switchMap } from 'rxjs';
 
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import {
     SportEventEntity,
     SportEventEntityAdd,
     SportEventEntityUpdate,
+    SportEventModelAdd,
     SportEventModelUpdate,
 } from '@app/api/domain/sport-event';
 import { EntityUtilServiceImpl } from '@app/core/entity';
@@ -14,10 +15,21 @@ import { Entity, EntityAdd, EntityUpdate } from '@app/api/core/entity';
 @Injectable()
 export class SportEventUtilServiceImpl extends EntityUtilServiceImpl {
     public _sort = (a: SportEventEntity, b: SportEventEntity): number =>
-        a.name < b.name ? 1 : -1;
+        a.dateTime < b.dateTime ? 1 : -1;
 
     public constructor(formBuilder: FormBuilder) {
         super(formBuilder);
+    }
+
+    public override convertEntityAddToModelAdd(entity: SportEventEntityAdd): SportEventModelAdd {
+      return {
+        dateTime: entity.dateTime.toISOString(),
+        location: entity.location || null,
+        meta: entity.meta,
+        participantIds: entity.participants.map(participant => participant.uid),
+        sportCategoryRule: entity.sportCategoryRule,
+      sportCategoryId: entity.sportCategory.uid,
+      };
     }
 
     public override convertModelUpdateToEntityUpdate$(
@@ -26,25 +38,12 @@ export class SportEventUtilServiceImpl extends EntityUtilServiceImpl {
         return super.convertModelUpdateToEntityUpdate$(model).pipe(
             map((entity) => entity as SportEventEntityUpdate),
             switchMap((entity) => {
-                if (model.name) {
-                    entity.name = model.name;
+                if (model.location) {
+                    entity.location = model.location;
                 }
 
                 return of(entity);
             })
         );
-    }
-
-     public override createEntity(formGroup: FormGroup): EntityAdd {
-        throw new Error('Method not implemented.');
-    }
-    public override createEntitySearchParameter(entity: Entity | EntityAdd | EntityUpdate): string[] {
-        throw new Error('Method not implemented.');
-    }
-    public override createFormGroup(entity: Entity | undefined): FormGroup {
-        throw new Error('Method not implemented.');
-    }
-    public override updateEntity(formGroup: FormGroup): EntityUpdate {
-        throw new Error('Method not implemented.');
     }
 }

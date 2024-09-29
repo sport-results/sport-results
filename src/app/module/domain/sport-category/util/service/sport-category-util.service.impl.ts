@@ -35,7 +35,7 @@ export class SportCategoryUtilServiceImpl extends EntityUtilServiceImpl {
     );
   }
 
-  public createEntity(formGroup: FormGroup): SportCategoryEntityAdd {
+  public override createEntity(formGroup: FormGroup): SportCategoryEntityAdd {
     const now = new Date().toISOString();
 
     return {
@@ -53,7 +53,7 @@ export class SportCategoryUtilServiceImpl extends EntityUtilServiceImpl {
     throw new Error('Method not implemented.');
   }
 
-  public createFormGroup(
+  public override createFormGroup(
     sportCategory: SportCategoryEntity | undefined
   ): FormGroup {
     return this.formBuilder.group({
@@ -63,7 +63,7 @@ export class SportCategoryUtilServiceImpl extends EntityUtilServiceImpl {
     });
   }
 
-  public updateEntity(formGroup: FormGroup): SportCategoryEntityUpdate {
+  public override updateEntity(formGroup: FormGroup): SportCategoryEntityUpdate {
     return {
       uid: formGroup.value['uid'],
       meta: formGroup.value['meta'],

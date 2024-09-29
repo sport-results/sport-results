@@ -157,9 +157,11 @@ export class SportPlayerFormService extends ComponentStore<SportPlayerFormState>
 
   public init$(entityId: string | undefined): void {
     this.updateEntityIdState(entityId);
+    
     this.fetchEntity(this.entityId$);
     this.fetchUsers();
     this.fetchSportCategories();
+
     this.handleCancel(this.cancel$$.asObservable());
     this.handleSubmit(this.submit$$.asObservable());
   }

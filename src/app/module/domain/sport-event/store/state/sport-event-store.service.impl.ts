@@ -22,9 +22,9 @@ export class SportEventStoreServiceImpl extends SportEventStoreService {
 
     public dispatchAddEntityAction(
         sportEvent: SportEventEntityAdd,
-        parentEntityId?: string
+        subCollectionPath?: string
     ): void {
-        this.store.dispatch(sportEventActions.addEntity({ sportEvent,  parentEntityId }));
+        this.store.dispatch(sportEventActions.addEntity({ sportEvent,  subCollectionPath }));
     }
 
     public dispatchChangeNewEntityButtonEnabled(enabled: boolean): void {
