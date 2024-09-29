@@ -87,6 +87,12 @@ export class SportPlayerStoreServiceImpl extends SportPlayerStoreService {
         return this.store.pipe(select(SportPlayerSelectors.getEntityById(entityId)));
     }
 
+    public selectEntitiesByIds$(
+      ids: string[]
+  ): Observable<SportPlayerEntity[]> {
+      return this.store.pipe(select(SportPlayerSelectors.getEntitiesByIds(ids)));
+  }
+
     public selectNewEntityButtonEnabled$(): Observable<boolean> {
         return this.store.pipe(select(SportPlayerSelectors.isNewEntityButtonEnabled));
     }

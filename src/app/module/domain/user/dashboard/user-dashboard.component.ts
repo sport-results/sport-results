@@ -1,3 +1,4 @@
+import { SportEventCardComponent } from './../../sport-event/collection/component/card/sport-event-card.component';
 import { Component, inject, Input, Signal } from '@angular/core';
 import { UserEntity } from '@app/api/domain/user';
 import { ButtonModule } from 'primeng/button';
@@ -13,7 +14,13 @@ import {
 @Component({
   selector: 'sr-user-dashboard',
   standalone: true,
-  imports: [ButtonModule, CardModule, TabViewModule, PanelModule],
+  imports: [
+    ButtonModule,
+    CardModule,
+    TabViewModule,
+    PanelModule,
+    SportEventCardComponent,
+  ],
   templateUrl: './user-dashboard.component.html',
   styleUrl: './user-dashboard.component.scss',
   providers: [UserDashboardService],
@@ -32,10 +39,10 @@ export class UserDashboardComponent {
   }
 
   onChangeHandler(event: TabViewChangeEvent): void {
-    console.log(event)
+    console.log(event);
   }
 
   onActiveIndexChangeHandler(index: number): void {
-    console.log(index)
+    console.log(index);
   }
 }

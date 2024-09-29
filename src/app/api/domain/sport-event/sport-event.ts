@@ -1,5 +1,5 @@
 import { Entity } from '../../core/entity';
-import { SportCategoryEntity } from '../sport-category';
+import { SportCategoryEntity, SportCategorySimple } from '../sport-category';
 import { SportCategoryRuleEntity } from '../sport-category-rule';
 import { Participant } from '../sport-player';
 
@@ -11,7 +11,7 @@ export interface SportEvent {
 export type SportEventEntity = SportEvent & Entity & {
   dateTime: Date;
   participants: Participant[];
-  sportCategory: SportCategoryEntity;
+  sportCategory: SportCategorySimple;
 };
 
 export type SportEventEntityAdd = Omit<SportEventEntity, 'uid'>;
@@ -21,7 +21,7 @@ export type SportEventEntityUpdate = Partial<SportEventEntity> & Entity;
 export type SportEventModel = SportEvent & Entity & {
   dateTime: string;
   participantIds: string[];
-  sportCategoryId: string;
+  sportCategory: SportCategorySimple;
 };
 
 export type SportEventModelAdd = Omit<SportEventModel, 'uid'>;

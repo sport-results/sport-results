@@ -7,7 +7,7 @@ import {
   NetworkPlayerStoreService,
 } from '@app/api/domain/network-player';
 import { SportCategoryStoreService } from '@app/api/domain/sport-category';
-import { SPORT_EVENT_FEATURE_KEY } from '@app/api/domain/sport-event';
+import { SPORT_EVENT_FEATURE_KEY, SportEventStoreService } from '@app/api/domain/sport-event';
 import {
   SPORT_NETWORK_FEATURE_KEY,
   SportNetworkEntity,
@@ -42,6 +42,7 @@ export type UserDashboardViewModel = {
 export class UserDashboardService extends ComponentStore<UserDashboardState> {
   private networkPlayerStoreService = inject(NetworkPlayerStoreService);
   private sportCategoryStoreService = inject(SportCategoryStoreService);
+  private sportEventStoreService = inject(SportEventStoreService);
   private sportNetworkStoreService = inject(SportNetworkStoreService);
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
@@ -120,7 +121,9 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
     this.fetchSportNetworks(this.user$);
     this.handleAddNetworkPlayer(this.addNetworkPlayer$$.asObservable());
     this.handleAddSportEvent(this.addSportEvent$$.asObservable());
+
     this.dispatchListNetworkPlayers(this.selectedNetworkId$);
+    this.dispatchListSportEvents(this.selectedNetworkId$);
   }
 
   private dispatchListNetworkPlayers = this.effect(
@@ -130,6 +133,20 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
         tap(([selectedNetworkId, user]) => {
           if (user) {
             this.networkPlayerStoreService.dispatchListEntitiesAction(
+              `${USER_FEATURE_KEY}/${user.uid}/${SPORT_NETWORK_FEATURE_KEY}/${selectedNetworkId}`
+            );
+          }
+        })
+      )
+  );
+
+  private dispatchListSportEvents = this.effect(
+    (selectedNetworkId$: Observable<string | undefined>) =>
+      selectedNetworkId$.pipe(
+        withLatestFrom(this.user$),
+        tap(([selectedNetworkId, user]) => {
+          if (user) {
+            this.sportEventStoreService.dispatchListEntitiesAction(
               `${USER_FEATURE_KEY}/${user.uid}/${SPORT_NETWORK_FEATURE_KEY}/${selectedNetworkId}`
             );
           }
