@@ -23,6 +23,7 @@ import { MessageService } from 'primeng/api';
 import { SportNetworkModule } from './module/domain/sport-network';
 import { SportPlayerModule } from './module/domain/sport-player';
 import { NetworkPlayerModule } from './module/domain/network-player';
+import { SportEventModule } from './module/domain/sport-event';
 
 @NgModule({
   declarations: [AppComponent],
@@ -43,6 +44,7 @@ import { NetworkPlayerModule } from './module/domain/network-player';
     SportNetworkModule,
     SportPlayerModule,
     NetworkPlayerModule,
+    SportEventModule,
   ],
   providers: [
     provideFirebaseApp(() => initializeApp(environment.firebase)),

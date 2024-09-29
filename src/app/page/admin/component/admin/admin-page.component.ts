@@ -12,7 +12,7 @@ import {
   AdminSportCategoryPermissionsService,
   AdminSportCategoryRulePermissionsService,
   AdminSportNetworkPermissionsService,
-  AdminSportPlayerPermissionsService, AdminNetworkPlayerPermissionsService,
+  AdminSportPlayerPermissionsService, AdminNetworkPlayerPermissionsService, AdminSportEventPermissionsService,
 } from '../../permissions';
 import { AuthorizationService } from '@app/api/core/authorization';
 import { AdminRolePermissionsService } from '../../permissions/admin-role-permissions.service';
@@ -22,6 +22,7 @@ import { SportCategoryRuleAdminPermissionsService } from '@app/api/admin/sport-c
 import { SportNetworkAdminPermissionsService } from '@app/api/admin/sport-network';
 import { SportPlayerAdminPermissionsService } from '@app/api/admin/sport-player';
 import { NetworkPlayerAdminPermissionsService } from '@app/api/admin/network-player';
+import { SportEventAdminPermissionsService } from '@app/api/admin/sport-event';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

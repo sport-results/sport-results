@@ -55,6 +55,16 @@ export class SportCategoryRuleStoreServiceImpl extends SportCategoryRuleStoreSer
     );
   }
 
+  public dispatchListGroupEntitiesAction(
+    ids?: string[],
+  ): void {
+    this.store.dispatch(
+      sportCategoryRuleActions.listGroupEntities({
+        ids
+      })
+    );
+  }
+
   public dispatchSelectEntityAction(
     sportCategoryRule: SportCategoryRuleEntity | null
   ): void {

@@ -31,6 +31,7 @@
       "@app/api/engine": ["./src/app/api/engine/index.ts"],
       "@app/api/module/admin": ["./src/app/api/module/admin/index.ts"],
       "@app/core/entity": ["./src/app/module/core/entity/index.ts"],
+      "@app/core/form": ["./src/app/module/core/form/index.ts"],
       "@app/domain/role": ["./src/app/module/domain/role/index.ts"],
       "@app/domain/user": ["./src/app/module/domain/user/index.ts"],
       "@app/engine": ["./src/app/module/engine/index.ts"],
@@ -95,6 +96,18 @@
       ],
       "@app/admin/network-player": [
         "./src/app/module/admin/network-player/admin/index.ts"
+      ],
+      "@app/api/domain/sport-event": [
+        "./src/app/api/domain/sport-event/index.ts"
+      ],
+      "@app/api/admin/sport-event": [
+        "./src/app/api/admin/sport-event/index.ts"
+      ],
+      "@app/domain/sport-event": [
+        "./src/app/module/domain/sport-event/index.ts"
+      ],
+      "@app/admin/sport-event": [
+        "./src/app/module/admin/sport-event/index.ts"
       ]
     }
   },

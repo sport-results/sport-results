@@ -1,6 +1,11 @@
 @import "primeicons/primeicons.css";
 
+html {
+  height: -webkit-fill-available;
+}
+
 body {
+  height: -webkit-fill-available;
   margin: 1.2rem;
 }
 
@@ -56,6 +61,91 @@ table {
 
   td.sub-content {
     background-color: #abc9fb;
+  }
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-row-center {
+  justify-content: center;
+}
+
+.flex-item {
+  flex: 1;
+}
+
+.flex-gap {
+  &-1{
+    gap: 0.4rem;
+  }
+  &-2{
+    gap: 0.8rem;
+  }
+  &-3{
+    gap: 1.2rem;
+  }
+  &-4{
+    gap: 1.6rem;
+  }
+  &-5{
+    gap: 2rem;
+  }
+}
+
+.form {
+  margin: auto;
+  width: 80%;
+}
+
+.margin {
+  &-1 {
+    margin: 0.4rem;
+  }
+  &-2 {
+    margin: 0.8rem;
+  }
+  &-3 {
+    margin: 1.2rem;
+  }
+  &-4 {
+    margin: 1.6rem;
+  }
+  &-5 {
+    margin: 2rem;
+  }
+  &-6 {
+    margin: 2.4rem;
+  }
+
+  &-top {
+    &-1 {
+      margin-top: 0.4rem;
+    }
+    &-2 {
+      margin-top: 0.8rem;
+    }
+    &-3 {
+      margin-top: 1.2rem;
+    }
+    &-4 {
+      margin-top: 1.6rem;
+    }
+    &-5 {
+      margin-top: 2rem;
+    }
+    &-6 {
+      margin-top: 2.4rem;
+    }
   }
 }
 

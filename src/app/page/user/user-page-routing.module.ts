@@ -32,6 +32,20 @@ const routes: Routes = [
           import('@app/admin/network-player').then(
             (module) => module.NetworkPlayerEditPageComponent
           ),
+          data: {
+            backUrl: '../../../../'
+          }
+      },
+      {
+        path: ':sportNetworkId/sport-event/edit/:sportEventId',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('@app/admin/sport-event').then(
+            (module) => module.SportEventEditPageComponent
+          ),
+        data: {
+          backUrl: '../../../../'
+        }
       },
     ],
   },

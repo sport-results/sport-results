@@ -1,13 +1,16 @@
 import { Entity } from '../../core/entity';
 import { SportCategorySimple } from '../sport-category';
 
-export interface SportPlayer {
+export interface Participant extends Entity {
+  name: string;
+}
+export interface SportPlayer extends Participant {
     name: string;
     userId: string | null;
     skills: SportCategorySimple[];
 }
 
-export type SportPlayerEntity = SportPlayer & Entity;
+export type SportPlayerEntity = SportPlayer ;
 
 export type SportPlayerEntityAdd = Omit<SportPlayerEntity, 'uid'>;
 

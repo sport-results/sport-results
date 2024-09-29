@@ -155,7 +155,7 @@ export class UserUtilServiceImpl extends EntityUtilServiceImpl {
     );
   }
 
-  public createEntity(formGroup: FormGroup): UserEntityAdd {
+  public override createEntity(formGroup: FormGroup): UserEntityAdd {
     const now = new Date().toISOString();
 
     return {
@@ -180,7 +180,7 @@ export class UserUtilServiceImpl extends EntityUtilServiceImpl {
     throw new Error('Method not implemented.');
   }
 
-  public createFormGroup(user: UserEntity | undefined): FormGroup {
+  public override createFormGroup(user: UserEntity | undefined): FormGroup {
     return this.formBuilder.group({
       displayName: [user?.displayName || null],
       firstName: [user?.firstName || null],
@@ -195,7 +195,7 @@ export class UserUtilServiceImpl extends EntityUtilServiceImpl {
     });
   }
 
-  public updateEntity(formGroup: FormGroup): UserEntityUpdate {
+  public override updateEntity(formGroup: FormGroup): UserEntityUpdate {
     const now = new Date().toISOString();
 
     return {

@@ -11,7 +11,7 @@
         <div class="tab-panel-content">
           <p-panel>
             <ng-template pTemplate="header">
-              <div class="panel-content__header">Players</div>
+              <div class="panel-content__header">Sport Players</div>
             </ng-template>
 
             <ng-template pTemplate="icons">
@@ -35,7 +35,7 @@
         <div class="tab-panel-content">
           <p-panel>
             <ng-template pTemplate="header">
-              <div class="panel-content__header">Events</div>
+              <div class="panel-content__header">Sport Events</div>
             </ng-template>
 
             <ng-template pTemplate="icons">
@@ -43,8 +43,11 @@
                 label="Add event"
                 icon="pi pi-plus-circle"
                 size="small"
+                (onClick)="userDashboardViewModel.addSportEvent$$.next()"
               />
             </ng-template>
+
+            <sr-sport-event-card-collection></sr-sport-event-card-collection>
           </p-panel>
         </div>
       </div>

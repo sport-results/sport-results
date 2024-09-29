@@ -65,6 +65,23 @@ export const listEntitiesFail = createAction(
   props<{ error: string }>()
 );
 
+export const listGroupEntities = createAction(
+  '[SportCategoryRule Admin] List Group SportCategoryRules',
+  props<{
+    ids?: string[];
+  }>()
+);
+
+export const listGroupEntitiesSuccess = createAction(
+  '[SportCategoryRule Admin] List Group SportCategoryRules Success',
+  props<{ sportCategoryRules: SportCategoryRuleEntity[] }>()
+);
+
+export const listGroupEntitiesFail = createAction(
+  '[SportCategoryRule Admin] List Group SportCategoryRules Fail',
+  props<{ error: string }>()
+);
+
 export const selectEntity = createAction(
   '[SportCategoryRule Admin] Select SportCategoryRule',
   props<{ sportCategoryRule: SportCategoryRuleEntity | null }>()

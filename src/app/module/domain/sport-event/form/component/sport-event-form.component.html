@@ -1,0 +1,108 @@
+<section
+  class="sport-event-form"
+  *ngIf="entityFormViewModel$ | async as entityFormViewModel"
+>
+  <form class="form" [formGroup]="entityFormViewModel.formGroup">
+    <input name="uid" formControlName="uid" hidden />
+    <input name="meta" formControlName="meta" hidden />
+
+    <div class="flex flex-column">
+      <div class="flex-item flex flex-gap-5">
+        <div class="field flex-item">
+          <span class="p-float-label">
+            <p-dropdown
+              id="sportCategory"
+              [options]="entityFormViewModel.sportCategories"
+              formControlName="sportCategory"
+              optionLabel="name"
+            >
+            </p-dropdown>
+            <label for="sportCategory">Sport Category</label>
+          </span>
+        </div>
+
+        <div class="field flex-item">
+          <span class="p-float-label">
+            <p-dropdown
+              inputId="sportCategoryRule"
+              [options]="entityFormViewModel.sportCategoryRules"
+              formControlName="sportCategoryRule"
+              optionLabel="name"
+            >
+            </p-dropdown>
+
+            <label for="sportCategoryRule">Sport Category rule</label>
+          </span>
+        </div>
+      </div>
+
+        @if(entityFormViewModel.selectedParticipantType == 'player') {
+        <div class="flex-item flex flex-gap-5" formArrayName="participants">
+          @for ( participant of entityFormViewModel.participantsArray; track
+            participant) {
+              <div class="field flex-item">
+                <span class="p-float-label">
+                  <p-dropdown
+                    [inputId]="'' + $index"
+                    [options]="entityFormViewModel.sportPlayers"
+                    [formControlName]="$index"
+                    optionLabel="name"
+                  >
+                  </p-dropdown>
+
+                  <label [for]="$index">Sport Player {{$index + 1}}</label>
+                </span>
+              </div>
+          }
+        </div>
+      }
+
+      <div class="flex-item">
+        <div class="field">
+          <span class="p-float-label">
+            <input
+              id="location"
+              type="text"
+              pInputText
+              formControlName="location"
+            />
+
+            <label for="location">Location</label>
+          </span>
+        </div>
+      </div>
+
+      <div class="flex-item">
+        <div class="field">
+          <span class="p-float-label">
+            <p-calendar
+              inputId="dateTime"
+              formControlName="dateTime"
+              [showTime]="true"
+              [hourFormat]="'24'"
+            />
+
+            <label for="dateTime">Date time</label>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex margin-top-5 flex-row-center">
+      <button
+        pButton
+        type="button"
+        label="Submit"
+        (click)="entityFormViewModel.submit$$.next()"
+        [disabled]="!entityFormViewModel.formGroup.valid"
+      ></button>
+
+      <button
+        pButton
+        type="button"
+        label="Cancel"
+        (click)="entityFormViewModel.cancel$$.next()"
+      ></button>
+    </div>
+  </form>
+</section>

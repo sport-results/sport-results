@@ -25,22 +25,29 @@ export class SportCategoryRuleEffects {
               sportCategoryRuleActions.addEntitySuccess({
                 sportCategoryRule: entity,
               })
-            )
+            ),
+            catchError((error) => {
+              return of(sportCategoryRuleActions.addEntityFail({ error }));
+            })
           )
       )
     )
   );
-  listEntities$ = createEffect(() =>
+
+  listGroupEntities$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(sportCategoryRuleActions.listEntities),
+      ofType(sportCategoryRuleActions.listGroupEntities),
       switchMap((action) =>
         this.sportCategoryRuleEffectService
-          .listEntities$(action.subCollectionPath, action.pathParams, action.queryParams)
+          .listGroupEntities$(action.ids)
           .pipe(
             map((entities) => {
-              return sportCategoryRuleActions.listEntitiesSuccess({
+              return sportCategoryRuleActions.listGroupEntitiesSuccess({
                 sportCategoryRules: entities,
               });
+            }),
+            catchError((error) => {
+              return of(sportCategoryRuleActions.listGroupEntitiesFail({ error }));
             })
           )
       )
@@ -55,7 +62,10 @@ export class SportCategoryRuleEffects {
             sportCategoryRuleActions.loadEntitySuccess({
               sportCategoryRule: entity,
             })
-          )
+          ),
+          catchError((error) => {
+            return of(sportCategoryRuleActions.loadEntityFail({ error }));
+          })
         )
       )
     )

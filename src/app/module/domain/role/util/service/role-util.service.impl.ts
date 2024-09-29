@@ -46,7 +46,7 @@ export class RoleUtilServiceImpl extends EntityUtilServiceImpl {
         );
     }
 
-    public createEntity(formGroup: FormGroup): RoleEntityAdd {
+    public override createEntity(formGroup: FormGroup): RoleEntityAdd {
         const now = new Date().toISOString();
 
         return {
@@ -60,7 +60,7 @@ export class RoleUtilServiceImpl extends EntityUtilServiceImpl {
         };
     }
 
-    public createFormGroup(role: RoleEntity | undefined): FormGroup {
+    public override createFormGroup(role: RoleEntity | undefined): FormGroup {
         return this.formBuilder.group({
             editable: [role ? role?.editable : true],
             meta: [role?.meta],
@@ -70,7 +70,7 @@ export class RoleUtilServiceImpl extends EntityUtilServiceImpl {
         });
     }
 
-    public updateEntity(formGroup: FormGroup): RoleEntityUpdate {
+    public override updateEntity(formGroup: FormGroup): RoleEntityUpdate {
         return {
             editable: formGroup.value['editable'],
             meta: formGroup.value['meta'],

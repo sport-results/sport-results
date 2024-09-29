@@ -13,6 +13,7 @@ export abstract class SportCategoryRuleStoreService extends EntityStoreService<
   SportCategoryRuleEntityUpdate
 > {
   public abstract dispatchChangeNewEntityButtonEnabled(enabled: boolean): void;
+  public abstract dispatchListGroupEntitiesAction(ids?: string[]): void;
   public abstract selectNewEntityButtonEnabled$(): Observable<boolean>;
   public abstract selectRulesByCategoryId$(
     categoryId: string

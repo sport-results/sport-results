@@ -45,7 +45,7 @@ export class NetworkPlayerFormService extends EntityFormComponentStore<
   NetworkPlayerEntityUpdate
 > {
   protected override entityStoreService = inject(NetworkPlayerStoreService);
-  private networkPlayerFormUtil = inject(NetworkPlayerFormUtil);
+  protected override entityFormUtil = inject(NetworkPlayerFormUtil);
   private sportNetworkStoreService = inject(SportNetworkStoreService);
   private sportPlayerStoreService = inject(SportPlayerStoreService);
 
@@ -95,6 +95,7 @@ export class NetworkPlayerFormService extends EntityFormComponentStore<
 
   public constructor() {
     super({
+      backUrl: '',
       formGroup: undefined,
       entity: undefined,
       entityId: undefined,
@@ -107,9 +108,10 @@ export class NetworkPlayerFormService extends EntityFormComponentStore<
   init$(
     entityId: string | undefined,
     sportNetworkId: string | undefined,
-    userId: string | undefined
+    userId: string | undefined,
+    backUrl: string
   ): void {
-    super.init(entityId, userId);
+    super.initForm(entityId, userId, backUrl);
 
     this.sportPlayerStoreService.dispatchListEntitiesAction();
 
@@ -143,19 +145,19 @@ export class NetworkPlayerFormService extends EntityFormComponentStore<
       return entity$.pipe(
         tap((entity) =>
           this.updateFormGroupState(
-            this.networkPlayerFormUtil.createFormGroup(entity)
+            this.entityFormUtil.createFormGroup(entity)
           )
         )
       );
     }
   );
 
-  private addEntity(formGroup: FormGroup, subCollectionGroup: string): void {
+  private addEntity(formGroup: FormGroup, subCollectionPath: string): void {
     this.entityStoreService.dispatchAddEntityAction(
-      this.networkPlayerFormUtil.createEntity(
+      this.entityFormUtil.createEntity(
         formGroup
       ) as NetworkPlayerEntityAdd,
-      subCollectionGroup
+      subCollectionPath
     );
   }
 
@@ -192,7 +194,7 @@ export class NetworkPlayerFormService extends EntityFormComponentStore<
 
   private updateEntity(formGroup: FormGroup): void {
     this.entityStoreService.dispatchUpdateEntityAction(
-      this.networkPlayerFormUtil.updateEntity(formGroup)
+      this.entityFormUtil.updateEntity(formGroup)
     );
   }
 

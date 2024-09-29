@@ -1,5 +1,4 @@
 import { Entity } from '../../core/entity';
-import { SportCategoryRuleEntity } from '../sport-category-rule';
 
 export interface SportCategory {
     name: string;
