@@ -9,8 +9,6 @@ import {
   AdminSportCategoryPermissionsService,
   AdminSportNetworkPermissionsService,
   AdminSportPlayerPermissionsService,
-  AdminNetworkPlayerPermissionsService,
-  AdminSportEventPermissionsService,
 } from './permissions';
 import { AdminUserPermissionsService } from './permissions/admin-user-permissions.service';
 import { AdminRolePermissionsService } from './permissions/admin-role-permissions.service';
@@ -105,7 +103,7 @@ function createRoutes(): Routes {
             import(
               '../../module/admin/sport-network/admin/sport-network-admin-page.module'
             ).then((lib) => lib.SportNetworkAdminPageModule),
-        },
+       },
       ],
     },
   ];

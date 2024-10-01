@@ -29,6 +29,10 @@ export abstract class EntityStoreService<R, S, T> extends StoreService {
     throw new Error('Method not implemented.');
   }
 
+  public dispatchResetAction(): void {
+    throw new Error('Method not implemented.');
+  }
+
   public abstract dispatchAddEntityAction(
     entity: S,
     subCollectionPath?: string
