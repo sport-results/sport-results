@@ -30,7 +30,7 @@ export class SportEventEffects {
   listEntities$ = createEffect(() =>
     this.actions$.pipe(
       ofType(sportEventActions.listEntities),
-      mergeMap((action) =>
+      switchMap((action) =>
         this.sportEventEffectService
           .listEntities$(
             action.subCollectionPath,

@@ -92,3 +92,7 @@ export const updateEntityFail = createAction(
     '[SportNetwork Admin] Update SportNetwork Fail',
     props<{ error: string }>()
 );
+
+export const reset = createAction(
+  '[SportNetwork] reset SportNetwork'
+);

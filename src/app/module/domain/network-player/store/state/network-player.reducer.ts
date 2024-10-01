@@ -80,7 +80,8 @@ const networkPlayerReducer = createReducer(
     on(networkPlayerActions.updateEntitySuccess, (state, { networkPlayer }) =>
         networkPlayerAdapter.updateOne(networkPlayer, state)
     ),
-    on(networkPlayerActions.updateEntityFail, (state, { error }) => ({ ...state, error }))
+    on(networkPlayerActions.updateEntityFail, (state, { error }) => ({ ...state, error })),
+    on(networkPlayerActions.reset, (state) => (networkPlayerAdapter.removeAll(state)))
 );
 
 export function reducer(state: State | undefined, action: Action) {

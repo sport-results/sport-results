@@ -80,7 +80,8 @@ const sportEventReducer = createReducer(
     on(sportEventActions.updateEntitySuccess, (state, { sportEvent }) =>
         sportEventAdapter.updateOne(sportEvent, state)
     ),
-    on(sportEventActions.updateEntityFail, (state, { error }) => ({ ...state, error }))
+    on(sportEventActions.updateEntityFail, (state, { error }) => ({ ...state, error })),
+    on(sportEventActions.reset, (state) => (sportEventAdapter.removeAll(state)))
 );
 
 export function reducer(state: State | undefined, action: Action) {

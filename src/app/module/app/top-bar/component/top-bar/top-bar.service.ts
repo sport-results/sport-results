@@ -7,23 +7,30 @@ import {
   switchMap,
 } from 'rxjs';
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { RoleNames, User } from '@app/api/common';
 import { ApplicationStoreService } from '@app/api/core/application';
 import { AuthorizationService } from '@app/api/core/authorization';
 
 import { TopBarParams } from '../../api';
+import { NetworkPlayerStoreService } from '@app/api/domain/network-player';
+import { User } from '@app/api/common';
+import { SportNetworkStoreService } from '@app/api/domain/sport-network';
+import { SportEventStoreService } from '@app/api/domain/sport-event';
 
 @Injectable()
 export class TopBarService {
+  private applicationStoreService = inject(ApplicationStoreService);
+  private authorizationService = inject(AuthorizationService);
+  private networkPlayerStoreService = inject(NetworkPlayerStoreService);
+  private sportNetworkStoreService = inject(SportNetworkStoreService);
+  private sportEventStoreService = inject(SportEventStoreService);
+  private router = inject(Router);
+
   private params!: TopBarParams;
   private params$$: Subject<TopBarParams>;
 
   constructor(
-    private applicationStoreService: ApplicationStoreService,
-    private authorizationService: AuthorizationService,
-    private router: Router
   ) {
     this.params$$ = new ReplaySubject();
   }
@@ -59,14 +66,12 @@ export class TopBarService {
     this.applicationStoreService.dispatchLogin();
   }
 
-  public testLogin(user: User): void {
-    this.applicationStoreService.dispatchTestLogin(user);
-    this.router.navigate(['/home']);
-  }
-
   public logout(): void {
-    this.authorizationService.removeAll();
     this.applicationStoreService.dispatchLogout();
+    this.authorizationService.removeAll();
+    this.networkPlayerStoreService.dispatchResetAction();
+    this.sportNetworkStoreService.dispatchResetAction();
+    this.sportEventStoreService.dispatchResetAction();
     this.router.navigate(['/home']);
   }
 

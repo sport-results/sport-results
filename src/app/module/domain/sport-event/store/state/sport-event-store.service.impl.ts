@@ -49,6 +49,10 @@ export class SportEventStoreServiceImpl extends SportEventStoreService {
         }));
     }
 
+    public override dispatchResetAction(): void {
+      this.store.dispatch(sportEventActions.reset());
+    }
+
     public dispatchSelectEntityAction(sportEvent: SportEventEntity | null): void {
         this.store.dispatch(sportEventActions.selectEntity({ sportEvent }));
     }

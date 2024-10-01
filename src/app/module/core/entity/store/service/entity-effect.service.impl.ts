@@ -1,4 +1,4 @@
-import { forkJoin, mergeMap, Observable, of, switchMap } from 'rxjs';
+import { exhaustMap, forkJoin, mergeMap, Observable, of, switchMap } from 'rxjs';
 
 import { KeyValue } from '@angular/common';
 import { Injectable } from '@angular/core';
@@ -80,29 +80,34 @@ export class EntityEffectServiceImpl extends EntityEffectService<
     return this.entityDataService
       .list$(subCollectionPath, pathParams, queryParams)
       .pipe(
-        mergeMap((models) =>models && models.length
-        ? forkJoin(
-            models.map((model) => this.entityUtilService.convertModelToEntity$(model)
+        exhaustMap((models) => {
+          const x =
+            models && models.length
+              ? forkJoin(
+                  models.map((model) =>
+                    this.entityUtilService.convertModelToEntity$(model)
+                  )
+                )
+              : of(models as Entity[]);
 
-            )
-          )
-        : of(models as Entity[]))
+          return x;
+        })
       );
   }
 
-  public listGroupEntities$(
-    ids?: string[],
-  ): Observable<Entity[]> {
+  public listGroupEntities$(ids?: string[]): Observable<Entity[]> {
     return this.entityDataService
       .listByGroup$(ids)
       .pipe(
-        mergeMap((models) =>models && models.length
-        ? forkJoin(
-            models.map((model) => this.entityUtilService.convertModelToEntity$(model)
-
-            )
-          )
-        : of(models as Entity[]))
+        mergeMap((models) =>
+          models && models.length
+            ? forkJoin(
+                models.map((model) =>
+                  this.entityUtilService.convertModelToEntity$(model)
+                )
+              )
+            : of(models as Entity[])
+        )
       );
   }
 

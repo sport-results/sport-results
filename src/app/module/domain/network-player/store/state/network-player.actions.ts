@@ -92,3 +92,7 @@ export const updateEntityFail = createAction(
     '[NetworkPlayer Admin] Update NetworkPlayer Fail',
     props<{ error: string }>()
 );
+
+export const reset = createAction(
+  '[NetworkPlayer] reset NetworkPlayer'
+);

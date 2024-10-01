@@ -65,7 +65,7 @@ const sportNetworkReducer = createReducer(
         error: null,
     })),
     on(sportNetworkActions.listEntitiesSuccess, (state, { sportNetworks }) =>
-        sportNetworkAdapter. upsertMany(sportNetworks, {
+        sportNetworkAdapter. setAll(sportNetworks, {
             ...state, loading: false,
     })),
     on(sportNetworkActions.listEntitiesFail, (state, { error }) => ({
@@ -80,7 +80,8 @@ const sportNetworkReducer = createReducer(
     on(sportNetworkActions.updateEntitySuccess, (state, { sportNetwork }) =>
         sportNetworkAdapter.updateOne(sportNetwork, state)
     ),
-    on(sportNetworkActions.updateEntityFail, (state, { error }) => ({ ...state, error }))
+    on(sportNetworkActions.updateEntityFail, (state, { error }) => ({ ...state, error })),
+    on(sportNetworkActions.reset, (state) => (sportNetworkAdapter.removeAll(state)))
 );
 
 export function reducer(state: State | undefined, action: Action) {

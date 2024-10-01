@@ -59,6 +59,10 @@ export class NetworkPlayerStoreServiceImpl extends NetworkPlayerStoreService {
     this.store.dispatch(networkPlayerActions.loadEntity({ uid }));
   }
 
+  public override dispatchResetAction(): void {
+    this.store.dispatch(networkPlayerActions.reset());
+  }
+
   public dispatchSelectEntityAction(
     networkPlayer: NetworkPlayerEntity | null
   ): void {
