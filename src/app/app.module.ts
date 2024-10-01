@@ -2,9 +2,14 @@ import { NgxPermissionsModule } from 'ngx-permissions';
 import { ToastModule } from 'primeng/toast';
 
 import { NgModule } from '@angular/core';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import {
+  provideAppCheck,
+  initializeAppCheck,
+  ReCaptchaV3Provider,
+} from '@angular/fire/app-check';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UserModule } from '@app/domain/user';
@@ -50,7 +55,17 @@ import { SportEventModule } from './module/domain/sport-event';
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
-    MessageService
+    provideAppCheck(() => {
+      const appCheckConfig = {
+        provider: new ReCaptchaV3Provider(
+          '6LfPmFQqAAAAAGnqlxtRqCeGbtUkjAUV1_yArO4p'
+        ),
+        isTokenAutoRefreshEnabled: true,
+      };
+
+      return initializeAppCheck(getApp(), appCheckConfig);
+    }),
+    MessageService,
   ],
   bootstrap: [AppComponent],
 })
