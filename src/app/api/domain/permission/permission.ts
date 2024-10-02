@@ -1,7 +1,11 @@
+import { ActionEnum } from '@app/api/common';
 import { Entity } from '../../core/entity';
 
 export interface Permission {
-    name: string;
+  userId: string;
+  actions: ActionEnum[];
+  resourceId: string;
+  resourceType: string;
 }
 
 export type PermissionEntity = Permission & Entity;
@@ -19,8 +23,8 @@ export type PermissionModelUpdate = Partial<PermissionModel> & Entity;
 export const PERMISSION_FEATURE_KEY = 'permission';
 
 export enum PermissionResourceEnum {
-    PERMISSION_ENTITY = 'PermissionEntity',
-    PERMISSION_ADMIN_PAGE = 'PermissionAdminPage',
-    PERMISSION_EDIT_PAGE  = 'PermissionEditPage',
-    PERMISSION_LIST_PAGE  = 'PermissionListPage',
-} 
+  PERMISSION_ENTITY = 'PermissionEntity',
+  PERMISSION_ADMIN_PAGE = 'PermissionAdminPage',
+  PERMISSION_EDIT_PAGE = 'PermissionEditPage',
+  PERMISSION_LIST_PAGE = 'PermissionListPage',
+}

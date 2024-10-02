@@ -14,7 +14,7 @@ import { Entity, EntityAdd, EntityUpdate } from '@app/api/core/entity';
 @Injectable()
 export class PermissionUtilServiceImpl extends EntityUtilServiceImpl {
     public _sort = (a: PermissionEntity, b: PermissionEntity): number =>
-        a.name < b.name ? 1 : -1;
+        a.uid < b.uid ? 1 : -1;
 
     public constructor(formBuilder: FormBuilder) {
         super(formBuilder);
@@ -26,8 +26,8 @@ export class PermissionUtilServiceImpl extends EntityUtilServiceImpl {
         return super.convertModelUpdateToEntityUpdate$(model).pipe(
             map((entity) => entity as PermissionEntityUpdate),
             switchMap((entity) => {
-                if (model.name) {
-                    entity.name = model.name;
+                if (model.actions) {
+                    entity.actions = model.actions;
                 }
 
                 return of(entity);

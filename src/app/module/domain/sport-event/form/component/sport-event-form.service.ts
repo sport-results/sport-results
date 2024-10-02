@@ -203,9 +203,9 @@ export class SportEventFormService extends EntityFormComponentStore<
     this.createFormGroup(this.entity$);
   }
 
-  private addEntity(formGroup: FormGroup, subCollectionPath: string): void {
+  private addEntity(formGroup: FormGroup, subCollectionPath: string, userId: string): void {
     this.entityStoreService.dispatchAddEntityAction(
-      this.entityFormUtil.createEntity(formGroup) as SportEventEntityAdd,
+      this.entityFormUtil.createEntityWithUser(formGroup, userId) as SportEventEntityAdd,
       subCollectionPath
     );
   }
@@ -259,7 +259,7 @@ export class SportEventFormService extends EntityFormComponentStore<
     if (entity) {
       this.updateEntity(formGroup);
     } else {
-      this.addEntity(formGroup, subCollectionPath);
+      this.addEntity(formGroup, subCollectionPath, user.uid);
     }
 
     this.router.navigate([backUrl], {

@@ -42,6 +42,21 @@ export class SportEventFormUtilImpl
     };
   }
 
+  public createEntityWithUser(
+    formGroup: FormGroup,
+    userId: string
+  ): SportEventEntityAdd {
+    const sportEvent = this.createEntity(formGroup);
+
+    return {
+      ...sportEvent,
+      meta: {
+        ...sportEvent.meta,
+        ownerId: userId,
+      },
+    };
+  }
+
   public createFormGroup(sportEvent: SportEventEntity | undefined): FormGroup {
     return this.formBuilder.group({
       uid: new FormControl(sportEvent?.uid),

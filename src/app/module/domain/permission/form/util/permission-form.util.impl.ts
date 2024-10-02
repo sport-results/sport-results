@@ -28,7 +28,10 @@ export class PermissionFormUtilImpl extends PermissionFormUtil {
                 creationDate: now,
                 lastUpdated: now,
             },
-            name: formGroup.value['name'],
+            actions: formGroup.value['actions'],
+            resourceId: formGroup.value['resourceId'],
+            resourceType: formGroup.value['resourceType'],
+            userId: formGroup.value['userId'],
         };
     }
 
@@ -36,7 +39,7 @@ export class PermissionFormUtilImpl extends PermissionFormUtil {
         return this.formBuilder.group({
             uid: [permission?.uid],
             meta: [permission?.meta],
-            name: [permission?.name, Validators.required],
+            actions: [permission?.actions, Validators.required],
         });
     }
 
@@ -44,7 +47,7 @@ export class PermissionFormUtilImpl extends PermissionFormUtil {
         return {
             uid: formGroup.value['uid'],
             meta: formGroup.value['meta'],
-            name: formGroup.value['name'],
+            actions: formGroup.value['actions'],
         };
     }
 }
