@@ -64,6 +64,10 @@ export abstract class EntityDataServiceImpl extends EntityDataService<
     return this.dataEngine.search$(params);
   }
 
+  public override searchByCollectionGroup$(params: SearchParams): Observable<EntityModel[]> {
+    return this.dataEngine.searchByCollectionGroup$(params);
+  }
+
   public override update$(
     entityUpdate: EntityModelUpdate,
     subCollectionPath?: string

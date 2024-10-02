@@ -4,90 +4,109 @@ import { KeyValue } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import {
-    PermissionEntity,
-    PermissionEntityAdd,
-    PermissionEntityUpdate,
-    PermissionStoreService,
+  PermissionEntity,
+  PermissionEntityAdd,
+  PermissionEntityUpdate,
+  PermissionStoreService,
 } from '@app/api/domain/permission';
 
 import * as permissionActions from './permission.actions';
 import * as fromPermission from './permission.reducer';
 import * as PermissionSelectors from './permission.selectors';
+import { SearchParam } from '@app/api/core/search';
 
 @Injectable()
 export class PermissionStoreServiceImpl extends PermissionStoreService {
-    public constructor(private store: Store<fromPermission.PermissionPartialState>) {
-        super();
-    }
+  public constructor(
+    private store: Store<fromPermission.PermissionPartialState>
+  ) {
+    super();
+  }
 
-    public dispatchAddEntityAction(
-        permission: PermissionEntityAdd,
-        parentEntityId?: string
-    ): void {
-        this.store.dispatch(permissionActions.addEntity({ permission,  parentEntityId }));
-    }
+  public dispatchAddEntityAction(
+    permission: PermissionEntityAdd,
+    subCollectionPath?: string
+  ): void {
+    this.store.dispatch(
+      permissionActions.addEntity({ permission, subCollectionPath })
+    );
+  }
 
-    public dispatchChangeNewEntityButtonEnabled(enabled: boolean): void {
-        this.store.dispatch(
-            permissionActions.changeNewEntityButtonEnabled({ enabled })
-        );
-    }
+  public dispatchChangeNewEntityButtonEnabled(enabled: boolean): void {
+    this.store.dispatch(
+      permissionActions.changeNewEntityButtonEnabled({ enabled })
+    );
+  }
 
-    public dispatchGetEntityAction(uid: string): void {
-        this.store.dispatch(permissionActions.loadEntity({ uid }));
-    }
+  public dispatchGetEntityAction(uid: string): void {
+    this.store.dispatch(permissionActions.loadEntity({ uid }));
+  }
 
-    public dispatchListEntitiesAction(
-        subCollectionPath?: string,
-        pathParams?: string[],
-        queryParams?: KeyValue<string, string>[]
-    ): void {
-        this.store.dispatch(permissionActions.listEntities({
-            subCollectionPath,
-            pathParams: pathParams,
-            queryParams: queryParams,
-        }));
-    }
+  public dispatchListEntitiesAction(
+    subCollectionPath?: string,
+    pathParams?: string[],
+    queryParams?: KeyValue<string, string>[]
+  ): void {
+    this.store.dispatch(
+      permissionActions.listEntities({
+        subCollectionPath,
+        pathParams: pathParams,
+        queryParams: queryParams,
+      })
+    );
+  }
 
-    public dispatchSelectEntityAction(permission: PermissionEntity | null): void {
-        this.store.dispatch(permissionActions.selectEntity({ permission }));
-    }
+  public dispatchSearchEntitiesByCollectionGroupAction(
+    searchParams: SearchParam[]
+  ): void {
+    this.store.dispatch(
+      permissionActions.searchEntitiesByCollectionGroup({
+        searchParams,
+      })
+    );
+  }
 
-    public dispatchUpdateEntityAction(
-        permission: PermissionEntityUpdate,
-        subCollectionPath?: string
-    ): void {
-        this.store.dispatch(permissionActions.updateEntity({
-            permission,
-            subCollectionPath
-        }));
-    }
+  public dispatchSelectEntityAction(permission: PermissionEntity | null): void {
+    this.store.dispatch(permissionActions.selectEntity({ permission }));
+  }
 
-    public isLoading$(): Observable<boolean> {
-        return this.store.pipe(select(PermissionSelectors.getEntityLoading));
-    }
+  public dispatchUpdateEntityAction(
+    permission: PermissionEntityUpdate,
+    subCollectionPath?: string
+  ): void {
+    this.store.dispatch(
+      permissionActions.updateEntity({
+        permission,
+        subCollectionPath,
+      })
+    );
+  }
 
-    public selectEntity$(
-        uid: string
-    ): Observable<PermissionEntity | undefined> {
-        return this.store.pipe(select(PermissionSelectors.getEntityById(uid)));
-    }
+  public isLoading$(): Observable<boolean> {
+    return this.store.pipe(select(PermissionSelectors.getEntityLoading));
+  }
 
-    public selectEntities$(): Observable<PermissionEntity[]> {
-        return this.store.pipe(select(PermissionSelectors.getAll));
-    }
+  public selectEntity$(uid: string): Observable<PermissionEntity | undefined> {
+    return this.store.pipe(select(PermissionSelectors.getEntityById(uid)));
+  }
 
-    public override selectEntityById$(
-        entityId: string
-    ): Observable<PermissionEntity | undefined> {
-        return this.store.pipe(select(PermissionSelectors.getEntityById(entityId)));
-    }
+  public selectEntities$(): Observable<PermissionEntity[]> {
+    return this.store.pipe(select(PermissionSelectors.getAll));
+  }
 
-    public selectNewEntityButtonEnabled$(): Observable<boolean> {
-        return this.store.pipe(select(PermissionSelectors.isNewEntityButtonEnabled));
-    }
+  public override selectEntityById$(
+    entityId: string
+  ): Observable<PermissionEntity | undefined> {
+    return this.store.pipe(select(PermissionSelectors.getEntityById(entityId)));
+  }
 
-    public selectSelectedEntity$(): Observable<PermissionEntity | null> {
-        return this.store.pipe(select(PermissionSelectors.getSelectedEntity));
-    }
+  public selectNewEntityButtonEnabled$(): Observable<boolean> {
+    return this.store.pipe(
+      select(PermissionSelectors.isNewEntityButtonEnabled)
+    );
+  }
+
+  public selectSelectedEntity$(): Observable<PermissionEntity | null> {
+    return this.store.pipe(select(PermissionSelectors.getSelectedEntity));
+  }
 }

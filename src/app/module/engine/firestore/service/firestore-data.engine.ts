@@ -22,7 +22,7 @@ import {
   EntityModelUpdate,
 } from '@app/api/core/entity';
 import { DataEngine } from '@app/api/engine';
-import { SearchParams } from '@app/api/core/search';
+import { SearchParam, SearchParams } from '@app/api/core/search';
 import { FirestoreDataUtil } from './firestore-data.util';
 
 export class FirestoreDataEngine extends DataEngine {
@@ -161,8 +161,20 @@ export class FirestoreDataEngine extends DataEngine {
     return this.searchByQuery(entityQuery);
   }
 
-  public searchFromCollectionGroup$(
-    params: SearchParams
+  public override load$(uid: string): Observable<EntityModel | undefined> {
+    const entityDocument = this.dataUtil.createDocumentReference(
+      this.firestore,
+      this.featureKey,
+      uid
+    );
+
+    return docData(entityDocument, {
+      idField: 'uid',
+    }) as Observable<EntityModel>;
+  }
+
+  public searchByCollectionGroup$(
+    params: SearchParam[]
   ): Observable<EntityModel[]> {
     const queries: QueryConstraint[] = params.map((param) =>
       where(param.query.field, param.query.operation, param.query.value)
@@ -174,18 +186,6 @@ export class FirestoreDataEngine extends DataEngine {
     );
 
     return this.searchByQuery(entityQuery);
-  }
-
-  public override load$(uid: string): Observable<EntityModel | undefined> {
-    const entityDocument = this.dataUtil.createDocumentReference(
-      this.firestore,
-      this.featureKey,
-      uid
-    );
-
-    return docData(entityDocument, {
-      idField: 'uid',
-    }) as Observable<EntityModel>;
   }
 
   public override update$(

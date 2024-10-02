@@ -125,6 +125,20 @@ export class EntityEffectServiceImpl extends EntityEffectService<
       );
   }
 
+  public searchEntitiesByCollectionGroup$(params: SearchParams): Observable<Entity[]> {
+    return this.entityDataService
+      .searchByCollectionGroup$(params)
+      .pipe(
+        switchMap((result) =>
+          forkJoin(
+            result.map((document) =>
+              this.entityUtilService.convertModelToEntity$(document)
+            )
+          )
+        )
+      );
+  }
+
   public loadEntity$(entityId: string): Observable<Entity> {
     return this.entityDataService
       .load$(entityId)
