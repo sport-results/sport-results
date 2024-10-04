@@ -37,6 +37,7 @@ const routes: Routes = [
             ],
             redirectTo: '/error',
           },
+          backUrl: '../../list'
         },
         path: 'edit/:roleId',
         pathMatch: 'full',

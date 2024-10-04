@@ -38,6 +38,7 @@ const routes: Routes = [
                         ],
                         redirectTo: '/error',
                     },
+                    backUrl: '../../list'
                 },
                 pathMatch: 'full',
                 resolve: { data: SportCategoryEditPageResolverService },

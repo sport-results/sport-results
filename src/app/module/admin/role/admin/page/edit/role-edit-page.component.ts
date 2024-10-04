@@ -8,5 +8,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 })
 export class RoleEditPageComponent {
     @Input()
-    public roleId!: string;
+    roleId!: string;
+    @Input()
+    backUrl!: string;
 }

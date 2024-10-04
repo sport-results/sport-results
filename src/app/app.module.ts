@@ -60,7 +60,7 @@ import { PermissionModule } from './module/domain/permission';
     provideAppCheck(() => {
       const appCheckConfig = {
         provider: new ReCaptchaV3Provider(
-          '6LfPmFQqAAAAAGnqlxtRqCeGbtUkjAUV1_yArO4p'
+          environment.appCheckKey
         ),
         isTokenAutoRefreshEnabled: true,
       };

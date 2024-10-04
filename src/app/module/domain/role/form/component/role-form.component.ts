@@ -25,7 +25,7 @@ export class RoleFormComponent
     const params = this.extractAllRouteParams(this.router);
 
     this.userId = params['userId'];
-
+  
     this.componentService.init$(this.entityId, this.userId, this.backUrl);
     this.entityFormViewModel$ = this.componentService.entityFormViewModel$;
   }

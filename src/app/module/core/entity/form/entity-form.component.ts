@@ -28,6 +28,7 @@ export class EntityFormComponent<T> {
       );
       route = route.firstChild;
     } while (route);
+
     return params;
   }
 }

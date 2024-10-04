@@ -1,6 +1,6 @@
 import { SelectItemGroup } from 'primeng/api';
 import { Observable, tap } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -52,10 +52,11 @@ export class RoleFormService extends EntityFormComponentStore<
 
   private readonly handleSubmit = this.effect((submit$: Observable<void>) => {
     return submit$.pipe(
-      switchMap(() =>
+      withLatestFrom(this.backUrl$),
+      switchMap(([_, backUrl]) =>
         this.getDataForSubmit$.pipe(
           tap(({ roleEntity, formGroup }) =>
-            this.submit(roleEntity, formGroup as FormGroup)
+            this.submit(roleEntity, formGroup as FormGroup, backUrl)
           )
         )
       )
@@ -114,7 +115,8 @@ export class RoleFormService extends EntityFormComponentStore<
 
   private submit(
     roleEntity: RoleEntity | undefined,
-    formGroup: FormGroup
+    formGroup: FormGroup,
+    backUrl: string
   ): void {
     if (roleEntity) {
       this.updateEntity(formGroup);
@@ -122,7 +124,7 @@ export class RoleFormService extends EntityFormComponentStore<
       this.addEntity(formGroup);
     }
 
-    this.router.navigate(['../../list'], {
+    this.router.navigate([backUrl], {
       relativeTo: this.activatedRoute,
     });
   }

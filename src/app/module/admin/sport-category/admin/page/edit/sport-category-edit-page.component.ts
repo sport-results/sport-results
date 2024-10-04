@@ -9,4 +9,6 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 export class SportCategoryEditPageComponent {
     @Input()
     public sportCategoryId!: string;
+    @Input()
+    backUrl!: string;
 }
