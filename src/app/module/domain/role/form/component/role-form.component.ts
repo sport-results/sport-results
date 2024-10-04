@@ -1,27 +1,32 @@
-import { Observable } from 'rxjs';
-
-
-import { ChangeDetectionStrategy, Component, OnInit, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+} from '@angular/core';
 
 import { RoleFormService, RoleFormViewModel } from './role-form.service';
+import { EntityFormComponent } from '@app/core/entity';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [RoleFormService],
-    selector: 'sr-role-form',
-    templateUrl: './role-form.component.html',
-    styleUrls: ['./role-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [RoleFormService],
+  selector: 'sr-role-form',
+  templateUrl: './role-form.component.html',
+  styleUrls: ['./role-form.component.scss'],
 })
-export class RoleFormComponent implements OnInit {
-    public roleFormViewModel$!: Observable<RoleFormViewModel>;
+export class RoleFormComponent
+  extends EntityFormComponent<RoleFormViewModel>
+  implements OnInit
+{
+  private componentService = inject(RoleFormService);
 
-    @Input()
-    public roleId: string | undefined;
+  public ngOnInit(): void {
+    const params = this.extractAllRouteParams(this.router);
 
-    public constructor(private componentService: RoleFormService) {}
+    this.userId = params['userId'];
 
-    public ngOnInit(): void {
-        this.componentService.init(this.roleId);
-        this.roleFormViewModel$ = this.componentService.roleFormViewModel$;
-    }
+    this.componentService.init$(this.entityId, this.userId, this.backUrl);
+    this.entityFormViewModel$ = this.componentService.entityFormViewModel$;
+  }
 }

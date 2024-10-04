@@ -1,180 +1,135 @@
 import { SelectItemGroup } from 'primeng/api';
-import { Observable, Subject, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { PermissionsService } from '@app/api/common';
 import {
-    RoleEntity,
-    RoleStoreService,
-    RoleUtilService,
+  RoleEntity,
+  RoleEntityAdd,
+  RoleEntityUpdate,
+  RoleFormUtil,
+  RoleStoreService,
+  RoleUtilService,
 } from '@app/api/domain/role';
-import { ComponentStore } from '@ngrx/component-store';
+import {
+  EntityFormComponentState,
+  EntityFormComponentStore,
+  EntityFormViewModel,
+} from '@app/core/entity';
 
-export interface RoleFormState {
-    formGroup: FormGroup | undefined;
-    roleEntity: RoleEntity | undefined;
-    roleId: string | undefined;
+export interface RoleFormState extends EntityFormComponentState<RoleEntity> {}
+
+export interface RoleFormViewModel extends EntityFormViewModel {
+  permissions: SelectItemGroup[];
 }
 
-export type RoleFormViewModel = {
-    formGroup: FormGroup;
-    permissions: SelectItemGroup[];
-    cancel$$: Subject<void>;
-    submit$$: Subject<void>;
-};
-
 @Injectable()
-export class RoleFormService extends ComponentStore<RoleFormState> {
-    private readonly fetchRoleEntity = this.effect(
-        (roleId$: Observable<string | undefined>) => {
-            return roleId$.pipe(
-                switchMap((roleId) =>
-                    this.roleStoreService.selectEntityById$(roleId || '').pipe(
-                        tap((roleEntity) => {
-                            this.updateRoleEntityState(roleEntity);
-                            this.updateFormGroupState(
-                                this.roleUtilService.createFormGroup(roleEntity)
-                            );
-                        })
-                    )
-                )
-            );
-        }
+export class RoleFormService extends EntityFormComponentStore<
+  RoleFormState,
+  RoleEntityAdd,
+  RoleEntity,
+  RoleEntityUpdate
+> {
+  protected override entityStoreService = inject(RoleStoreService);
+  protected override entityFormUtil = inject(RoleFormUtil);
+
+  private readonly getDataForSubmit$ = this.select((state) => ({
+    roleEntity: state.entity,
+    formGroup: state.formGroup,
+  }));
+
+  private readonly createFormGroup = this.effect(
+    (entity$: Observable<RoleEntity | undefined>) => {
+      return entity$.pipe(
+        tap((entity) =>
+          this.updateFormGroupState(this.entityFormUtil.createFormGroup(entity))
+        )
+      );
+    }
+  );
+
+  private readonly handleSubmit = this.effect((submit$: Observable<void>) => {
+    return submit$.pipe(
+      switchMap(() =>
+        this.getDataForSubmit$.pipe(
+          tap(({ roleEntity, formGroup }) =>
+            this.submit(roleEntity, formGroup as FormGroup)
+          )
+        )
+      )
     );
-    private readonly formGroup$ = this.select((state) => state.formGroup);
-    private readonly getDataForSubmit$ = this.select((state) => ({
-        roleEntity: state.roleEntity,
-        formGroup: state.formGroup,
-    }));
-    private readonly handleCancel = this.effect((cancel$: Observable<void>) => {
-        return cancel$.pipe(tap(() => this.cancel()));
+  });
+
+  public readonly entityFormViewModel$: Observable<RoleFormViewModel> =
+    this.select({
+      formGroup: this.formGroup$.pipe(
+        map((formGroup) => formGroup as FormGroup)
+      ),
+    }).pipe(
+      map((roleFormViewModel) =>
+        this.extendsRoleFormViewModel(roleFormViewModel)
+      )
+    );
+
+  public constructor() {
+    super({
+      backUrl: '',
+      formGroup: undefined,
+      entity: undefined,
+      entityId: undefined,
+      user: undefined,
     });
-    private readonly handleSubmit = this.effect((submit$: Observable<void>) => {
-        return submit$.pipe(
-            switchMap(() =>
-                this.getDataForSubmit$.pipe(
-                    tap(({ roleEntity, formGroup }) =>
-                        this.submit(roleEntity, formGroup as FormGroup)
-                    )
-                )
-            )
-        );
+  }
+
+  public init$(
+    entityId: string | undefined,
+    userId: string | undefined,
+    backUrl: string
+  ): void {
+    super.initForm(entityId, userId, backUrl);
+
+    this.handleSubmit(this.submit$$.asObservable());
+
+    this.createFormGroup(this.entity$);
+  }
+
+  private addEntity(formGroup: FormGroup): void {
+    this.entityStoreService.dispatchAddEntityAction(
+      this.entityFormUtil.createEntity(formGroup) as RoleEntityAdd
+    );
+  }
+
+  private extendsRoleFormViewModel(
+    roleFormViewModel: Partial<RoleFormViewModel>
+  ): RoleFormViewModel {
+    return {
+      formGroup: roleFormViewModel.formGroup as FormGroup,
+      permissions: PermissionsService.permissions,
+      cancel$$: this.cancel$$,
+      submit$$: this.submit$$,
+    };
+  }
+
+  private submit(
+    roleEntity: RoleEntity | undefined,
+    formGroup: FormGroup
+  ): void {
+    if (roleEntity) {
+      this.updateEntity(formGroup);
+    } else {
+      this.addEntity(formGroup);
+    }
+
+    this.router.navigate(['../../list'], {
+      relativeTo: this.activatedRoute,
     });
-    private readonly roleEntity$ = this.select((state) => state.roleEntity);
+  }
 
-    private cancel$$: Subject<void>;
-    private submit$$: Subject<void>;
-
-    public readonly roleFormViewModel$: Observable<RoleFormViewModel> =
-        this.select({
-            formGroup: this.formGroup$.pipe(
-                map((formGroup) => formGroup as FormGroup)
-            ),
-        }).pipe(
-            map((roleFormViewModel) =>
-                this.extendsRoleFormViewModel(roleFormViewModel)
-            )
-        );
-    readonly roleId$ = this.select((state) => state.roleId);
-
-    public constructor(
-        private activatedRoute: ActivatedRoute,
-        private roleStoreService: RoleStoreService,
-        private roleUtilService: RoleUtilService,
-        private router: Router
-    ) {
-        super();
-
-        this.cancel$$ = new Subject();
-        this.submit$$ = new Subject();
-
-        const initialValues = {
-            formGroup: undefined,
-            roleEntity: undefined,
-            roleId: undefined,
-        };
-
-        this.setState(initialValues);
-    }
-
-    public cancel(): void {
-        this.router.navigate(['../../list'], {
-            relativeTo: this.activatedRoute,
-        });
-    }
-
-    public init(roleId: string | undefined): void {
-        this.updateRoleIdState(roleId);
-        this.fetchRoleEntity(this.roleId$);
-        this.handleCancel(this.cancel$$.asObservable());
-        this.handleSubmit(this.submit$$.asObservable());
-    }
-
-    private addRole(formGroup: FormGroup): void {
-        this.roleStoreService.dispatchAddEntityAction(
-            this.roleUtilService.createEntity(formGroup)
-        );
-    }
-
-    private extendsRoleFormViewModel(
-        roleFormViewModel: Partial<RoleFormViewModel>
-    ): RoleFormViewModel {
-        return {
-            formGroup: roleFormViewModel.formGroup as FormGroup,
-            permissions: PermissionsService.permissions,
-            cancel$$: this.cancel$$,
-            submit$$: this.submit$$,
-        };
-    }
-
-    private submit(
-        roleEntity: RoleEntity | undefined,
-        formGroup: FormGroup
-    ): void {
-        if (roleEntity) {
-            this.updateRole(formGroup);
-        } else {
-            this.addRole(formGroup);
-        }
-
-        this.router.navigate(['../../list'], {
-            relativeTo: this.activatedRoute,
-        });
-    }
-
-    private updateFormGroupState(formGroup: FormGroup): void {
-        this.setState((state) => {
-            return {
-                ...state,
-                formGroup,
-            };
-        });
-    }
-
-    private updateRole(formGroup: FormGroup): void {
-        this.roleStoreService.dispatchUpdateEntityAction(
-            this.roleUtilService.updateEntity(formGroup)
-        );
-    }
-
-    private updateRoleEntityState(roleEntity: RoleEntity | undefined): void {
-        this.setState((state) => {
-            return {
-                ...state,
-                roleEntity,
-            };
-        });
-    }
-
-    private updateRoleIdState(roleId: string | undefined): void {
-        this.setState((state) => {
-            return {
-                ...state,
-                roleId,
-            };
-        });
-    }
+  private updateEntity(formGroup: FormGroup): void {
+    this.entityStoreService.dispatchUpdateEntityAction(
+      this.entityFormUtil.updateEntity(formGroup)
+    );
+  }
 }

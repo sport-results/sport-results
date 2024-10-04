@@ -1,11 +1,16 @@
-import { exhaustMap, map, Observable, of, switchMap } from 'rxjs';
+import { exhaustMap, map, mergeMap, Observable, of, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Entity, EntityAdd, EntityUpdate } from '@app/api/core/entity';
 import { RoleDataService, RoleEntity } from '@app/api/domain/role';
 import {
-    UserEntity, UserEntityAdd, UserEntityUpdate, UserModel, UserModelAdd, UserModelUpdate
+  UserEntity,
+  UserEntityAdd,
+  UserEntityUpdate,
+  UserModel,
+  UserModelAdd,
+  UserModelUpdate,
 } from '@app/api/domain/user';
 import { EntityUtilServiceImpl } from '@app/core/entity';
 
@@ -92,14 +97,12 @@ export class UserUtilServiceImpl extends EntityUtilServiceImpl {
   ): Observable<UserEntity> {
     return super.convertModelToEntity$(model).pipe(
       map((entity) => entity as UserEntity),
-      exhaustMap((entity) => {
+      mergeMap((entity) => {
         return this.convertRoleIdsToRoles$(model.roleIds || []).pipe(
-          switchMap((roles) =>
-            of({
-              ...entity,
-              roles,
-            })
-          )
+          map((roles) => ({
+            ...entity,
+            roles,
+          }))
         );
       })
     );
@@ -141,12 +144,10 @@ export class UserUtilServiceImpl extends EntityUtilServiceImpl {
 
         if (model.roleIds) {
           return this.convertRoleIdsToRoles$(model.roleIds).pipe(
-            switchMap((roles) => {
-              return of({
-                ...entity,
-                roles,
-              });
-            })
+            map((roles) => ({
+              ...entity,
+              roles,
+            }))
           );
         } else {
           return of(entity);

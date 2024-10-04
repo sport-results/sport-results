@@ -51,7 +51,7 @@ export class NetworkPlayerFormService extends EntityFormComponentStore<
 
   protected override entityFormUtil = inject(NetworkPlayerFormUtil);
   protected override entityStoreService = inject(NetworkPlayerStoreService);
-  
+
   private readonly createFormGroup = this.effect(
     (entity$: Observable<NetworkPlayerEntity | undefined>) => {
       return entity$.pipe(
