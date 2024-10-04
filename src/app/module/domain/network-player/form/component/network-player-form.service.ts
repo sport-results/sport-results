@@ -1,30 +1,29 @@
-import { Observable, tap } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import {
-  NetworkPlayerEntity,
-  NetworkPlayerStoreService,
-  NetworkPlayerFormUtil,
-  NetworkPlayerEntityAdd,
-  NetworkPlayerEntityUpdate,
-} from '@app/api/domain/network-player';
-
 import { inject, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import {
+  NetworkPlayerEntity,
+  NetworkPlayerEntityAdd,
+  NetworkPlayerEntityUpdate,
+  NetworkPlayerFormUtil,
+  NetworkPlayerStoreService,
+} from '@app/api/domain/network-player';
 import {
   SPORT_NETWORK_FEATURE_KEY,
   SportNetworkEntity,
   SportNetworkStoreService,
 } from '@app/api/domain/sport-network';
-import { USER_FEATURE_KEY, UserEntity } from '@app/api/domain/user';
 import {
   SportPlayerEntity,
   SportPlayerStoreService,
 } from '@app/api/domain/sport-player';
+import { USER_FEATURE_KEY, UserEntity } from '@app/api/domain/user';
 import {
   EntityFormComponentState,
   EntityFormComponentStore,
   EntityFormViewModel,
 } from '@app/core/entity';
+import { Observable, tap } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 export interface NetworkPlayerFormState
   extends EntityFormComponentState<NetworkPlayerEntity> {
@@ -33,8 +32,8 @@ export interface NetworkPlayerFormState
 }
 
 export interface NetworkPlayerFormViewModel extends EntityFormViewModel {
-  sportPlayers: SportPlayerEntity[];
   sportNetworks: SportNetworkEntity[];
+  sportPlayers: SportPlayerEntity[];
 }
 
 @Injectable()
@@ -44,22 +43,24 @@ export class NetworkPlayerFormService extends EntityFormComponentStore<
   NetworkPlayerEntity,
   NetworkPlayerEntityUpdate
 > {
-  protected override entityStoreService = inject(NetworkPlayerStoreService);
-  protected override entityFormUtil = inject(NetworkPlayerFormUtil);
-  private sportNetworkStoreService = inject(SportNetworkStoreService);
-  private sportPlayerStoreService = inject(SportPlayerStoreService);
-
   private readonly sportNetwork$ = this.select((state) => state.sportNetwork);
   private readonly sportPlayers$ = this.select((state) => state.sportPlayers);
 
-  private readonly fetchSportPlayers = this.effect(() => {
-    return this.sportPlayerStoreService.selectEntities$().pipe(
-      tap((sportPlayers) => {
-        this.updateSportPlayersState(sportPlayers);
-      })
-    );
-  });
+  private sportNetworkStoreService = inject(SportNetworkStoreService);
+  private sportPlayerStoreService = inject(SportPlayerStoreService);
 
+  protected override entityFormUtil = inject(NetworkPlayerFormUtil);
+  protected override entityStoreService = inject(NetworkPlayerStoreService);
+  
+  private readonly createFormGroup = this.effect(
+    (entity$: Observable<NetworkPlayerEntity | undefined>) => {
+      return entity$.pipe(
+        tap((entity) =>
+          this.updateFormGroupState(this.entityFormUtil.createFormGroup(entity))
+        )
+      );
+    }
+  );
   private readonly fetchSportNetwork = (sportNetworkId: string | undefined) =>
     this.effect(() => {
       return this.sportNetworkStoreService
@@ -70,13 +71,35 @@ export class NetworkPlayerFormService extends EntityFormComponentStore<
           })
         );
     });
-
+  private readonly fetchSportPlayers = this.effect(() => {
+    return this.sportPlayerStoreService.selectEntities$().pipe(
+      tap((sportPlayers) => {
+        this.updateSportPlayersState(sportPlayers);
+      })
+    );
+  });
   private readonly getDataForSubmit$ = this.select((state) => ({
     entity: state.entity,
     formGroup: state.formGroup as FormGroup,
     user: state.user,
     sportNetwork: state.sportNetwork,
   }));
+  private readonly handleSubmit = this.effect((submit$: Observable<void>) => {
+    return submit$.pipe(
+      switchMap(() =>
+        this.getDataForSubmit$.pipe(
+          tap(({ entity, formGroup, user, sportNetwork }) =>
+            this.submit(
+              entity,
+              formGroup as FormGroup,
+              user as UserEntity,
+              sportNetwork as SportNetworkEntity
+            )
+          )
+        )
+      )
+    );
+  });
 
   public readonly entityFormViewModel$: Observable<NetworkPlayerFormViewModel> =
     this.select({
@@ -123,56 +146,6 @@ export class NetworkPlayerFormService extends EntityFormComponentStore<
     this.createFormGroup(this.entity$);
   }
 
-  private readonly handleSubmit = this.effect((submit$: Observable<void>) => {
-    return submit$.pipe(
-      switchMap(() =>
-        this.getDataForSubmit$.pipe(
-          tap(({ entity, formGroup, user, sportNetwork }) =>
-            this.submit(
-              entity,
-              formGroup as FormGroup,
-              user as UserEntity,
-              sportNetwork as SportNetworkEntity
-            )
-          )
-        )
-      )
-    );
-  });
-
-  private readonly createFormGroup = this.effect(
-    (entity$: Observable<NetworkPlayerEntity | undefined>) => {
-      return entity$.pipe(
-        tap((entity) =>
-          this.updateFormGroupState(
-            this.entityFormUtil.createFormGroup(entity)
-          )
-        )
-      );
-    }
-  );
-
-  private addEntity(formGroup: FormGroup, subCollectionPath: string): void {
-    this.entityStoreService.dispatchAddEntityAction(
-      this.entityFormUtil.createEntity(
-        formGroup
-      ) as NetworkPlayerEntityAdd,
-      subCollectionPath
-    );
-  }
-
-  private extendsEntityFormViewModel(
-    entityFormViewModel: Partial<NetworkPlayerFormViewModel>
-  ): NetworkPlayerFormViewModel {
-    return {
-      formGroup: entityFormViewModel.formGroup as FormGroup,
-      cancel$$: this.cancel$$,
-      submit$$: this.submit$$,
-      sportPlayers: entityFormViewModel.sportPlayers as SportPlayerEntity[],
-      sportNetworks: entityFormViewModel.sportNetworks as SportNetworkEntity[],
-    };
-  }
-
   public submit(
     entity: NetworkPlayerEntity | undefined,
     formGroup: FormGroup,
@@ -190,6 +163,25 @@ export class NetworkPlayerFormService extends EntityFormComponentStore<
     this.router.navigate(['../../../..'], {
       relativeTo: this.activatedRoute,
     });
+  }
+
+  private addEntity(formGroup: FormGroup, subCollectionPath: string): void {
+    this.entityStoreService.dispatchAddEntityAction(
+      this.entityFormUtil.createEntity(formGroup) as NetworkPlayerEntityAdd,
+      subCollectionPath
+    );
+  }
+
+  private extendsEntityFormViewModel(
+    entityFormViewModel: Partial<NetworkPlayerFormViewModel>
+  ): NetworkPlayerFormViewModel {
+    return {
+      formGroup: entityFormViewModel.formGroup as FormGroup,
+      cancel$$: this.cancel$$,
+      submit$$: this.submit$$,
+      sportPlayers: entityFormViewModel.sportPlayers as SportPlayerEntity[],
+      sportNetworks: entityFormViewModel.sportNetworks as SportNetworkEntity[],
+    };
   }
 
   private updateEntity(formGroup: FormGroup): void {

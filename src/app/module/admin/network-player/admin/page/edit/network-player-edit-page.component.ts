@@ -6,7 +6,7 @@ import { NetworkPlayerEditPageResolverService } from './network-player-edit-page
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [NetworkPlayerFormModule],
-  selector: 'app-network-player-edit-page',
+  selector: 'sr-network-player-edit-page',
   templateUrl: './network-player-edit-page.component.html',
   styleUrls: ['./network-player-edit-page.component.scss'],
   providers: [NetworkPlayerEditPageResolverService],
