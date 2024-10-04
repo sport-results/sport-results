@@ -7,7 +7,7 @@ import { SportNetworkTableService, EntityTableViewModel } from './sport-network-
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [SportNetworkTableService],
-	selector: 'app-sport-network-table',
+	selector: 'sr-sport-network-table',
 	templateUrl: './sport-network-table.component.html',
 	styleUrls: ['./sport-network-table.component.scss'],
 })

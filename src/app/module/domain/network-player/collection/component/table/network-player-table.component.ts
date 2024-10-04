@@ -7,7 +7,7 @@ import { NetworkPlayerTableService, EntityTableViewModel } from './network-playe
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	providers: [NetworkPlayerTableService],
-	selector: 'app-network-player-table',
+	selector: 'sr-network-player-table',
 	templateUrl: './network-player-table.component.html',
 	styleUrls: ['./network-player-table.component.scss'],
 })
