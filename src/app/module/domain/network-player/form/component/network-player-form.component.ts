@@ -21,7 +21,7 @@ import { ActivatedRouteSnapshot, Router } from '@angular/router';
   templateUrl: './network-player-form.component.html',
   styleUrls: ['./network-player-form.component.scss'],
 })
-export class NetworkPlayerFormComponent implements OnInit {
+export class NetworkPlayerFormComponent  implements OnInit {
   public entityFormViewModel$!: Observable<NetworkPlayerFormViewModel>;
 
   private componentService = inject(NetworkPlayerFormService);

@@ -1,12 +1,10 @@
 import { FormGroup } from '@angular/forms';
-import {
-  EntityComponentState,
-  EntityComponentStore,
-} from './entity-component.store';
+
 import { Observable, Subject, tap, withLatestFrom } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { EntityFormUtil } from '@app/api/core/entity';
+import { EntityComponentState, EntityComponentStore } from '../store';
 
 export interface EntityFormComponentState<S> extends EntityComponentState<S> {
   backUrl: string;
@@ -38,7 +36,7 @@ export class EntityFormComponentStore<
   protected initForm(
     entityId: string | undefined,
     userId: string | undefined,
-    backUrl: string,
+    backUrl: string
   ): void {
     super.init(entityId, userId);
 
