@@ -1,10 +1,11 @@
 import { Observable, Subject, tap } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
   SportPlayerEntity,
   SportPlayerEntityAdd,
   SportPlayerStoreService,
   SportPlayerFormUtil,
+  SportPlayerEntityUpdate,
 } from '@app/api/domain/sport-player';
 
 import { inject, Injectable } from '@angular/core';
@@ -16,57 +17,37 @@ import {
   SportCategorySimple,
   SportCategoryStoreService,
 } from '@app/api/domain/sport-category';
+import {
+  EntityFormComponentState,
+  EntityFormComponentStore,
+  EntityFormViewModel,
+} from '@app/core/entity';
 
-export interface SportPlayerFormState {
-  formGroup: FormGroup | undefined;
-  entity: SportPlayerEntity | undefined;
-  entityId: string | undefined;
+export interface SportPlayerFormState
+  extends EntityFormComponentState<SportPlayerEntity> {
   users: UserEntity[];
   sportCategories: SportCategorySimple[];
 }
 
-export type EntityFormViewModel = {
-  formGroup: FormGroup;
-  cancel$$: Subject<void>;
-  submit$$: Subject<void>;
+export interface SportPlayerFormViewModel extends EntityFormViewModel {
   users: UserEntity[];
   sportCategories: SportCategorySimple[];
-};
+}
 
 @Injectable()
-export class SportPlayerFormService extends ComponentStore<SportPlayerFormState> {
-  private readonly activatedRoute = inject(ActivatedRoute);
-  private readonly sportCategoryStoreService = inject(
-    SportCategoryStoreService
-  );
-  private readonly sportPlayerStoreService = inject(SportPlayerStoreService);
-  private readonly sportPlayerFormUtil = inject(SportPlayerFormUtil);
-  private readonly router = inject(Router);
-  private readonly userStoreService = inject(UserStoreService);
+export class SportPlayerFormService extends EntityFormComponentStore<
+  SportPlayerFormState,
+  SportPlayerEntityAdd,
+  SportPlayerEntity,
+  SportPlayerEntityUpdate
+> {
+  protected sportCategoryStoreService = inject(SportCategoryStoreService);
+  protected override entityStoreService = inject(SportPlayerStoreService);
+  protected override entityFormUtil = inject(SportPlayerFormUtil);
 
-  private readonly entity$ = this.select((state) => state.entity);
-  private readonly entityId$ = this.select((state) => state.entityId);
-  private readonly formGroup$ = this.select((state) => state.formGroup);
   private readonly users$ = this.select((state) => state.users);
   private readonly sportCategories$ = this.select(
     (state) => state.sportCategories
-  );
-
-  private readonly fetchEntity = this.effect(
-    (entityId$: Observable<string | undefined>) => {
-      return entityId$.pipe(
-        switchMap((entityId) =>
-          this.sportPlayerStoreService.selectEntityById$(entityId || '').pipe(
-            tap((entity) => {
-              this.updateEntityState(entity);
-              this.updateFormGroupState(
-                this.sportPlayerFormUtil.createFormGroup(entity)
-              );
-            })
-          )
-        )
-      );
-    }
   );
 
   private readonly fetchUsers = this.effect(() => {
@@ -103,25 +84,20 @@ export class SportPlayerFormService extends ComponentStore<SportPlayerFormState>
     }))
   );
 
-  private readonly handleCancel = this.effect((cancel$: Observable<void>) => {
-    return cancel$.pipe(tap(() => this.cancel()));
-  });
   private readonly handleSubmit = this.effect((submit$: Observable<void>) => {
     return submit$.pipe(
-      switchMap(() =>
+      withLatestFrom(this.backUrl$),
+      switchMap(([_, backUrl]) =>
         this.getDataForSubmit$.pipe(
           tap(({ entity, formGroup }) =>
-            this.submit(entity, formGroup as FormGroup)
+            this.submit(entity, formGroup as FormGroup, backUrl)
           )
         )
       )
     );
   });
 
-  private cancel$$: Subject<void>;
-  private submit$$: Subject<void>;
-
-  public readonly entityFormViewModel$: Observable<EntityFormViewModel> =
+  public readonly entityFormViewModel$: Observable<SportPlayerFormViewModel> =
     this.select({
       formGroup: this.formGroup$.pipe(
         map((formGroup) => formGroup as FormGroup)
@@ -143,38 +119,45 @@ export class SportPlayerFormService extends ComponentStore<SportPlayerFormState>
       entityId: undefined,
       users: [],
       sportCategories: [],
-    });
-
-    this.cancel$$ = new Subject();
-    this.submit$$ = new Subject();
-  }
-
-  public cancel(): void {
-    this.router.navigate(['../../list'], {
-      relativeTo: this.activatedRoute,
+      backUrl: '',
+      user: undefined,
     });
   }
 
-  public init$(entityId: string | undefined): void {
-    this.updateEntityIdState(entityId);
-    
-    this.fetchEntity(this.entityId$);
+  public init$(
+    entityId: string | undefined,
+    userId: string | undefined,
+    backUrl: string
+  ): void {
+    super.initForm(entityId, userId, backUrl);
+
     this.fetchUsers();
     this.fetchSportCategories();
 
-    this.handleCancel(this.cancel$$.asObservable());
     this.handleSubmit(this.submit$$.asObservable());
+
+    this.createFormGroup(this.entity$);
   }
 
   private addEntity(formGroup: FormGroup): void {
-    this.sportPlayerStoreService.dispatchAddEntityAction(
-      this.sportPlayerFormUtil.createEntity(formGroup) as SportPlayerEntityAdd
+    this.entityStoreService.dispatchAddEntityAction(
+      this.entityFormUtil.createEntity(formGroup) as SportPlayerEntityAdd
     );
   }
 
+  private readonly createFormGroup = this.effect(
+    (entity$: Observable<SportPlayerEntity | undefined>) => {
+      return entity$.pipe(
+        tap((entity) =>
+          this.updateFormGroupState(this.entityFormUtil.createFormGroup(entity))
+        )
+      );
+    }
+  );
+
   private extendsEntityFormViewModel(
-    entityFormViewModel: Partial<EntityFormViewModel>
-  ): EntityFormViewModel {
+    entityFormViewModel: Partial<SportPlayerFormViewModel>
+  ): SportPlayerFormViewModel {
     return {
       formGroup: entityFormViewModel.formGroup as FormGroup,
       cancel$$: this.cancel$$,
@@ -187,7 +170,8 @@ export class SportPlayerFormService extends ComponentStore<SportPlayerFormState>
 
   public submit(
     entity: SportPlayerEntity | undefined,
-    formGroup: FormGroup
+    formGroup: FormGroup,
+    backUrl: string,
   ): void {
     if (entity) {
       this.updateEntity(formGroup);
@@ -195,42 +179,15 @@ export class SportPlayerFormService extends ComponentStore<SportPlayerFormState>
       this.addEntity(formGroup);
     }
 
-    this.router.navigate(['../../list'], {
+    this.router.navigate([backUrl], {
       relativeTo: this.activatedRoute,
     });
   }
 
-  private updateFormGroupState(formGroup: FormGroup): void {
-    this.setState((state) => {
-      return {
-        ...state,
-        formGroup,
-      };
-    });
-  }
-
   private updateEntity(formGroup: FormGroup): void {
-    this.sportPlayerStoreService.dispatchUpdateEntityAction(
-      this.sportPlayerFormUtil.updateEntity(formGroup)
+    this.entityStoreService.dispatchUpdateEntityAction(
+      this.entityFormUtil.updateEntity(formGroup)
     );
-  }
-
-  private updateEntityState(entity: SportPlayerEntity | undefined): void {
-    this.setState((state) => {
-      return {
-        ...state,
-        entity,
-      };
-    });
-  }
-
-  private updateEntityIdState(entityId: string | undefined): void {
-    this.setState((state) => {
-      return {
-        ...state,
-        entityId,
-      };
-    });
   }
 
   private updateUsersState(users: UserEntity[]): void {

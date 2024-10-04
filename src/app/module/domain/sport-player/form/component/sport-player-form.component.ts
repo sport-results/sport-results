@@ -1,26 +1,34 @@
-import { Observable } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-
-import { SportPlayerFormService, EntityFormViewModel } from './sport-player-form.service';
+import {
+  SportPlayerFormService,
+  SportPlayerFormViewModel,
+} from './sport-player-form.service';
+import { EntityFormComponent } from '@app/core/entity';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [SportPlayerFormService],
-    selector: 'app-sport-player-form',
-    templateUrl: './sport-player-form.component.html',
-    styleUrls: ['./sport-player-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SportPlayerFormService],
+  selector: 'sr-sport-player-form',
+  templateUrl: './sport-player-form.component.html',
+  styleUrls: ['./sport-player-form.component.scss'],
 })
-export class SportPlayerFormComponent implements OnInit {
-    public entityFormViewModel$!: Observable<EntityFormViewModel>;
+export class SportPlayerFormComponent
+  extends EntityFormComponent<SportPlayerFormViewModel>
+  implements OnInit
+{
+  private componentService = inject(SportPlayerFormService);
 
-    @Input()
-    public entityId: string | undefined;
+  public ngOnInit(): void {
+    const params = this.extractAllRouteParams(this.router);
 
-    public constructor(private componentService: SportPlayerFormService) {}
-
-    public ngOnInit(): void {
-        this.componentService.init$(this.entityId);
-        this.entityFormViewModel$ = this.componentService.entityFormViewModel$;
-    }
+    this.userId = params['userId'];
+    this.componentService.init$(this.entityId, this.userId, this.backUrl);
+    this.entityFormViewModel$ = this.componentService.entityFormViewModel$;
+  }
 }
