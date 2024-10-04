@@ -1,5 +1,7 @@
 import { inject, Injectable, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { User } from '@app/api/common';
+import { ApplicationStoreService } from '@app/api/core/application';
 import { SportCategoryEntity } from '@app/api/domain/sport-category';
 import { SportCategoryRuleEntity } from '@app/api/domain/sport-category-rule';
 
@@ -8,6 +10,7 @@ import {
   SportEventEntityAdd,
   SportEventEntityUpdate,
   SportEventFormUtil,
+  SportEventUtilService,
 } from '@app/api/domain/sport-event';
 
 import { FormValidatorService } from '@app/core/form';
@@ -18,6 +21,7 @@ export class SportEventFormUtilImpl
   extends SportEventFormUtil
   implements OnDestroy
 {
+  entityUtilService = inject(SportEventUtilService);
   destroy: Subject<void> = new Subject();
 
   ngOnDestroy(): void {
@@ -28,11 +32,13 @@ export class SportEventFormUtilImpl
 
   public createEntity(formGroup: FormGroup): SportEventEntityAdd {
     const now = new Date().toISOString();
+    const user = this.entityUtilService.user$$$();
 
     return {
       meta: {
         creationDate: now,
         lastUpdated: now,
+        ownerId: user?.uid,
       },
       location: formGroup.value['location'],
       dateTime: formGroup.value['dateTime'],

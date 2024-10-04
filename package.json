@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "source-map-analyzer": "ng build --configuration=production --source-map",
+    "source-map-explorer": "source-map-explorer dist/sport-results/**/*.js",
     "watch": "ng build --watch --configuration development",
     "test": "jest",
     "test:coverage": "jest --coverage"

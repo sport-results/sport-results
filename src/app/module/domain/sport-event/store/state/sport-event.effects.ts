@@ -1,4 +1,4 @@
-import { catchError, map, mergeMap, of, switchMap } from 'rxjs';
+import { catchError, map, of, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 import {
@@ -69,6 +69,7 @@ export class SportEventEffects {
       )
     )
   );
+
   listEntities$ = createEffect(() =>
     this.actions$.pipe(
       ofType(sportEventActions.listEntities),
@@ -89,6 +90,30 @@ export class SportEventEffects {
       )
     )
   );
+
+  listEntitiesByIds$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(sportEventActions.listEntitiesByIds),
+      switchMap((action) =>
+        this.sportEventEffectService
+          .listEntitiesByCollectionGroup$(
+            action.ids,
+          )
+          .pipe(
+            map((entities) => {
+              return sportEventActions.listEntitiesByIdsSuccess({
+                sportEvents: entities,
+              });
+            }),
+            catchError((error) => {
+              return of(sportEventActions.listEntitiesByIdsFail({ error }));
+            })
+          )
+      )
+    )
+  );
+
+
   loadEntity$ = createEffect(() =>
     this.actions$.pipe(
       ofType(sportEventActions.loadEntity),

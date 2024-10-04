@@ -65,6 +65,23 @@ export const listEntitiesFail = createAction(
     props<{ error: string }>()
 );
 
+export const listEntitiesByIds = createAction(
+  '[SportEvent Admin] List SportEvents By Ids',
+  props<{
+      ids: string[];
+  }>()
+);
+
+export const listEntitiesByIdsSuccess = createAction(
+  '[SportEvent Admin] List SportEvents By Ids Success',
+  props<{ sportEvents: SportEventEntity[] }>()
+);
+
+export const listEntitiesByIdsFail = createAction(
+  '[SportEvent Admin] List SportEvents By Ids Fail',
+  props<{ error: string }>()
+);
+
 export const selectEntity = createAction(
 	'[SportEvent Admin] Select SportEvent',
 	props<{ sportEvent: SportEventEntity | null }>()

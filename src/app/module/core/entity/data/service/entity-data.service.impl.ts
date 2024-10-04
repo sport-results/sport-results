@@ -44,10 +44,10 @@ export abstract class EntityDataServiceImpl extends EntityDataService<
     return this.dataEngine.listByIds$(ids);
   }
 
-  public override listByGroup$(
+  public override listByCollectionGroup$(
     ids?: string[]
   ): Observable<EntityModel[]> {
-    return this.dataEngine.listByGroup$(ids);
+    return this.dataEngine.listByCollectionGroup$(ids);
   }
 
   public override load$(id: string): Observable<EntityModel | undefined> {

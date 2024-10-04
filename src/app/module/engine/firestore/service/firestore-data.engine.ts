@@ -121,7 +121,7 @@ export class FirestoreDataEngine extends DataEngine {
     });
   }
 
-  public listByGroup$(
+  public listByCollectionGroup$(
     ids?: string[]
   ): Observable<EntityModel[]> {
     const entityCollectionGroup = collectionGroup(

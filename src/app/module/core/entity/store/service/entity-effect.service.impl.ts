@@ -1,4 +1,11 @@
-import { exhaustMap, forkJoin, mergeMap, Observable, of, switchMap } from 'rxjs';
+import {
+  exhaustMap,
+  forkJoin,
+  mergeMap,
+  Observable,
+  of,
+  switchMap,
+} from 'rxjs';
 
 import { KeyValue } from '@angular/common';
 import { Injectable } from '@angular/core';
@@ -95,20 +102,43 @@ export class EntityEffectServiceImpl extends EntityEffectService<
       );
   }
 
-  public listGroupEntities$(ids?: string[]): Observable<Entity[]> {
-    return this.entityDataService
-      .listByGroup$(ids)
-      .pipe(
-        mergeMap((models) =>
+  public override listEntitiesByIds$(ids: string[]): Observable<Entity[]> {
+    return this.entityDataService.listByIds$(ids).pipe(
+      exhaustMap((models) => {
+        const x =
           models && models.length
             ? forkJoin(
                 models.map((model) =>
                   this.entityUtilService.convertModelToEntity$(model)
                 )
               )
-            : of(models as Entity[])
-        )
-      );
+            : of(models as Entity[]);
+
+        return x;
+      })
+    );
+  }
+
+  public listEntitiesByCollectionGroup$(ids?: string[]): Observable<Entity[]> {
+    return this.entityDataService.listByCollectionGroup$(ids).pipe(
+      mergeMap((models) => {
+        const x =
+          models && models.length
+            ? forkJoin(
+                models.map((model) =>
+                  this.entityUtilService.convertModelToEntity$(model)
+                )
+              )
+            : of(models as Entity[]);
+
+            x.subscribe({
+              next: (data) => console.log(data),
+              error: (error) => console.error(error)
+            })
+
+        return x;
+      })
+    );
   }
 
   public searchEntities$(params: SearchParams): Observable<Entity[]> {
@@ -125,7 +155,9 @@ export class EntityEffectServiceImpl extends EntityEffectService<
       );
   }
 
-  public searchEntitiesByCollectionGroup$(params: SearchParams): Observable<Entity[]> {
+  public searchEntitiesByCollectionGroup$(
+    params: SearchParams
+  ): Observable<Entity[]> {
     return this.entityDataService
       .searchByCollectionGroup$(params)
       .pipe(

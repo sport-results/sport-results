@@ -6,6 +6,6 @@ export type TopBarParams = {
   addPagePermissions: string[];
   editPagePermissions: string[];
   menuItems: MenuItem[];
-  user: User | null;
+  user: User | undefined;
   isAuthenticated: boolean;
 };

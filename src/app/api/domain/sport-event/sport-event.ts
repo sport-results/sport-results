@@ -20,7 +20,7 @@ export type SportEventEntityUpdate = Partial<SportEventEntity> & Entity;
 
 export type SportEventModel = SportEvent & Entity & {
   dateTime: string;
-  participantIds: string[];
+  participants: Participant[];
   sportCategory: SportCategorySimple;
 };
 

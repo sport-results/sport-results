@@ -1,7 +1,7 @@
-import { filter, first, map, Observable, of, switchMap, tap } from 'rxjs';
+import { filter, first, map, Observable, of, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import {
   SportEventEntity,
   SportEventEntityAdd,
@@ -11,7 +11,6 @@ import {
   SportEventModelUpdate,
 } from '@app/api/domain/sport-event';
 import { EntityUtilServiceImpl } from '@app/core/entity';
-import { Entity, EntityAdd, EntityUpdate } from '@app/api/core/entity';
 import { SportPlayerStoreService } from '@app/api/domain/sport-player';
 
 @Injectable()
@@ -32,7 +31,7 @@ export class SportEventUtilServiceImpl extends EntityUtilServiceImpl {
       dateTime: entity.dateTime.toISOString(),
       location: entity.location || null,
       meta: entity.meta,
-      participantIds: entity.participants.map((participant) => participant.uid),
+      participants: entity.participants,
       sportCategoryRule: entity.sportCategoryRule,
       sportCategory: entity.sportCategory,
     };
@@ -41,27 +40,15 @@ export class SportEventUtilServiceImpl extends EntityUtilServiceImpl {
   public override convertModelToEntity$(
     model: SportEventModel
   ): Observable<SportEventEntity> {
-    return this.sportPlayerStoreService
-      .selectEntitiesByIds$(model.participantIds)
-      .pipe(
-        filter(
-          (sportPlayers) =>
-            !!sportPlayers &&
-            sportPlayers.length == model.sportCategoryRule.participantSize
-        ),
-        first(),
-        map((sportPlayers) => {
-          return {
-            meta: model.meta,
-            dateTime: new Date(model.dateTime),
-            location: model.location,
-            participants: sportPlayers,
-            sportCategory: model.sportCategory,
-            sportCategoryRule: model.sportCategoryRule,
-            uid: model.uid,
-          };
-        })
-      );
+    return of({
+      meta: model.meta,
+      dateTime: new Date(model.dateTime),
+      location: model.location,
+      participants: model.participants,
+      sportCategory: model.sportCategory,
+      sportCategoryRule: model.sportCategoryRule,
+      uid: model.uid,
+    });
   }
 
   public override convertModelUpdateToEntityUpdate$(

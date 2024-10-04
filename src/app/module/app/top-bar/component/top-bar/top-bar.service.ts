@@ -17,6 +17,7 @@ import { NetworkPlayerStoreService } from '@app/api/domain/network-player';
 import { User } from '@app/api/common';
 import { SportNetworkStoreService } from '@app/api/domain/sport-network';
 import { SportEventStoreService } from '@app/api/domain/sport-event';
+import { PermissionStoreService } from '@app/api/domain/permission';
 
 @Injectable()
 export class TopBarService {
@@ -25,6 +26,7 @@ export class TopBarService {
   private networkPlayerStoreService = inject(NetworkPlayerStoreService);
   private sportNetworkStoreService = inject(SportNetworkStoreService);
   private sportEventStoreService = inject(SportEventStoreService);
+  private permissionStoreService = inject(PermissionStoreService);
   private router = inject(Router);
 
   private params!: TopBarParams;
@@ -72,10 +74,11 @@ export class TopBarService {
     this.networkPlayerStoreService.dispatchResetAction();
     this.sportNetworkStoreService.dispatchResetAction();
     this.sportEventStoreService.dispatchResetAction();
+    this.permissionStoreService.dispatchResetAction();
     this.router.navigate(['/home']);
   }
 
-  private updateParams(params: TopBarParams, user: User | null): TopBarParams {
+  private updateParams(params: TopBarParams, user: User | undefined): TopBarParams {
     let newParams: TopBarParams;
 
     if (!params) {

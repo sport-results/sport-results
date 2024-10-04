@@ -31,7 +31,7 @@ export class UserAvatarComponent {
   @Output()
   public logout = new EventEmitter<boolean>();
   @Input()
-  public user: User | null = null;
+  public user?: User;
   public userMenuItems$$$!: Signal<MenuItem[] | undefined>;
 
   constructor() {
@@ -46,7 +46,7 @@ export class UserAvatarComponent {
     );
   }
 
-  private createMenuItems(user: User | null): MenuItem[] {
+  private createMenuItems(user: User | undefined): MenuItem[] {
     this.user = user;
     const userMenuItems: MenuItem[] = [
       {

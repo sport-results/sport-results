@@ -13,7 +13,7 @@ export abstract class DataService<R, S, T> {
     queryParams?: KeyValue<string, string>[]
   ): Observable<R[]>;
   public abstract listByIds$(ids: string[]): Observable<R[]>;
-  public abstract listByGroup$(ids?: string[]): Observable<R[]>;
+  public abstract listByCollectionGroup$(ids?: string[]): Observable<R[]>;
   public abstract load$(id: string): Observable<R | undefined>;
   public abstract search$(params: SearchParam[]): Observable<R[]>;
   public abstract searchByCollectionGroup$(

@@ -110,3 +110,7 @@ export const updateEntityFail = createAction(
   '[Permission Admin] Update Permission Fail',
   props<{ error: string }>()
 );
+
+export const reset = createAction(
+  '[SportEvent] reset SportEvent'
+);

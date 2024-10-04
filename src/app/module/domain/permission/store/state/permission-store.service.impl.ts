@@ -56,6 +56,10 @@ export class PermissionStoreServiceImpl extends PermissionStoreService {
     );
   }
 
+  public override dispatchResetAction(): void {
+    this.store.dispatch(permissionActions.reset());
+  }
+
   public dispatchSearchEntitiesByCollectionGroupAction(
     searchParams: SearchParam[]
   ): void {

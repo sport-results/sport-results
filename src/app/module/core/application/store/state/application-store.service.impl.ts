@@ -39,7 +39,7 @@ export class ApplicationStoreServiceImpl extends ApplicationStoreService {
     this.store.dispatch(applicationActions.testLogin({ user }));
   }
 
-  public selectAuthenticatedUser$(): Observable<User | null> {
+  public selectAuthenticatedUser$(): Observable<User | undefined> {
     return this.store.pipe(
       select(applicationSelectors.selectAuthenticatedUser)
     );

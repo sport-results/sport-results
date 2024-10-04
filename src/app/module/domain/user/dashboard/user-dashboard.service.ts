@@ -1,13 +1,26 @@
 import { inject, Injectable, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
+import { EntityTypeEnum } from '@app/api/core/entity';
+import {
+  QueryConstraintTypeEnum,
+  QueryOperatorEnum,
+} from '@app/api/core/search';
 import {
   NETWORK_PLAYER_FEATURE_KEY,
   NetworkPlayerEntity,
   NetworkPlayerStoreService,
 } from '@app/api/domain/network-player';
+import {
+  PermissionEntity,
+  PermissionStoreService,
+} from '@app/api/domain/permission';
 import { SportCategoryStoreService } from '@app/api/domain/sport-category';
-import { SPORT_EVENT_FEATURE_KEY, SportEventStoreService } from '@app/api/domain/sport-event';
+import {
+  SPORT_EVENT_FEATURE_KEY,
+  SportEventEntity,
+  SportEventStoreService,
+} from '@app/api/domain/sport-event';
 import {
   SPORT_NETWORK_FEATURE_KEY,
   SportNetworkEntity,
@@ -30,17 +43,21 @@ export type UserDashboardState = {
   sportNetworks: SportNetworkEntity[];
   selectedNetworkId: string | undefined;
   networkPlayers: NetworkPlayerEntity[] | undefined;
+  permissions: PermissionEntity[];
+  sportEventsByPermissions: SportEventEntity[];
 };
 export type UserDashboardViewModel = {
   sportNetworks: SportNetworkEntity[];
   addNetworkPlayer$$: Subject<void>;
   addSportEvent$$: Subject<void>;
   networkPlayers: NetworkPlayerEntity[];
+  sportEventsByPermissions: SportEventEntity[];
 };
 
 @Injectable()
 export class UserDashboardService extends ComponentStore<UserDashboardState> {
   private networkPlayerStoreService = inject(NetworkPlayerStoreService);
+  private permissionStoreService = inject(PermissionStoreService);
   private sportCategoryStoreService = inject(SportCategoryStoreService);
   private sportEventStoreService = inject(SportEventStoreService);
   private sportNetworkStoreService = inject(SportNetworkStoreService);
@@ -51,10 +68,43 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
   private readonly networkPlayers$ = this.select(
     (state) => state.networkPlayers
   ).pipe(map((networkPlayers) => networkPlayers || []));
+  private readonly permissions$ = this.select((state) => state.permissions);
+  private readonly sportEventsByPermissions$ = this.select(
+    (state) => state.sportEventsByPermissions
+  ); //
   private readonly selectedNetworkId$ = this.select(
     (state) => state.selectedNetworkId
   );
   private readonly user$ = this.select((state) => state.user);
+
+  private readonly fetchNetworkPlayers = this.effect(
+    (selectedNetworkId$: Observable<string | undefined>) =>
+      selectedNetworkId$.pipe(
+        switchMap((selectedNetworkId) =>
+          this.networkPlayerStoreService
+            .selectEntitiesBySportNetworkId$(selectedNetworkId || '')
+            .pipe(
+              tap((networkPlayers) => {
+                this.updateNetworkPlayersState(networkPlayers);
+              })
+            )
+        )
+      )
+  );
+
+  private readonly fetchPermissions = this.effect(
+    (user$: Observable<UserEntity | undefined>) =>
+      user$.pipe(
+        filter((user) => !!user),
+        switchMap((user) =>
+          this.permissionStoreService.selectEntities$().pipe(
+            tap((permissions) => {
+              this.updatePermissionState(permissions);
+            })
+          )
+        )
+      )
+  );
 
   private readonly fetchSportNetworks = this.effect(
     (user$: Observable<UserEntity | undefined>) =>
@@ -78,12 +128,32 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
       )
   );
 
+  private readonly fetchSportEventsByPermissionIds = this.effect(
+    (permissions$: Observable<PermissionEntity[]>) =>
+      permissions$.pipe(
+        switchMap((permissions) =>
+          this.sportEventStoreService
+            .selectEntitiesByIds$(
+              permissions.map((permission) => permission.uid)
+            )
+            .pipe(
+              tap((sportEventsByPermissions) => {
+                this.updateSportEventsByPermissionsState(
+                  sportEventsByPermissions
+                );
+              })
+            )
+        )
+      )
+  );
+
   public readonly userDashboardViewModel$$$: Signal<
     UserDashboardViewModel | undefined
   > = toSignal(
     this.select({
       sportNetworks: this.networks$,
       networkPlayers: this.networkPlayers$,
+      sportEventsByPermissions: this.sportEventsByPermissions$,
     }).pipe(
       map((userDashboardViewModel) => ({
         ...userDashboardViewModel,
@@ -102,6 +172,8 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
       user: undefined,
       selectedNetworkId: undefined,
       networkPlayers: [],
+      permissions: [],
+      sportEventsByPermissions: [],
     });
 
     this.addNetworkPlayer$$ = new Subject<void>();
@@ -114,16 +186,32 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
         `${USER_FEATURE_KEY}/${user?.uid}`
       );
       this.networkPlayerStoreService.dispatchListEntitiesAction;
+      this.permissionStoreService.dispatchSearchEntitiesByCollectionGroupAction(
+        [
+          {
+            entityType: EntityTypeEnum.Entity,
+            query: {
+              field: 'userId',
+              queryConstraint: QueryConstraintTypeEnum.where,
+              operation: QueryOperatorEnum.equal,
+              value: user.uid,
+            },
+          },
+        ]
+      );
     }
+
+    this.dispatchListNetworkPlayers(this.selectedNetworkId$);
+    this.dispatchListSportEvents(this.selectedNetworkId$);
+    this.dispatchListSportEventsByPermissions(this.permissions$);
 
     this.updateUserState(user);
     this.fetchNetworkPlayers(this.selectedNetworkId$);
     this.fetchSportNetworks(this.user$);
+    this.fetchPermissions(this.user$);
+    this.fetchSportEventsByPermissionIds(this.permissions$);
     this.handleAddNetworkPlayer(this.addNetworkPlayer$$.asObservable());
     this.handleAddSportEvent(this.addSportEvent$$.asObservable());
-
-    this.dispatchListNetworkPlayers(this.selectedNetworkId$);
-    this.dispatchListSportEvents(this.selectedNetworkId$);
   }
 
   private dispatchListNetworkPlayers = this.effect(
@@ -154,18 +242,15 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
       )
   );
 
-  private readonly fetchNetworkPlayers = this.effect(
-    (selectedNetworkId$: Observable<string | undefined>) =>
-      selectedNetworkId$.pipe(
-        switchMap((selectedNetworkId) =>
-          this.networkPlayerStoreService
-            .selectEntitiesBySportNetworkId$(selectedNetworkId || '')
-            .pipe(
-              tap((networkPlayers) => {
-                this.updateNetworkPlayersState(networkPlayers);
-              })
-            )
-        )
+  private dispatchListSportEventsByPermissions = this.effect(
+    (permissions$: Observable<PermissionEntity[]>) =>
+      permissions$.pipe(
+        filter(permissions => permissions && permissions.length > 0),
+        tap((permissions) => {
+          this.sportEventStoreService.dispatchListEntitiesByIdsAction(
+            permissions.map((permission) => permission.resourceId)
+          );
+        })
       )
   );
 
@@ -219,6 +304,17 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
     });
   }
 
+  private updateSportEventsByPermissionsState(
+    sportEventsByPermissions: SportEventEntity[]
+  ): void {
+    this.setState((state) => {
+      return {
+        ...state,
+        sportEventsByPermissions,
+      };
+    });
+  }
+
   private updateSelectedSportNetworkState(
     selectedNetworkId: string | undefined
   ): void {
@@ -237,6 +333,15 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
       return {
         ...state,
         networkPlayers,
+      };
+    });
+  }
+
+  private updatePermissionState(permissions: PermissionEntity[]): void {
+    this.setState((state) => {
+      return {
+        ...state,
+        permissions,
       };
     });
   }

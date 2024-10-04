@@ -1,5 +1,5 @@
 export interface Meta {
-	creationDate: string;
-	lastUpdated: string;
+  creationDate: string;
+  lastUpdated: string;
   ownerId?: string;
 }
