@@ -47,7 +47,11 @@
               />
             </ng-template>
 
-            <sr-sport-event-card-collection></sr-sport-event-card-collection>
+            <sr-sport-event-card-collection
+              [sportEventsByPermissions]="
+                userDashboardViewModel.sportEventsByPermissions
+              "
+            />
           </p-panel>
         </div>
       </div>

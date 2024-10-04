@@ -35,21 +35,29 @@ export class UserEffects {
   listUsers$ = createEffect(() =>
     this.actions$.pipe(
       ofType(userActions.listEntities),
-      switchMap((action) =>
-        this.userEffectService
-          .listEntities$(
-            action.subCollectionPath,
-            action.pathParams,
-            action.queryParams
-          )
-          .pipe(
-            map((users) => {
-              return userActions.listEntitiesSuccess({
-                users,
-              });
-            })
-          )
-      )
+      switchMap((action) => {
+        const x = this.userEffectService.listEntities$(
+          action.subCollectionPath,
+          action.pathParams,
+          action.queryParams
+        );
+
+        x.subscribe({
+          next: (data) => console.log(data),
+          error: (err) => console.log(err)
+        })
+
+        return x.pipe(
+          map((users) => {
+            return userActions.listEntitiesSuccess({
+              users,
+            });
+          }),
+          catchError((error) => {
+            return of(userActions.listEntitiesFail({ error }));
+          })
+        );
+      })
     )
   );
   loadExistedUser$ = createEffect(() =>

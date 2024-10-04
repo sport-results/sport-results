@@ -1,6 +1,6 @@
 import { Observable, of } from 'rxjs';
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   Entity,
@@ -19,6 +19,8 @@ import {
   SearchParam,
   SearchParams,
 } from '@app/api/core/search';
+import { ApplicationStoreService } from '@app/api/core/application';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable()
 export abstract class EntityUtilServiceImpl extends EntityUtilService<
@@ -29,10 +31,14 @@ export abstract class EntityUtilServiceImpl extends EntityUtilService<
   EntityModelAdd,
   EntityModelUpdate
 > {
+  protected applicationStoreService = inject(ApplicationStoreService);
+
   protected _sortByMeta = (a: never, b: never): number => (a < b ? 1 : -1);
 
   public constructor(protected formBuilder: FormBuilder) {
     super();
+
+    this.user$$$ = toSignal(this.applicationStoreService.selectAuthenticatedUser$());
   }
 
   public convertEntityAddToModelAdd(entity: EntityAdd): EntityModelAdd {

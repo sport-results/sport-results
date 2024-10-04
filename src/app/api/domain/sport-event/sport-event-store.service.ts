@@ -11,5 +11,7 @@ export abstract class SportEventStoreService extends EntityStoreService<
     public abstract dispatchChangeNewEntityButtonEnabled(
         enabled: boolean
     ): void;
+    public abstract dispatchListEntitiesByIdsAction(ids: string[]): void;
     public abstract selectNewEntityButtonEnabled$(): Observable<boolean>;
+    public abstract selectEntitiesByIds$(ids: string[]): Observable<SportEventEntity[]>;
 }

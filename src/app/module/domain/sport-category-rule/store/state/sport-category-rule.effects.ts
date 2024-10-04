@@ -39,7 +39,7 @@ export class SportCategoryRuleEffects {
       ofType(sportCategoryRuleActions.listGroupEntities),
       switchMap((action) =>
         this.sportCategoryRuleEffectService
-          .listGroupEntities$(action.ids)
+          .listEntitiesByCollectionGroup$(action.ids)
           .pipe(
             map((entities) => {
               return sportCategoryRuleActions.listGroupEntitiesSuccess({

@@ -1,4 +1,4 @@
-import { map, Observable, of, switchMap } from 'rxjs';
+import { exhaustMap, map, Observable, of, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -92,7 +92,7 @@ export class UserUtilServiceImpl extends EntityUtilServiceImpl {
   ): Observable<UserEntity> {
     return super.convertModelToEntity$(model).pipe(
       map((entity) => entity as UserEntity),
-      switchMap((entity) => {
+      exhaustMap((entity) => {
         return this.convertRoleIdsToRoles$(model.roleIds || []).pipe(
           switchMap((roles) =>
             of({

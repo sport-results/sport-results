@@ -29,6 +29,7 @@ import { SportNetworkModule } from './module/domain/sport-network';
 import { SportPlayerModule } from './module/domain/sport-player';
 import { NetworkPlayerModule } from './module/domain/network-player';
 import { SportEventModule } from './module/domain/sport-event';
+import { PermissionModule } from './module/domain/permission';
 
 @NgModule({
   declarations: [AppComponent],
@@ -50,6 +51,7 @@ import { SportEventModule } from './module/domain/sport-event';
     SportPlayerModule,
     NetworkPlayerModule,
     SportEventModule,
+    PermissionModule,
   ],
   providers: [
     provideFirebaseApp(() => initializeApp(environment.firebase)),

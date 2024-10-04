@@ -12,12 +12,13 @@ import { ComponentStore } from '@ngrx/component-store';
 
 export type SportEventCardState = {
   entities: SportEventEntity[];
+  sportEventsByPermissions: SportEventEntity[];
 };
 
 export type EntityCardViewModel = {
   entities: SportEventEntity[];
   editEntity$$: Subject<SportEventEntity>;
-  buttonPermissions: string[];
+  sportEventsByPermissions: SportEventEntity[];
 };
 
 @Injectable()
@@ -26,12 +27,15 @@ export class SportEventCardService extends ComponentStore<SportEventCardState> {
   private sportEventStoreService = inject(SportEventStoreService);
   private router = inject(Router);
 
+  private readonly entities$ = this.select((state) => state.entities);
+  private readonly sportEventsByPermissions$ = this.select((state) => state.sportEventsByPermissions);
+
   private readonly handleEditEntity = this.effect(
     (editEntity$: Observable<SportEventEntity>) => {
       return editEntity$.pipe(tap((entity) => this.editEntity(entity)));
     }
   );
-  private readonly entities$ = this.select((state) => state.entities);
+
   private readonly selectEntities = this.effect(() => {
     return this.sportEventStoreService.selectEntities$().pipe(
       tap((entities) => {
@@ -45,13 +49,10 @@ export class SportEventCardService extends ComponentStore<SportEventCardState> {
   public readonly entityCardViewModel$: Observable<EntityCardViewModel> =
     this.select({
       entities: this.entities$,
+      sportEventsByPermissions: this.sportEventsByPermissions$
     }).pipe(
       map((entityFormViewModel) => ({
         ...entityFormViewModel,
-        buttonPermissions: [
-          RoleNames.ADMIN,
-          SportEventPermissionsService.updateSportEventEntity,
-        ],
         editEntity$$: this.editEntity$$,
       }))
     );
@@ -59,6 +60,7 @@ export class SportEventCardService extends ComponentStore<SportEventCardState> {
   public constructor() {
     super({
       entities: [],
+      sportEventsByPermissions: [],
     });
 
     this.editEntity$$ = new Subject();
@@ -70,7 +72,7 @@ export class SportEventCardService extends ComponentStore<SportEventCardState> {
     });
   }
 
-  public init$(): void {
+  public init$(sportEventsByPermissions: SportEventEntity[]): void {
     this.selectEntities();
     this.handleEditEntity(this.editEntity$$.asObservable());
   }
@@ -80,6 +82,15 @@ export class SportEventCardService extends ComponentStore<SportEventCardState> {
       return {
         ...state,
         entities,
+      };
+    });
+  }
+
+  private updateSportEventsByPermissionsState(sportEventsByPermissions: SportEventEntity[]): void {
+    this.setState((state) => {
+      return {
+        ...state,
+        sportEventsByPermissions,
       };
     });
   }

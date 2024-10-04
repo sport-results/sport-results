@@ -1,15 +1,26 @@
-import { catchError, map, mergeMap, of, switchMap } from 'rxjs';
+import { catchError, map, of, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
-import { SportEventEffectService } from '@app/api/domain/sport-event';
+import {
+  SPORT_EVENT_FEATURE_KEY,
+  SportEventEffectService,
+} from '@app/api/domain/sport-event';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import * as sportEventActions from './sport-event.actions';
+import {
+  PermissionEntityAdd,
+  PermissionStoreService,
+} from '@app/api/domain/permission';
+import { ActionEnum, Meta } from '@app/api/common';
+import { ParticipantTypeEnum } from '@app/api/domain/sport-category-rule';
+import { SportPlayerEntity } from '@app/api/domain/sport-player';
 
 @Injectable()
 export class SportEventEffects {
   private actions$ = inject(Actions);
   private sportEventEffectService = inject(SportEventEffectService);
+  private permissionStoreService = inject(PermissionStoreService);
 
   addEntity$ = createEffect(() =>
     this.actions$.pipe(
@@ -18,19 +29,51 @@ export class SportEventEffects {
         this.sportEventEffectService
           .addEntity$(action.sportEvent, action.subCollectionPath)
           .pipe(
-            map((entity) =>
-              sportEventActions.addEntitySuccess({
+            map((entity) => {
+              entity.participants
+                .filter((participant) =>
+                  entity.sportCategoryRule.participantType ===
+                  ParticipantTypeEnum.player
+                    ? (participant as SportPlayerEntity).userId !==
+                      entity.meta.ownerId
+                    : true
+                )
+                .forEach((participant) => {
+                  if (
+                    entity.sportCategoryRule.participantType ===
+                    ParticipantTypeEnum.player
+                      ? !!(participant as SportPlayerEntity).userId
+                      : false
+                  ) {
+                    const permission: PermissionEntityAdd = {
+                      actions: [ActionEnum.VIEW],
+                      resourceId: entity.uid,
+                      resourceType: typeof entity,
+                      userId: (participant as SportPlayerEntity).userId || '',
+                      meta: {} as Meta,
+                    };
+                    this.permissionStoreService.dispatchAddEntityAction(
+                      permission,
+                      action.subCollectionPath
+                        ? `${action.subCollectionPath}/${SPORT_EVENT_FEATURE_KEY}/${entity.uid}`
+                        : `${SPORT_EVENT_FEATURE_KEY}/${entity.uid}`
+                    );
+                  }
+                });
+
+              return sportEventActions.addEntitySuccess({
                 sportEvent: entity,
-              })
-            )
+              });
+            })
           )
       )
     )
   );
+
   listEntities$ = createEffect(() =>
     this.actions$.pipe(
       ofType(sportEventActions.listEntities),
-      mergeMap((action) =>
+      switchMap((action) =>
         this.sportEventEffectService
           .listEntities$(
             action.subCollectionPath,
@@ -47,6 +90,30 @@ export class SportEventEffects {
       )
     )
   );
+
+  listEntitiesByIds$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(sportEventActions.listEntitiesByIds),
+      switchMap((action) =>
+        this.sportEventEffectService
+          .listEntitiesByCollectionGroup$(
+            action.ids,
+          )
+          .pipe(
+            map((entities) => {
+              return sportEventActions.listEntitiesByIdsSuccess({
+                sportEvents: entities,
+              });
+            }),
+            catchError((error) => {
+              return of(sportEventActions.listEntitiesByIdsFail({ error }));
+            })
+          )
+      )
+    )
+  );
+
+
   loadEntity$ = createEffect(() =>
     this.actions$.pipe(
       ofType(sportEventActions.loadEntity),

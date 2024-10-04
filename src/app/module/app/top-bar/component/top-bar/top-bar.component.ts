@@ -23,7 +23,7 @@ export class TopBarComponent implements OnInit {
   constructor(private componentService: TopBarService) {}
 
   @Input()
-  title: string | null = '';
+  title: string = '';
 
   imgClickHandler(): void {
     this.componentService.imgClickHandler();

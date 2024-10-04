@@ -49,6 +49,10 @@ export class SportNetworkStoreServiceImpl extends SportNetworkStoreService {
         }));
     }
 
+    public override dispatchResetAction(): void {
+      this.store.dispatch(sportNetworkActions.reset());
+    }
+
     public dispatchSelectEntityAction(sportNetwork: SportNetworkEntity | null): void {
         this.store.dispatch(sportNetworkActions.selectEntity({ sportNetwork }));
     }

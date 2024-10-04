@@ -5,7 +5,7 @@ import { APPLICATION_FEATURE_KEY } from '@app/api/core/application';
 import { User } from '@app/api/common';
 
 export interface ApplicationState {
-  authenticatedUser: User | null;
+  authenticatedUser: User | undefined;
   checkpointId: number;
   loading: boolean;
   error: string | null;
@@ -16,7 +16,7 @@ export interface ApplicationPartialState {
 }
 
 const defaultState: ApplicationState = {
- authenticatedUser: null,
+ authenticatedUser: undefined,
  checkpointId: 0,
  error: null,
  loading: false,
@@ -41,7 +41,7 @@ export const applicationReducer = createReducer(
   on(applicationActions.logout, (state) => {
     return {
       ...state,
-      authenticatedUser: null,
+      authenticatedUser: undefined,
       loading: false,
     };
   }),
@@ -55,7 +55,7 @@ export const applicationReducer = createReducer(
   })),
   on(applicationActions.authError, (state) => ({
     ...state,
-    authenticatedUser: null,
+    authenticatedUser: undefined,
     loading: false,
   }))
 );

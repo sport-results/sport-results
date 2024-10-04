@@ -106,8 +106,16 @@
       "@app/domain/sport-event": [
         "./src/app/module/domain/sport-event/index.ts"
       ],
-      "@app/admin/sport-event": [
-        "./src/app/module/admin/sport-event/index.ts"
+      "@app/admin/sport-event": ["./src/app/module/admin/sport-event/index.ts"],
+      "@app/api/domain/permission": [
+        "./src/app/api/domain/permission/index.ts"
+      ],
+      "@app/api/admin/permission": ["./src/app/api/admin/permission/index.ts"],
+      "@app/module/domain/permission": [
+        "./src/app/module/domain/permission/index.ts"
+      ],
+      "@app/module/admin/permission": [
+        "./src/app/module/admin/permission/index.ts"
       ]
     }
   },
