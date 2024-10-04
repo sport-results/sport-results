@@ -1,5 +1,5 @@
 import { Observable, tap } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
   SportCategoryEntity,
   SportCategoryEntityAdd,
@@ -38,10 +38,11 @@ export class SportCategoryFormService extends EntityFormComponentStore<
 
   private readonly handleSubmit = this.effect((submit$: Observable<void>) => {
     return submit$.pipe(
-      switchMap(() =>
+      withLatestFrom(this.backUrl$),
+      switchMap(([_, backUrl]) =>
         this.getDataForSubmit$.pipe(
           tap(({ entity, formGroup }) =>
-            this.submit(entity, formGroup as FormGroup)
+            this.submit(entity, formGroup as FormGroup, backUrl)
           )
         )
       )
@@ -108,7 +109,8 @@ export class SportCategoryFormService extends EntityFormComponentStore<
 
   public submit(
     entity: SportCategoryEntity | undefined,
-    formGroup: FormGroup
+    formGroup: FormGroup,
+    backUrl: string,
   ): void {
     if (entity) {
       this.updateEntity(formGroup);
@@ -116,7 +118,7 @@ export class SportCategoryFormService extends EntityFormComponentStore<
       this.addEntity(formGroup);
     }
 
-    this.router.navigate(['../../list'], {
+    this.router.navigate([backUrl], {
       relativeTo: this.activatedRoute,
     });
   }

@@ -11,4 +11,6 @@ export class SportCategoryRuleEditPageComponent {
     public sportCategoryId!: string;
     @Input()
     public sportCategoryRuleId!: string;
+    @Input()
+    backUrl!: string;
 }

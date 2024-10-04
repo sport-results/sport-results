@@ -1,9 +1,8 @@
-import { Observable, Subject, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import {
   ParticipantTypeEnum,
   participantTypes,
@@ -11,68 +10,52 @@ import {
   periodTypes,
   SportCategoryRuleEntity,
   SportCategoryRuleEntityAdd,
+  SportCategoryRuleEntityUpdate,
   SportCategoryRuleFormUtil,
   SportCategoryRuleStoreService,
 } from '@app/api/domain/sport-category-rule';
-import { ComponentStore } from '@ngrx/component-store';
-import { SPORT_CATEGORY_FEATURE_KEY, SportCategory, SportCategoryEntity, SportCategoryStoreService } from '@app/api/domain/sport-category';
+import {
+  SPORT_CATEGORY_FEATURE_KEY,
+  SportCategoryEntity,
+  SportCategoryStoreService,
+} from '@app/api/domain/sport-category';
+import {
+  EntityFormComponentState,
+  EntityFormComponentStore,
+  EntityFormViewModel,
+} from '@app/core/entity';
 
-export interface SportCategoryRuleFormState {
-  formGroup: FormGroup | undefined;
-  entity: SportCategoryRuleEntity | undefined;
-  entityId: string | undefined;
+export interface SportCategoryRuleFormState
+  extends EntityFormComponentState<SportCategoryRuleEntity> {
   parentEntityId: string | undefined;
   parentEntity: SportCategoryEntity | undefined;
 }
 
-export type EntityFormViewModel = {
-  formGroup: FormGroup;
-  cancel$$: Subject<void>;
-  submit$$: Subject<void>;
+export interface SportCategoryRuleFormViewModel extends EntityFormViewModel {
   periodTypes: PeriodTypeEnum[];
   participantTypes: ParticipantTypeEnum[];
-};
+}
 
 @Injectable()
-export class SportCategoryRuleFormService extends ComponentStore<SportCategoryRuleFormState> {
-  private activatedRoute = inject(ActivatedRoute);
-  private sportCategoryRuleStoreService = inject(SportCategoryRuleStoreService);
-  private sportCategoryRuleFormUtil = inject(SportCategoryRuleFormUtil);
+export class SportCategoryRuleFormService extends EntityFormComponentStore<
+  SportCategoryRuleFormState,
+  SportCategoryRuleEntityAdd,
+  SportCategoryRuleEntity,
+  SportCategoryRuleEntityUpdate
+> {
+  protected override entityStoreService = inject(SportCategoryRuleStoreService);
+  protected override entityFormUtil = inject(SportCategoryRuleFormUtil);
   private sportCategoryStoreService = inject(SportCategoryStoreService);
-  private router = inject(Router);
 
-  private readonly entity$ = this.select((state) => state.entity);
-  private readonly entityId$ = this.select((state) => state.entityId);
-  private readonly parentEntity$ = this.select((state) => state.parentEntity);
   private readonly parentEntityId$ = this.select(
     (state) => state.parentEntityId
   );
-  private readonly formGroup$ = this.select((state) => state.formGroup);
+
   private readonly getDataForSubmit$ = this.select((state) => ({
     entity: state.entity,
     parentEntity: state.parentEntity,
     formGroup: state.formGroup,
   }));
-
-  private readonly fetchEntity = this.effect(
-    (entityId$: Observable<string | undefined>) => {
-      return entityId$.pipe(
-        withLatestFrom(this.parentEntityId$),
-        switchMap(([entityId, parentEntityId]) =>
-          this.sportCategoryRuleStoreService
-            .selectEntityById$(entityId || '')
-            .pipe(
-              tap((entity) => {
-                this.updateEntityState(entity);
-                this.updateFormGroupState(
-                  this.sportCategoryRuleFormUtil.createFormGroup(entity)
-                );
-              })
-            )
-        )
-      );
-    }
-  );
 
   private readonly fetchParentEntity = this.effect(
     (parentEntityId$: Observable<string | undefined>) => {
@@ -90,25 +73,20 @@ export class SportCategoryRuleFormService extends ComponentStore<SportCategoryRu
     }
   );
 
-  private readonly handleCancel = this.effect((cancel$: Observable<void>) => {
-    return cancel$.pipe(tap(() => this.cancel()));
-  });
   private readonly handleSubmit = this.effect((submit$: Observable<void>) => {
     return submit$.pipe(
-      switchMap(() =>
+      withLatestFrom(this.backUrl$),
+      switchMap(([_, backUrl]) =>
         this.getDataForSubmit$.pipe(
           tap(({ entity, parentEntity, formGroup }) =>
-            this.submit(entity, parentEntity, formGroup as FormGroup)
+            this.submit(entity, parentEntity, formGroup as FormGroup, backUrl)
           )
         )
       )
     );
   });
 
-  private cancel$$: Subject<void>;
-  private submit$$: Subject<void>;
-
-  public readonly entityFormViewModel$: Observable<EntityFormViewModel> =
+  public readonly entityFormViewModel$: Observable<SportCategoryRuleFormViewModel> =
     this.select({
       formGroup: this.formGroup$.pipe(
         map((formGroup) => formGroup as FormGroup)
@@ -126,45 +104,55 @@ export class SportCategoryRuleFormService extends ComponentStore<SportCategoryRu
       entityId: undefined,
       parentEntityId: undefined,
       parentEntity: undefined,
-    });
-
-    this.cancel$$ = new Subject();
-    this.submit$$ = new Subject();
-  }
-
-  public cancel(): void {
-    this.router.navigate(['../../../list'], {
-      relativeTo: this.activatedRoute,
+      backUrl: '',
+      user: undefined,
     });
   }
 
   public init$(
     entityId: string | undefined,
+    userId: string | undefined,
+    backUrl: string,
     parentEntityId: string | undefined
   ): void {
-    this.updateEntityIdState(entityId);
+    super.initForm(entityId, userId, backUrl);
+
     this.updateParentEntityIdState(parentEntityId);
-    this.fetchEntity(this.entityId$);
     this.fetchParentEntity(this.parentEntityId$);
-    this.handleCancel(this.cancel$$.asObservable());
     this.handleSubmit(this.submit$$.asObservable());
+
+    this.createFormGroup(this.entity$);
   }
 
-  private addEntity(formGroup: FormGroup, parentEntity: SportCategoryEntity | undefined): void {
+  private addEntity(
+    formGroup: FormGroup,
+    parentEntity: SportCategoryEntity | undefined
+  ): void {
     if (!parentEntity) {
       throw new Error('No parent entity');
     }
-    this.sportCategoryRuleStoreService.dispatchAddEntityAction(
-      this.sportCategoryRuleFormUtil.createEntity(
-        formGroup, parentEntity
+    this.entityStoreService.dispatchAddEntityAction(
+      this.entityFormUtil.createEntity(
+        formGroup,
+        parentEntity
       ) as SportCategoryRuleEntityAdd,
       `${SPORT_CATEGORY_FEATURE_KEY}/${parentEntity.uid}`
     );
   }
 
+  private readonly createFormGroup = this.effect(
+    (entity$: Observable<SportCategoryRuleEntity | undefined>) => {
+      return entity$.pipe(
+        tap((entity) =>
+          this.updateFormGroupState(this.entityFormUtil.createFormGroup(entity))
+        )
+      );
+    }
+  );
+
   private extendsEntityFormViewModel(
-    entityFormViewModel: Partial<EntityFormViewModel>
-  ): EntityFormViewModel {
+    entityFormViewModel: Partial<SportCategoryRuleFormViewModel>
+  ): SportCategoryRuleFormViewModel {
     return {
       formGroup: entityFormViewModel.formGroup as FormGroup,
       cancel$$: this.cancel$$,
@@ -177,7 +165,8 @@ export class SportCategoryRuleFormService extends ComponentStore<SportCategoryRu
   public submit(
     entity: SportCategoryRuleEntity | undefined,
     parentEntity: SportCategoryEntity | undefined,
-    formGroup: FormGroup
+    formGroup: FormGroup,
+    backUrl: string,
   ): void {
     if (entity) {
       this.updateEntity(formGroup, parentEntity);
@@ -185,50 +174,28 @@ export class SportCategoryRuleFormService extends ComponentStore<SportCategoryRu
       this.addEntity(formGroup, parentEntity);
     }
 
-    this.router.navigate(['../../../list'], {
+    this.router.navigate([backUrl], {
       relativeTo: this.activatedRoute,
     });
   }
 
-  private updateFormGroupState(formGroup: FormGroup): void {
-    this.setState((state) => {
-      return {
-        ...state,
-        formGroup,
-      };
-    });
-  }
-
-  private updateEntity(formGroup: FormGroup, parentEntity: SportCategoryEntity | undefined): void {
-    this.sportCategoryRuleStoreService.dispatchUpdateEntityAction(
-      this.sportCategoryRuleFormUtil.updateEntity(formGroup),
+  private updateEntity(
+    formGroup: FormGroup,
+    parentEntity: SportCategoryEntity | undefined
+  ): void {
+    this.entityStoreService.dispatchUpdateEntityAction(
+      this.entityFormUtil.updateEntity(formGroup),
       `${SPORT_CATEGORY_FEATURE_KEY}/${parentEntity?.uid}`
     );
   }
 
-  private updateEntityState(entity: SportCategoryRuleEntity | undefined): void {
-    this.setState((state) => {
-      return {
-        ...state,
-        entity,
-      };
-    });
-  }
-
-  private updateParentEntityState(parentEntity: SportCategoryEntity | undefined): void {
+  private updateParentEntityState(
+    parentEntity: SportCategoryEntity | undefined
+  ): void {
     this.setState((state) => {
       return {
         ...state,
         parentEntity,
-      };
-    });
-  }
-
-  private updateEntityIdState(entityId: string | undefined): void {
-    this.setState((state) => {
-      return {
-        ...state,
-        entityId,
       };
     });
   }
