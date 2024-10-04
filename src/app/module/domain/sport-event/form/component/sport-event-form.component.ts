@@ -1,5 +1,3 @@
-import { Observable } from 'rxjs';
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -12,7 +10,7 @@ import {
   SportEventFormService,
   SportEventFormViewModel,
 } from './sport-event-form.service';
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { EntityFormComponent } from '@app/core/entity';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,24 +19,14 @@ import { ActivatedRouteSnapshot, Router } from '@angular/router';
   templateUrl: './sport-event-form.component.html',
   styleUrls: ['./sport-event-form.component.scss'],
 })
-export class SportEventFormComponent implements OnInit {
-  public entityFormViewModel$!: Observable<SportEventFormViewModel>;
-
-  private router = inject(Router);
-
-  @Input()
-  public entityId: string | undefined;
+export class SportEventFormComponent
+  extends EntityFormComponent<SportEventFormViewModel>
+  implements OnInit
+{
+  private componentService = inject(SportEventFormService);
 
   @Input()
   public sportNetworkId: string | undefined;
-
-  @Input()
-  public userId: string | undefined;
-
-  @Input()
-  backUrl = '../../list';
-
-  public constructor(private componentService: SportEventFormService) {}
 
   public ngOnInit(): void {
     const params = this.extractAllRouteParams(this.router);
@@ -53,19 +41,5 @@ export class SportEventFormComponent implements OnInit {
       this.backUrl
     );
     this.entityFormViewModel$ = this.componentService.entityFormViewModel$;
-  }
-
-  extractAllRouteParams(router: Router): any {
-    const params: any = {};
-
-    let route: ActivatedRouteSnapshot | null = router.routerState.snapshot.root;
-
-    do {
-      Object.keys(route.params).forEach(
-        (key) => (params[key] = route?.params[key])
-      );
-      route = route.firstChild;
-    } while (route);
-    return params;
   }
 }
