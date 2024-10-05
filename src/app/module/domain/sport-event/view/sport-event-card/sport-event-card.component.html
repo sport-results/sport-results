@@ -1,0 +1,19 @@
+@if (sportEvent) {
+<section class="card">
+  <p-card [header]="sportEvent.sportCategory.name">
+    <div class="flex">
+      @for(participant of sportEvent.participants; track participant.uid) {
+      <p class="flex-item">
+        {{ participant.name }}
+      </p>
+      }
+    </div>
+  
+    <ng-template pTemplate="footer">
+      <div>
+        {{ sportEvent.dateTime | date : "short" }}
+      </div>
+    </ng-template>
+  </p-card>
+</section>
+}

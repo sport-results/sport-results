@@ -10,19 +10,19 @@ import {
 } from '@app/api/domain/sport-event';
 import { ComponentStore } from '@ngrx/component-store';
 
-export type SportEventCardState = {
+export type SportEventCardsState = {
   entities: SportEventEntity[];
   sportEventsByPermissions: SportEventEntity[];
 };
 
-export type EntityCardViewModel = {
+export type EntityCardsViewModel = {
   entities: SportEventEntity[];
   editEntity$$: Subject<SportEventEntity>;
   sportEventsByPermissions: SportEventEntity[];
 };
 
 @Injectable()
-export class SportEventCardService extends ComponentStore<SportEventCardState> {
+export class SportEventCardsService extends ComponentStore<SportEventCardsState> {
   private activatedRoute = inject(ActivatedRoute);
   private sportEventStoreService = inject(SportEventStoreService);
   private router = inject(Router);
@@ -46,7 +46,7 @@ export class SportEventCardService extends ComponentStore<SportEventCardState> {
 
   private editEntity$$: Subject<SportEventEntity>;
 
-  public readonly entityCardViewModel$: Observable<EntityCardViewModel> =
+  public readonly entityCardViewModel$: Observable<EntityCardsViewModel> =
     this.select({
       entities: this.entities$,
       sportEventsByPermissions: this.sportEventsByPermissions$
