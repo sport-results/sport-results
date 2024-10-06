@@ -6,7 +6,7 @@ import { SearchParam } from '../../core';
 
 export abstract class DataService<R, S, T> {
   public abstract add$(entityAdd: S, subCollectionPath?: string): Observable<R>;
-  public abstract delete$(entity: R): Observable<R>;
+  public abstract delete$(uid: string, subCollectionPath?: string): Observable<string>;
   public abstract list$(
     subCollectionPath?: string,
     pathParams?: string[],

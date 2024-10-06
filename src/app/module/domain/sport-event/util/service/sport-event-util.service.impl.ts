@@ -1,6 +1,6 @@
-import { filter, first, map, Observable, of, switchMap } from 'rxjs';
+import { map, Observable, of, switchMap } from 'rxjs';
 
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import {
   SportEventEntity,
@@ -11,12 +11,9 @@ import {
   SportEventModelUpdate,
 } from '@app/api/domain/sport-event';
 import { EntityUtilServiceImpl } from '@app/core/entity';
-import { SportPlayerStoreService } from '@app/api/domain/sport-player';
 
 @Injectable()
 export class SportEventUtilServiceImpl extends EntityUtilServiceImpl {
-  private sportPlayerStoreService = inject(SportPlayerStoreService);
-
   public _sort = (a: SportEventEntity, b: SportEventEntity): number =>
     a.dateTime < b.dateTime ? 1 : -1;
 
@@ -34,6 +31,8 @@ export class SportEventUtilServiceImpl extends EntityUtilServiceImpl {
       participants: entity.participants,
       sportCategoryRule: entity.sportCategoryRule,
       sportCategory: entity.sportCategory,
+      sportNetworkId: entity.sportNetworkId,
+      userId: entity.userId,
     };
   }
 
@@ -47,6 +46,8 @@ export class SportEventUtilServiceImpl extends EntityUtilServiceImpl {
       participants: model.participants,
       sportCategory: model.sportCategory,
       sportCategoryRule: model.sportCategoryRule,
+      sportNetworkId: model.sportNetworkId,
+      userId: model.userId,
       uid: model.uid,
     });
   }

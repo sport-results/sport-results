@@ -1,11 +1,13 @@
 import { Entity } from '../../core/entity';
-import { SportCategoryEntity, SportCategorySimple } from '../sport-category';
+import { SportCategorySimple } from '../sport-category';
 import { SportCategoryRuleEntity } from '../sport-category-rule';
 import { Participant } from '../sport-player';
 
 export interface SportEvent {
     location: string | null;
-    sportCategoryRule: SportCategoryRuleEntity
+    sportCategoryRule: SportCategoryRuleEntity;
+    sportNetworkId?: string;
+    userId?: string;
 }
 
 export type SportEventEntity = SportEvent & Entity & {

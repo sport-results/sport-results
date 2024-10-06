@@ -12,6 +12,7 @@ import { SportEventFormUtilImpl } from './util';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { TabViewModule } from 'primeng/tabview';
 
 @NgModule({
     declarations: [SportEventFormComponent],
@@ -26,6 +27,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
         InputTextModule,
         InputTextareaModule,
         SelectButtonModule,
+        TabViewModule
     ],
     providers: [
     {

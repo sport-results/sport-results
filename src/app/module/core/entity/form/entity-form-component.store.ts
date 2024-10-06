@@ -29,6 +29,7 @@ export class EntityFormComponentStore<
 
   protected readonly backUrl$ = this.select((state) => state.backUrl);
   protected readonly formGroup$ = this.select((state) => state.formGroup);
+  protected readonly isNewEntity$ = this.select((state) => !state.entity);
 
   protected cancel$$ = new Subject<void>();
   protected submit$$ = new Subject<void>();

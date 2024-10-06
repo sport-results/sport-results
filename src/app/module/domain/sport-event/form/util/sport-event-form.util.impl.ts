@@ -1,7 +1,5 @@
 import { inject, Injectable, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { User } from '@app/api/common';
-import { ApplicationStoreService } from '@app/api/core/application';
 import { SportCategoryEntity } from '@app/api/domain/sport-category';
 import { SportCategoryRuleEntity } from '@app/api/domain/sport-category-rule';
 
@@ -45,11 +43,14 @@ export class SportEventFormUtilImpl
       participants: formGroup.value['participants'],
       sportCategory: formGroup.value['sportCategory'],
       sportCategoryRule: formGroup.value['sportCategoryRule'],
+      sportNetworkId: formGroup.value['sportNetworkId'],
+      userId: formGroup.value['userId'],
     };
   }
 
   public createEntityWithUser(
     formGroup: FormGroup,
+    sportNetworkId: string | undefined,
     userId: string
   ): SportEventEntityAdd {
     const sportEvent = this.createEntity(formGroup);
@@ -60,6 +61,8 @@ export class SportEventFormUtilImpl
         ...sportEvent.meta,
         ownerId: userId,
       },
+      sportNetworkId,
+      userId
     };
   }
 
@@ -86,6 +89,8 @@ export class SportEventFormUtilImpl
         sportEvent?.sportCategory,
         FormValidatorService.required
       ),
+      sportNetworkId: new FormControl(sportEvent?.sportNetworkId),
+      userId: new FormControl(sportEvent?.userId),
     });
   }
 
@@ -122,6 +127,8 @@ export class SportEventFormUtilImpl
       participants: formGroup.value['participants'],
       sportCategory: formGroup.value['sportCategory'],
       sportCategoryRule: formGroup.value['sportCategoryRule'],
+      sportNetworkId: formGroup.value['sportNetworkId'],
+      userId: formGroup.value['userId'],
       uid: formGroup.value['uid'],
     };
   }

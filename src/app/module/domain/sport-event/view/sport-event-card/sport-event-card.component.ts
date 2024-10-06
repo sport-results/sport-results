@@ -8,7 +8,12 @@ import {
 } from '@angular/core';
 import { ActionEnum, RoleNamesEnum } from '@app/api/common';
 import { AuthorizationService } from '@app/api/core/authorization';
-import { SportEventEntity } from '@app/api/domain/sport-event';
+import {
+  SportEventEntity,
+  SportEventStoreService,
+} from '@app/api/domain/sport-event';
+import { SPORT_NETWORK_FEATURE_KEY } from '@app/api/domain/sport-network';
+import { USER_FEATURE_KEY } from '@app/api/domain/user';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -23,6 +28,7 @@ import { CardModule } from 'primeng/card';
 })
 export class SportEventCardComponent implements OnInit {
   private authorizationService = inject(AuthorizationService);
+  private entityStoreService = inject(SportEventStoreService);
 
   @Input()
   public sportEvent?: SportEventEntity;
@@ -57,5 +63,14 @@ export class SportEventCardComponent implements OnInit {
         this.sportEvent?.uid || ''
       ),
     ];
+  }
+
+  public handleDeleteClick(sportEvent: SportEventEntity): void {
+    const subCollectionPath =
+      sportEvent.userId && sportEvent.sportNetworkId
+        ? `${USER_FEATURE_KEY}/${sportEvent.userId}/${SPORT_NETWORK_FEATURE_KEY}/${sportEvent.sportNetworkId}`
+        : undefined;
+
+    this.entityStoreService.dispatchDeleteEntityAction(sportEvent, subCollectionPath);
   }
 }

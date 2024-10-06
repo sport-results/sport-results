@@ -14,7 +14,12 @@
           </ng-template>
 
           <ng-template [ngxPermissionsOnly]="deletePermissions">
-            <p-button icon="pi pi-times" severity="danger" [rounded]="true" />
+            <p-button
+              icon="pi pi-times"
+              severity="danger"
+              [rounded]="true"
+              (click)="handleDeleteClick(sportEvent)"
+            />
           </ng-template>
         </div>
       </header>

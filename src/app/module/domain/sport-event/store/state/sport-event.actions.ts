@@ -26,6 +26,21 @@ export const addEntitySuccess = createAction(
     props<{ sportEvent: SportEventEntity }>()
 );
 
+export const deleteEntity = createAction(
+  '[SportEvent Admin] Delete SportEvent',
+  props<{ entityId: string, subCollectionPath?: string; }>()
+);
+
+export const deleteEntityFail = createAction(
+  '[SportEvent Admin] Delete SportEvent Fail',
+  props<{ error: string }>()
+);
+
+export const deleteEntitySuccess = createAction(
+  '[SportEvent Admin] Delete SportEvent Success',
+  props<{ entityId: string }>()
+);
+
 export const loadEntity = createAction(
     '[SportEvent] Load SportEvent',
     props<{ uid: string }>()

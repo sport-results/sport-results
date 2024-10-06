@@ -12,6 +12,7 @@ import {
 export abstract class SportEventFormUtil extends EntityFormUtil {
   public abstract createEntityWithUser(
     formGroup: FormGroup,
+    sportNetworkId: string | undefined,
     userId: string
   ): SportEventEntityAdd;
   public abstract createFormGroupWithChange(

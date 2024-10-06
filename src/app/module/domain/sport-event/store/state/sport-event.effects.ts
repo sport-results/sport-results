@@ -72,6 +72,26 @@ export class SportEventEffects {
     )
   );
 
+  deleteEvent$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(sportEventActions.deleteEntity),
+      switchMap((action) =>
+        this.sportEventEffectService
+          .deleteEntity$(action.entityId, action.subCollectionPath)
+          .pipe(
+            map(() => {
+              return sportEventActions.deleteEntitySuccess({
+                entityId: action.entityId,
+              });
+            }),
+            catchError((error) => {
+              return of(sportEventActions.deleteEntityFail({ error }));
+            })
+          )
+      )
+    )
+  );
+
   listEntities$ = createEffect(() =>
     this.actions$.pipe(
       ofType(sportEventActions.listEntities),
@@ -92,7 +112,7 @@ export class SportEventEffects {
                   )
                 )
               );
-            
+
               return sportEventActions.listEntitiesSuccess({
                 sportEvents,
               });

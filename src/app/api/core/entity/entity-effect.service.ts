@@ -8,6 +8,7 @@ export abstract class EntityEffectService<R, S, T> {
     entityAdd: S,
     subCollectionPath?: string
   ): Observable<R>;
+  public abstract deleteEntity$(entityId: string, subCollectionPath?: string,): Observable<string>;
   public abstract listEntities$(
     subCollectionPath?: string,
     pathParams?: string[],

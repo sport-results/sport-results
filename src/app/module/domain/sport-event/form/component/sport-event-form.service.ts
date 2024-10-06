@@ -42,6 +42,7 @@ export interface SportEventFormState
 }
 
 export interface SportEventFormViewModel extends EntityFormViewModel {
+  isNewEntity: boolean;
   participantsArray: FormControl[];
   participantTypes: ParticipantTypeEnum[];
   selectedParticipantType: ParticipantTypeEnum | undefined;
@@ -138,6 +139,7 @@ export class SportEventFormService extends EntityFormComponentStore<
       formGroup: this.formGroup$.pipe(
         map((formGroup) => formGroup as FormGroup)
       ),
+      isNewEntity: this.isNewEntity$,
       sportCategories: this.sportCategories$.pipe(
         map((sportCategories) => sportCategories as SportCategoryEntity[])
       ),
@@ -203,9 +205,9 @@ export class SportEventFormService extends EntityFormComponentStore<
     this.createFormGroup(this.entity$);
   }
 
-  private addEntity(formGroup: FormGroup, subCollectionPath: string, userId: string): void {
+  private addEntity(formGroup: FormGroup, subCollectionPath: string, sportNetworkId: string | undefined, userId: string): void {
     this.entityStoreService.dispatchAddEntityAction(
-      this.entityFormUtil.createEntityWithUser(formGroup, userId) as SportEventEntityAdd,
+      this.entityFormUtil.createEntityWithUser(formGroup, sportNetworkId, userId) as SportEventEntityAdd,
       subCollectionPath
     );
   }
@@ -230,8 +232,9 @@ export class SportEventFormService extends EntityFormComponentStore<
     entityFormViewModel: Partial<SportEventFormViewModel>
   ): SportEventFormViewModel {
     return {
-      formGroup: entityFormViewModel.formGroup as FormGroup,
       cancel$$: this.cancel$$,
+      formGroup: entityFormViewModel.formGroup as FormGroup,
+      isNewEntity: entityFormViewModel.isNewEntity as boolean,
       participantTypes,
       participantsArray: this.getParticipantsArray(
         entityFormViewModel.formGroup as FormGroup,
@@ -259,7 +262,7 @@ export class SportEventFormService extends EntityFormComponentStore<
     if (entity) {
       this.updateEntity(formGroup);
     } else {
-      this.addEntity(formGroup, subCollectionPath, user.uid);
+      this.addEntity(formGroup, subCollectionPath, sportNetworkId, user.uid);
     }
 
     this.router.navigate([backUrl], {
