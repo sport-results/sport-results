@@ -2,7 +2,7 @@ import { ngxPermissionsGuard } from 'ngx-permissions';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { RoleNames } from '@app/api/common';
+import { RoleNamesEnum } from '@app/api/common';
 
 import { AdminPageComponent } from './component';
 import {
@@ -24,7 +24,7 @@ function createRoutes(): Routes {
           data: {
             permissions: {
               only: [
-                RoleNames.ADMIN,
+                RoleNamesEnum.ADMIN,
                 AdminRolePermissionsService.viewRoleAdminPage,
               ],
               redirectTo: '/error',
@@ -41,7 +41,7 @@ function createRoutes(): Routes {
           data: {
             permissions: {
               only: [
-                RoleNames.ADMIN,
+                RoleNamesEnum.ADMIN,
                 AdminSportCategoryPermissionsService.viewSportCategoryAdminPage,
               ],
               redirectTo: '/error',
@@ -58,7 +58,7 @@ function createRoutes(): Routes {
           data: {
             permissions: {
               only: [
-                RoleNames.ADMIN,
+                RoleNamesEnum.ADMIN,
                 AdminUserPermissionsService.viewUserAdminPage,
               ],
               redirectTo: '/error',
@@ -75,7 +75,7 @@ function createRoutes(): Routes {
           data: {
             permissions: {
               only: [
-                RoleNames.ADMIN,
+                RoleNamesEnum.ADMIN,
                 AdminSportPlayerPermissionsService.viewSportPlayerAdminPage,
               ],
               redirectTo: '/error',
@@ -92,7 +92,7 @@ function createRoutes(): Routes {
           data: {
             permissions: {
               only: [
-                RoleNames.ADMIN,
+                RoleNamesEnum.ADMIN,
                 AdminSportNetworkPermissionsService.viewSportNetworkAdminPage,
               ],
               redirectTo: '/error',

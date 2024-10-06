@@ -2,7 +2,7 @@ import { map, Observable, Subject, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RoleNames } from '@app/api/common';
+import { RoleNamesEnum } from '@app/api/common';
 import { RoleEntity, RolePermissionsService, RoleStoreService } from '@app/api/domain/role';
 import { ComponentStore } from '@ngrx/component-store';
 
@@ -45,7 +45,7 @@ export class RoleTableService extends ComponentStore<RoleTableState> {
       map((roleFormViewModel) => ({
         ...roleFormViewModel,
         buttonPermissions: [
-          RoleNames.ADMIN,
+          RoleNamesEnum.ADMIN,
           RolePermissionsService.updateRoleEntity,
         ],
         editRole$$: this.editRole$$,

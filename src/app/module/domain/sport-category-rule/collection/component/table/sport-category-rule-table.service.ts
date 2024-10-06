@@ -2,7 +2,7 @@ import { map, Observable, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RoleNames } from '@app/api/common';
+import { RoleNamesEnum } from '@app/api/common';
 import {
   SportCategoryRuleEntity,
   SportCategoryRulePermissionsService,
@@ -62,7 +62,7 @@ export class SportCategoryRuleTableService extends ComponentStore<SportCategoryR
       map((entityFormViewModel) => ({
         ...entityFormViewModel,
         buttonPermissions: [
-          RoleNames.ADMIN,
+          RoleNamesEnum.ADMIN,
           SportCategoryRulePermissionsService.updateSportCategoryRuleEntity,
         ],
         editEntity$$: this.editEntity$$,

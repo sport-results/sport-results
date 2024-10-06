@@ -1,6 +1,25 @@
 @if (sportEvent) {
 <section class="card">
-  <p-card [header]="sportEvent.sportCategory.name">
+  <p-card
+    [header]="(sportEvent.dateTime | date : 'short') || ''"
+    [subheader]="sportEvent.location || ''"
+  >
+    <ng-template pTemplate="header">
+      <header>
+        <span>{{ sportEvent.sportCategory.name }}</span>
+
+        <div class="buttons">
+          <ng-template [ngxPermissionsOnly]="updatePermissions">
+            <p-button icon="pi pi-pencil" [rounded]="true" />
+          </ng-template>
+
+          <ng-template [ngxPermissionsOnly]="deletePermissions">
+            <p-button icon="pi pi-times" severity="danger" [rounded]="true" />
+          </ng-template>
+        </div>
+      </header>
+    </ng-template>
+
     <div class="flex">
       @for(participant of sportEvent.participants; track participant.uid) {
       <p class="flex-item">
@@ -8,11 +27,9 @@
       </p>
       }
     </div>
-  
+
     <ng-template pTemplate="footer">
-      <div>
-        {{ sportEvent.dateTime | date : "short" }}
-      </div>
+      <div></div>
     </ng-template>
   </p-card>
 </section>

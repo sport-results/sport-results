@@ -8,8 +8,9 @@ export interface _Role {
 
 export type Role = _Role & Identifiable;
 
-export const RoleNames = {
-    ADMIN: 'ADMIN',
-    EDITOR: 'EDITOR',
-    USER: 'USER',
+export enum RoleNamesEnum {
+    ADMIN = 'ADMIN',
+    EDITOR = 'EDITOR',
+    OWNER = 'OWNER',
+    USER = 'USER',
 };

@@ -8,7 +8,7 @@ import {
   Routes,
 } from '@angular/router';
 
-import { ActionEnum, RoleNames } from '@app/api/common';
+import { ActionEnum, RoleNamesEnum } from '@app/api/common';
 import { AdminPermissionsService } from '@app/api/module/admin';
 
 const calculateUserPermission = (
@@ -49,7 +49,7 @@ const routes: Routes = [
     canActivate: [ngxPermissionsGuard],
     data: {
       permissions: {
-        only: [RoleNames.ADMIN, AdminPermissionsService.viewAdminPage],
+        only: [RoleNamesEnum.ADMIN, AdminPermissionsService.viewAdminPage],
 
         redirectTo: '/error',
       },

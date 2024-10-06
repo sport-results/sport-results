@@ -2,69 +2,69 @@ import { ngxPermissionsGuard } from 'ngx-permissions';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SportPlayerAdminPermissionsService } from '@app/api/admin/sport-player';
-import { RoleNames } from '@app/api/common';
+import { RoleNamesEnum } from '@app/api/common';
 
 import { SportPlayerAdminPageComponent } from './page/admin';
 import {
-    SportPlayerEditPageComponent,
-    SportPlayerEditPageResolverService,
+  SportPlayerEditPageComponent,
+  SportPlayerEditPageResolverService,
 } from './page/edit';
 import {
-    SportPlayerListPageComponent,
-    SportPlayerListPageResolverService,
+  SportPlayerListPageComponent,
+  SportPlayerListPageResolverService,
 } from './page/list';
 
 const routes: Routes = [
-    {
+  {
+    path: '',
+    component: SportPlayerAdminPageComponent,
+    children: [
+      {
         path: '',
-        component: SportPlayerAdminPageComponent,
-        children: [
-            {
-                path: '',
-                pathMatch: 'full',
-                redirectTo: 'list',
-            },
-            {
-                component: SportPlayerEditPageComponent,
-                canActivate: [ngxPermissionsGuard],
-                path: 'edit/:sportPlayerId',
-                data: {
-                    breadcrumb: 'Edit',
-                    permissions: {
-                        only: [
-                            RoleNames.ADMIN,
-                            SportPlayerAdminPermissionsService.viewSportPlayerEditPage,
-                        ],
-                        redirectTo: '/error',
-                    },
-                    backUrl: '../../list',
-                },
-                pathMatch: 'full',
-                resolve: { data: SportPlayerEditPageResolverService },
-            },
-            {
-                component: SportPlayerListPageComponent,
-                canActivate: [ngxPermissionsGuard],
-                data: {
-                    breadcrumb: 'List',
-                    permissions: {
-                        only: [
-                            RoleNames.ADMIN,
-                            SportPlayerAdminPermissionsService.viewSportPlayerListPage,
-                        ],
-                        redirectTo: '/error',
-                    },
-                },
-                path: 'list',
-                pathMatch: 'full',
-                resolve: { data: SportPlayerListPageResolverService },
-            },
-        ],
-    },
+        pathMatch: 'full',
+        redirectTo: 'list',
+      },
+      {
+        component: SportPlayerEditPageComponent,
+        canActivate: [ngxPermissionsGuard],
+        path: 'edit/:sportPlayerId',
+        data: {
+          breadcrumb: 'Edit',
+          permissions: {
+            only: [
+              RoleNamesEnum.ADMIN,
+              SportPlayerAdminPermissionsService.viewSportPlayerEditPage,
+            ],
+            redirectTo: '/error',
+          },
+          backUrl: '../../list',
+        },
+        pathMatch: 'full',
+        resolve: { data: SportPlayerEditPageResolverService },
+      },
+      {
+        component: SportPlayerListPageComponent,
+        canActivate: [ngxPermissionsGuard],
+        data: {
+          breadcrumb: 'List',
+          permissions: {
+            only: [
+              RoleNamesEnum.ADMIN,
+              SportPlayerAdminPermissionsService.viewSportPlayerListPage,
+            ],
+            redirectTo: '/error',
+          },
+        },
+        path: 'list',
+        pathMatch: 'full',
+        resolve: { data: SportPlayerListPageResolverService },
+      },
+    ],
+  },
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule],
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
 export class SportPlayerAdminPageRoutingModule {}

@@ -12,7 +12,7 @@ import {
   Signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { RoleNames, User } from '@app/api/common';
+import { RoleNamesEnum, User } from '@app/api/common';
 import { ApplicationStoreService } from '@app/api/core/application';
 import { AuthorizationService } from '@app/api/core/authorization';
 import { AdminPermissionsService } from '@app/api/module/admin';
@@ -80,7 +80,7 @@ export class UserAvatarComponent {
     }
 
     if (
-      this.authorizationService.hasPermission(RoleNames.USER) ||
+      this.authorizationService.hasPermission(RoleNamesEnum.USER) ||
       this.authorizationService.hasPermission(
         AdminPermissionsService.viewAdminPage
       )

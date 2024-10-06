@@ -3,7 +3,7 @@ import { ngxPermissionsGuard } from 'ngx-permissions';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RoleAdminPermissionsService } from '@app/api/admin/role';
-import { RoleNames } from '@app/api/common';
+import { RoleNamesEnum } from '@app/api/common';
 
 import { RoleAdminPageComponent } from './page/admin';
 import {
@@ -32,12 +32,12 @@ const routes: Routes = [
           breadcrumb: 'Edit',
           permissions: {
             only: [
-              RoleNames.ADMIN,
+              RoleNamesEnum.ADMIN,
               RoleAdminPermissionsService.viewRoleEditPage,
             ],
             redirectTo: '/error',
           },
-          backUrl: '../../list'
+          backUrl: '../../list',
         },
         path: 'edit/:roleId',
         pathMatch: 'full',
@@ -50,7 +50,7 @@ const routes: Routes = [
           breadcrumb: 'List',
           permissions: {
             only: [
-              RoleNames.ADMIN,
+              RoleNamesEnum.ADMIN,
               RoleAdminPermissionsService.viewRoleListPage,
             ],
             redirectTo: '/error',

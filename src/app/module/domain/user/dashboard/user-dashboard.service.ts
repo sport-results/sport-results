@@ -1,6 +1,7 @@
 import { inject, Injectable, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthorizationService } from '@app/api/core/authorization';
 import { EntityTypeEnum } from '@app/api/core/entity';
 import {
   QueryConstraintTypeEnum,
@@ -71,7 +72,7 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
   private readonly permissions$ = this.select((state) => state.permissions);
   private readonly sportEventsByPermissions$ = this.select(
     (state) => state.sportEventsByPermissions
-  ); //
+  );
   private readonly selectedNetworkId$ = this.select(
     (state) => state.selectedNetworkId
   );
@@ -98,6 +99,7 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
         filter((user) => !!user),
         switchMap((user) =>
           this.permissionStoreService.selectEntities$().pipe(
+            filter(permissions => permissions.length > 0),
             tap((permissions) => {
               this.updatePermissionState(permissions);
             })

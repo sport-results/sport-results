@@ -1,3 +1,4 @@
+import { AuthorizationService } from '@app/api/core/authorization';
 import { catchError, map, of, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
@@ -12,13 +13,14 @@ import {
   PermissionEntityAdd,
   PermissionStoreService,
 } from '@app/api/domain/permission';
-import { ActionEnum, Meta } from '@app/api/common';
+import { ActionEnum, Meta, RoleNamesEnum } from '@app/api/common';
 import { ParticipantTypeEnum } from '@app/api/domain/sport-category-rule';
 import { SportPlayerEntity } from '@app/api/domain/sport-player';
 
 @Injectable()
 export class SportEventEffects {
   private actions$ = inject(Actions);
+  private authorizationService = inject(AuthorizationService);
   private sportEventEffectService = inject(SportEventEffectService);
   private permissionStoreService = inject(PermissionStoreService);
 
@@ -81,9 +83,18 @@ export class SportEventEffects {
             action.queryParams
           )
           .pipe(
-            map((entities) => {
+            map((sportEvents) => {
+              sportEvents.forEach((sportEvent) =>
+                this.authorizationService.addPermission(
+                  this.authorizationService.generatePermissionName(
+                    RoleNamesEnum.OWNER,
+                    sportEvent.uid
+                  )
+                )
+              );
+            
               return sportEventActions.listEntitiesSuccess({
-                sportEvents: entities,
+                sportEvents,
               });
             })
           )
@@ -96,13 +107,11 @@ export class SportEventEffects {
       ofType(sportEventActions.listEntitiesByIds),
       switchMap((action) =>
         this.sportEventEffectService
-          .listEntitiesByCollectionGroup$(
-            action.ids,
-          )
+          .listEntitiesByCollectionGroup$(action.ids)
           .pipe(
-            map((entities) => {
+            map((sportEvents) => {
               return sportEventActions.listEntitiesByIdsSuccess({
-                sportEvents: entities,
+                sportEvents,
               });
             }),
             catchError((error) => {
@@ -112,7 +121,6 @@ export class SportEventEffects {
       )
     )
   );
-
 
   loadEntity$ = createEffect(() =>
     this.actions$.pipe(
