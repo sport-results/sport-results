@@ -42,8 +42,6 @@ export class SportEventUtilServiceImpl extends EntityUtilServiceImpl {
       sportCategory: model.sportCategory,
       sportCategoryRule: model.sportCategoryRule,
       uid: model.uid,
-      sportNetworkId: model.sportNetworkId,
-      userId: model.userId,
     };
   }
   public override createSimpleModel(
@@ -64,8 +62,6 @@ export class SportEventUtilServiceImpl extends EntityUtilServiceImpl {
       sportCategory: entity.sportCategory,
       sportCategoryRule: entity.sportCategoryRule,
       uid: entity.uid,
-      sportNetworkId: entity.sportNetworkId,
-      userId: entity.userId,
     };
   }
   public _sort = (a: SportEventEntity, b: SportEventEntity): number =>
@@ -92,8 +88,7 @@ export class SportEventUtilServiceImpl extends EntityUtilServiceImpl {
       : entity.participants,
       sportCategoryRule: entity.sportCategoryRule,
       sportCategory: entity.sportCategory,
-      sportNetworkId: entity.sportNetworkId,
-      userId: entity.userId,
+      path: entity.path,
     };
   }
 
@@ -132,12 +127,8 @@ export class SportEventUtilServiceImpl extends EntityUtilServiceImpl {
       model.sportCategoryRule = entity.sportCategoryRule;
     }
 
-    if (entity.sportNetworkId) {
-      model.sportNetworkId = entity.sportNetworkId;
-    }
-
-    if (entity.userId) {
-      model.userId = entity.userId;
+    if (entity.path) {
+      model.path = entity.path;
     }
 
     return model;
@@ -161,8 +152,7 @@ export class SportEventUtilServiceImpl extends EntityUtilServiceImpl {
           : model.participants,
       sportCategory: model.sportCategory,
       sportCategoryRule: model.sportCategoryRule,
-      sportNetworkId: model.sportNetworkId,
-      userId: model.userId,
+      path: model.path,
       uid: model.uid,
     });
   }

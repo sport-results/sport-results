@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import { Identifiable } from '../../common/identifiable';
 import { Meta } from '../../common/meta';
 

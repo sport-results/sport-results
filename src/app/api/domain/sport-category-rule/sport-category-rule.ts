@@ -1,5 +1,5 @@
 import { Entity } from '../../core/entity';
-import { SportCategorySimple } from '../sport-category/sport-category';
+import { SportCategoryEntitySimple } from '../sport-category';
 
 export interface SportCategoryRule {
   name: string;
@@ -8,7 +8,7 @@ export interface SportCategoryRule {
   periodType: PeriodTypeEnum;
   periodTypeWinningSize: number;
   periodWinningSize: number;
-  sportCategory: SportCategorySimple;
+  sportCategory: SportCategoryEntitySimple;
 }
 
 export type SportCategoryRuleEntity = SportCategoryRule & Entity;

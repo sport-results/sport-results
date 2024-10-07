@@ -51,6 +51,7 @@ export class NetworkPlayerUtilServiceImpl extends EntityUtilServiceImpl {
   ): NetworkPlayerModelAdd {
     return {
       meta: entity.meta,
+      path: entity.path,
       sportNetworkId: entity.sportNetworkId,
       sportPlayerId: entity.sportPlayer.uid,
       startDate: entity.startDate.toISOString(),
@@ -75,8 +76,9 @@ export class NetworkPlayerUtilServiceImpl extends EntityUtilServiceImpl {
         first(),
         map((sportPlayer) => {
           return {
-            meta: model.meta,
             endDate: model.endDate ? new Date(model.endDate) : null,
+            meta: model.meta,
+            path: model.path,
             startDate: new Date(model.startDate),
             sportNetworkId: model.sportNetworkId,
             sportPlayer,

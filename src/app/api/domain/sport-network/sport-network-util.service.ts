@@ -1,5 +1,6 @@
+import { KeyValue } from '@angular/common';
 import { EntityUtilService } from '../../core';
-import { SportCategorySimple } from '../sport-category';
+import { SportCategoryEntitySimple } from '../sport-category';
 import { UserEntity } from '../user';
 import {
   SportNetworkEntity,
@@ -19,7 +20,12 @@ export abstract class SportNetworkUtilService extends EntityUtilService<
   SportNetworkModelUpdate
 > {
   public abstract createDefaultSportNetwork(
-    sportCategories: SportCategorySimple[],
-    user: UserEntity
+    sportCategories: SportCategoryEntitySimple[],
+    user: UserEntity,
+    path: KeyValue<string, string>[],
   ): SportNetworkEntityAdd;
+
+  public abstract createPath(
+    userId: string,
+  ): KeyValue<string, string>[];
 }

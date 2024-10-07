@@ -1,19 +1,20 @@
+import { KeyValue } from '@angular/common';
+
 import { Entity } from '../../core/entity';
-import { SportCategorySimple } from '../sport-category';
 import { SportCategoryRuleEntity } from '../sport-category-rule';
 import { Participant } from '../sport-player';
+import { SportCategoryEntitySimple } from '../sport-category';
 
 export interface SportEvent {
     location: string | null;
     sportCategoryRule: SportCategoryRuleEntity;
-    sportNetworkId?: string;
-    userId?: string;
+    path: KeyValue<string, string>[];
 }
 
 export type SportEventEntity = SportEvent & Entity & {
   dateTime: Date;
   participants: Participant[];
-  sportCategory: SportCategorySimple;
+  sportCategory: SportCategoryEntitySimple;
 };
 
 export type SportEventEntityAdd = Omit<SportEventEntity, 'uid'>;
@@ -23,7 +24,7 @@ export type SportEventEntityUpdate = Partial<SportEventEntity> & Entity;
 export type SportEventModel = SportEvent & Entity & {
   dateTime: string;
   participants: Participant[];
-  sportCategory: SportCategorySimple;
+  sportCategory: SportCategoryEntitySimple;
 };
 
 export type SportEventModelAdd = Omit<SportEventModel, 'uid'>;
@@ -39,6 +40,6 @@ export enum SportEventResourceEnum {
     SPORT_EVENT_LIST_PAGE  = 'SportEventListPage',
 }
 
-export type SportEventEntitySimple = Omit<SportEventEntity, 'meta'>;
+export type SportEventEntitySimple = Omit<SportEventEntity, 'meta' | 'path'>;
 
-export type SportEventModelSimple = Omit<SportEventModel, 'meta'>;
+export type SportEventModelSimple = Omit<SportEventModel, 'meta' | 'path'>;

@@ -5,7 +5,14 @@ import {
   SportCategoryRuleStoreService,
 } from '@app/api/domain/sport-category-rule';
 import { BehaviorSubject, combineLatest, Observable, Subject, tap } from 'rxjs';
-import { combineLatestAll, delay, map, switchMap, take, withLatestFrom } from 'rxjs/operators';
+import {
+  combineLatestAll,
+  delay,
+  map,
+  switchMap,
+  take,
+  withLatestFrom,
+} from 'rxjs/operators';
 import {
   SportEventEntity,
   SportEventEntityAdd,
@@ -33,6 +40,7 @@ import {
 } from '@app/api/domain/network-player';
 import { USER_FEATURE_KEY, UserEntity } from '@app/api/domain/user';
 import { SPORT_NETWORK_FEATURE_KEY } from '@app/api/domain/sport-network';
+import { KeyValue } from '@angular/common';
 
 export interface SportEventFormState
   extends EntityFormComponentState<SportEventEntity> {
@@ -236,14 +244,14 @@ export class SportEventFormService extends EntityFormComponentStore<
   private addEntity(
     formGroup: FormGroup,
     subCollectionPath: string,
-    sportNetworkId: string | undefined,
-    userId: string
+    userId: string,
+    path: KeyValue<string, string>[]
   ): void {
     this.entityStoreService.dispatchAddEntityAction(
       this.entityFormUtil.createEntityWithUser(
         formGroup,
-        sportNetworkId,
-        userId
+        userId,
+        path
       ) as SportEventEntityAdd,
       subCollectionPath
     );
@@ -269,23 +277,26 @@ export class SportEventFormService extends EntityFormComponentStore<
     entityFormViewModel: Partial<SportEventFormViewModel>
   ): SportEventFormViewModel {
     const formGroup = entityFormViewModel.formGroup as FormGroup;
-  
+
     return {
       cancel$$: this.cancel$$,
       formGroup: entityFormViewModel.formGroup as FormGroup,
       isNewEntity: entityFormViewModel.isNewEntity as boolean,
       participantTypes,
-      participantsArray: (entityFormViewModel.isNewEntity ? this.createParticipantsArray(
-        formGroup,
-        entityFormViewModel.selectedParticipantSize || 0
-      ) : this.getParticipantsArray(formGroup)).controls as FormControl[],
+      participantsArray: (entityFormViewModel.isNewEntity
+        ? this.createParticipantsArray(
+            formGroup,
+            entityFormViewModel.selectedParticipantSize || 0
+          )
+        : this.getParticipantsArray(formGroup)
+      ).controls as FormControl[],
       selectedParticipantType: entityFormViewModel.selectedParticipantType,
       selectedParticipantSize: entityFormViewModel.selectedParticipantSize || 0,
       sportCategories:
         entityFormViewModel.sportCategories as SportCategoryEntity[],
       sportCategoryRules:
         entityFormViewModel.sportCategoryRules as SportCategoryRuleEntity[],
-      sportPlayers:  entityFormViewModel.sportPlayers as SportPlayerEntity[],
+      sportPlayers: entityFormViewModel.sportPlayers as SportPlayerEntity[],
       submit$$: this.submit$$,
     };
   }
@@ -301,7 +312,12 @@ export class SportEventFormService extends EntityFormComponentStore<
     if (entity) {
       this.updateEntity(formGroup, subCollectionPath);
     } else {
-      this.addEntity(formGroup, subCollectionPath, sportNetworkId, user.uid);
+      this.addEntity(
+        formGroup,
+        subCollectionPath,
+        user.uid,
+        this.entityFormUtil.createPath(user.uid, sportNetworkId || '')
+      );
     }
 
     this.router.navigate([backUrl], {
@@ -318,7 +334,7 @@ export class SportEventFormService extends EntityFormComponentStore<
     });
   }
 
-  private updateEntity(formGroup: FormGroup, subCollectionPath: string,): void {
+  private updateEntity(formGroup: FormGroup, subCollectionPath: string): void {
     this.entityStoreService.dispatchUpdateEntityAction(
       this.entityFormUtil.updateEntity(formGroup),
       subCollectionPath
@@ -358,9 +374,7 @@ export class SportEventFormService extends EntityFormComponentStore<
     });
   }
 
-  private updateSportNetworkIdState(
-    sportNetworkId: string | undefined
-  ): void {
+  private updateSportNetworkIdState(sportNetworkId: string | undefined): void {
     this.setState((state) => {
       return {
         ...state,
@@ -380,9 +394,7 @@ export class SportEventFormService extends EntityFormComponentStore<
     return controls;
   }
 
-  private getParticipantsArray(
-    formGroup: FormGroup,
-  ): FormArray {
+  private getParticipantsArray(formGroup: FormGroup): FormArray {
     return formGroup.controls['participants'] as FormArray;
   }
 }

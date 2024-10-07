@@ -34,7 +34,8 @@ export class UserEffectServiceImpl extends EntityEffectServiceImpl {
           this.sportNetworkStoreService.dispatchAddEntityAction(
             this.sportNetworkUtilService.createDefaultSportNetwork(
               [],
-              user as UserEntity
+              user as UserEntity,
+              this.sportNetworkUtilService.createPath(user.uid),
             ),
             `${USER_FEATURE_KEY}/${user.uid}`
           );

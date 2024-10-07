@@ -1,24 +1,31 @@
+import { KeyValue } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Entity } from '@app/api/core/entity';
-import { SportCategoryEntity } from '@app/api/domain/sport-category';
+import { EntityAdd } from '@app/api/core/entity';
+import { SportCategoryEntitySimple } from '@app/api/domain/sport-category';
 import {
   SportCategoryRuleEntity,
   SportCategoryRuleEntityAdd,
   SportCategoryRuleEntityUpdate,
   SportCategoryRuleFormUtil,
-  SportCategoryRuleModelUpdate,
 } from '@app/api/domain/sport-category-rule';
 
-import { FormValidatorService } from '../../../../core/form/validator';
+import { FormValidatorService } from '@app/core/form';
 
 @Injectable()
 export class SportCategoryRuleFormUtilImpl extends SportCategoryRuleFormUtil {
   private formBuilder = inject(FormBuilder);
 
-  public createEntity(
+  public override createEntity(
     formGroup: FormGroup,
-    parentEntity?: SportCategoryEntity
+    path?: KeyValue<string, string>[]
+  ): EntityAdd {
+    throw new Error('Method not implemented.');
+  }
+
+  public createEntityWithCategory(
+    formGroup: FormGroup,
+    sportCategory?: SportCategoryEntitySimple
   ): SportCategoryRuleEntityAdd {
     const now = new Date().toISOString();
 
@@ -33,11 +40,7 @@ export class SportCategoryRuleFormUtilImpl extends SportCategoryRuleFormUtil {
       periodType: formGroup.value['periodType'],
       periodTypeWinningSize: formGroup.value['periodTypeWinningSize'],
       periodWinningSize: formGroup.value['periodWinningSize'],
-      sportCategory:
-        formGroup.value['sportCategory'] ||
-        (parentEntity
-          ? { uid: parentEntity.uid, name: parentEntity.name }
-          : null),
+      sportCategory: formGroup.value['sportCategory'] || sportCategory || null,
     };
   }
 

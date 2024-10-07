@@ -89,10 +89,7 @@ export class SportEventCardComponent implements OnInit {
       rejectIcon: 'none',
       rejectButtonStyleClass: 'p-button-text',
       accept: () => {
-        const subCollectionPath =
-          sportEvent.userId && sportEvent.sportNetworkId
-            ? `${USER_FEATURE_KEY}/${sportEvent.userId}/${SPORT_NETWORK_FEATURE_KEY}/${sportEvent.sportNetworkId}`
-            : undefined;
+        const subCollectionPath = `${sportEvent.path[0].key}/${sportEvent.path[0].value}/${sportEvent.path[1].key}/${sportEvent.path[1].value}`;
 
         this.entityStoreService.dispatchDeleteEntityAction(
           sportEvent,
@@ -105,7 +102,7 @@ export class SportEventCardComponent implements OnInit {
   public handleUpdateClick(sportEvent: SportEventEntity): void {
     this.router.navigate(
       [
-        `../${sportEvent.sportNetworkId}/${SPORT_EVENT_FEATURE_KEY}/edit`,
+        `../${sportEvent.path[1].value}/${SPORT_EVENT_FEATURE_KEY}/edit`,
         sportEvent.uid,
       ],
       {

@@ -1,13 +1,13 @@
-import { Identifiable, Meta } from '@app/api/common';
+import { Identifiable } from '@app/api/common';
 import { Entity, EntityHelper } from '../../core/entity';
-import { SportCategorySimple } from '../sport-category';
+import { SportCategoryEntitySimple } from '../sport-category';
 
 export interface Participant extends Identifiable {
   name: string;
 }
 export type SportPlayer = Participant & EntityHelper & {
     userId: string | null;
-    skills: SportCategorySimple[];
+    skills: SportCategoryEntitySimple[];
 }
 
 export type SportPlayerEntity = SportPlayer ;

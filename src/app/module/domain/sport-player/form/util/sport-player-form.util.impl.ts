@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EntityAdd } from '@app/api/core/entity';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 import {
   SportPlayerEntity,
@@ -10,7 +9,7 @@ import {
   SportPlayerFormUtil,
 } from '@app/api/domain/sport-player';
 
-import { FormValidatorService } from '../../../../core/form/validator';
+import { FormValidatorService } from '@app/core/form';
 
 @Injectable()
 export class SportPlayerFormUtilImpl extends SportPlayerFormUtil {
