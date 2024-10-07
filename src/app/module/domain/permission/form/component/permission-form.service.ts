@@ -1,3 +1,4 @@
+import { selectableActions } from '@app/api/common';
 import { Observable, Subject, tap } from 'rxjs';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
@@ -15,6 +16,7 @@ import {
   EntityFormComponentStore,
   EntityFormViewModel,
 } from '@app/core/entity';
+import { ActionEnum } from '@app/api/common';
 
 export interface PermissionFormState
   extends EntityFormComponentState<PermissionEntity> {
@@ -26,6 +28,7 @@ export interface PermissionFormState
 export interface PermissionFormViewModel extends EntityFormViewModel {
   formGroup: FormGroup;
   cancel$$: Subject<void>;
+  selectableActions: ActionEnum[];
   submit$$: Subject<void>;
 }
 
@@ -57,7 +60,7 @@ export class PermissionFormService extends EntityFormComponentStore<
     );
   });
 
-  public readonly entityFormViewModel$: Observable<EntityFormViewModel> =
+  public readonly entityFormViewModel$: Observable<PermissionFormViewModel> =
     this.select({
       formGroup: this.formGroup$.pipe(
         map((formGroup) => formGroup as FormGroup)
@@ -94,11 +97,12 @@ export class PermissionFormService extends EntityFormComponentStore<
   }
 
   private extendsEntityFormViewModel(
-    entityFormViewModel: Partial<EntityFormViewModel>
-  ): EntityFormViewModel {
+    entityFormViewModel: Partial<PermissionFormViewModel>
+  ): PermissionFormViewModel {
     return {
-      formGroup: entityFormViewModel.formGroup as FormGroup,
       cancel$$: this.cancel$$,
+      formGroup: entityFormViewModel.formGroup as FormGroup,
+      selectableActions,
       submit$$: this.submit$$,
     };
   }

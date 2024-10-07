@@ -4,7 +4,6 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { EntityAdd } from '@app/api/core/entity';
 
 import {
     PermissionEntity,
@@ -13,8 +12,6 @@ import {
     PermissionModelUpdate,
     PermissionFormUtil,
 } from '@app/api/domain/permission';
-
-import { FormValidatorService } from '../../../../core/form/validator';
 
 @Injectable()
 export class PermissionFormUtilImpl extends PermissionFormUtil {
@@ -40,6 +37,9 @@ export class PermissionFormUtilImpl extends PermissionFormUtil {
             uid: [permission?.uid],
             meta: [permission?.meta],
             actions: [permission?.actions, Validators.required],
+            resourceId: [permission?.resourceId],
+            resourceType: [permission?.resourceType],
+            userId: [permission?.userId],
         });
     }
 
@@ -48,6 +48,9 @@ export class PermissionFormUtilImpl extends PermissionFormUtil {
             uid: formGroup.value['uid'],
             meta: formGroup.value['meta'],
             actions: formGroup.value['actions'],
+            resourceId: formGroup.value['resourceId'],
+            resourceType: formGroup.value['resourceType'],
+            userId: formGroup.value['userId'],
         };
     }
 }

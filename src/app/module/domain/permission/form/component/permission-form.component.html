@@ -2,15 +2,23 @@
 	<form [formGroup]="entityFormViewModel.formGroup">
 		<input name="uid" formControlName="uid" hidden />
 		<input name="meta" formControlName="meta" hidden />
+    <input name="resourceId" formControlName="resourceId" hidden />
+    <input name="resourceType" formControlName="resourceType" hidden />
+    <input name="userId" formControlName="userId" hidden />
 
 		<div class="field">
-			<span class="p-float-label">
-				<input id="name" type="text" pInputText formControlName="name" />
+      <span class="p-float-label">
+          <p-multiSelect
+              id="actions"
+              [options]="entityFormViewModel.selectableActions"
+              placeholder="Select an action"
+              formControlName="actions"
+              display="chip"
+          />
 
-				<label for="name">Name</label>
-			</span>
-		</div>
-
+          <label for="actions">Actions</label>
+      </span>
+  </div>
 
 		<div style="margin-top: 10px" fxLayout="row" fxLayoutAlign="space-around">
 			<button pButton type="button" label="Submit" (click)="entityFormViewModel.submit$$.next()"

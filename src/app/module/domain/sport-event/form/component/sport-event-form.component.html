@@ -113,6 +113,8 @@
       </form>
     </p-tabPanel>
 
-    <p-tabPanel [disabled]="entityFormViewModel.isNewEntity" header="Permissions"> </p-tabPanel>
+    <p-tabPanel [disabled]="entityFormViewModel.isNewEntity" header="Permissions">
+      <sr-permission-form [entityId]=""/>
+    </p-tabPanel>
   </p-tabView>
 </section>
