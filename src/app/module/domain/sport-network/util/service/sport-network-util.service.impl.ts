@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Entity, EntityAdd, EntityUpdate } from '@app/api/core/entity';
+import { Entity, EntityAdd, EntityUpdate, SimpleEntity, SimpleModel } from '@app/api/core/entity';
 import { SportCategorySimple } from '@app/api/domain/sport-category';
 import {
   SportNetworkEntity,
@@ -14,6 +14,12 @@ import { map, Observable, of, switchMap } from 'rxjs';
 
 @Injectable()
 export class SportNetworkUtilServiceImpl extends EntityUtilServiceImpl {
+  public override createSimpleEntity(model: SimpleModel): SimpleEntity {
+    throw new Error('Method not implemented.');
+  }
+  public override createSimpleModel(entity: SimpleEntity): SimpleModel {
+    throw new Error('Method not implemented.');
+  }
   public _sort = (a: SportNetworkEntity, b: SportNetworkEntity): number =>
     a.name < b.name ? 1 : -1;
 

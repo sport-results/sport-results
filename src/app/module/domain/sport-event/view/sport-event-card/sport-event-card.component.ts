@@ -6,9 +6,12 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ActionEnum, RoleNamesEnum } from '@app/api/common';
 import { AuthorizationService } from '@app/api/core/authorization';
+import { NETWORK_PLAYER_FEATURE_KEY } from '@app/api/domain/network-player';
 import {
+  SPORT_EVENT_FEATURE_KEY,
   SportEventEntity,
   SportEventStoreService,
 } from '@app/api/domain/sport-event';
@@ -22,7 +25,13 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ButtonModule, CardModule, ConfirmDialogModule, DatePipe, NgxPermissionsModule],
+  imports: [
+    ButtonModule,
+    CardModule,
+    ConfirmDialogModule,
+    DatePipe,
+    NgxPermissionsModule,
+  ],
   providers: [ConfirmationService],
   selector: 'sr-sport-event-card',
   standalone: true,
@@ -33,6 +42,8 @@ export class SportEventCardComponent implements OnInit {
   private authorizationService = inject(AuthorizationService);
   private confirmationService = inject(ConfirmationService);
   private entityStoreService = inject(SportEventStoreService);
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
 
   @Input()
   public sportEvent?: SportEventEntity;
@@ -89,5 +100,17 @@ export class SportEventCardComponent implements OnInit {
         );
       },
     });
+  }
+
+  public handleUpdateClick(sportEvent: SportEventEntity): void {
+    this.router.navigate(
+      [
+        `../${sportEvent.sportNetworkId}/${SPORT_EVENT_FEATURE_KEY}/edit`,
+        sportEvent.uid,
+      ],
+      {
+        relativeTo: this.activatedRoute,
+      }
+    );
   }
 }

@@ -2,7 +2,7 @@ import { exhaustMap, map, mergeMap, Observable, of, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Entity, EntityAdd, EntityUpdate } from '@app/api/core/entity';
+import { Entity, EntityAdd, EntityUpdate, SimpleEntity, SimpleModel } from '@app/api/core/entity';
 import { RoleDataService, RoleEntity } from '@app/api/domain/role';
 import {
   UserEntity,
@@ -16,6 +16,12 @@ import { EntityUtilServiceImpl } from '@app/core/entity';
 
 @Injectable()
 export class UserUtilServiceImpl extends EntityUtilServiceImpl {
+  public override createSimpleEntity(model: SimpleModel): SimpleEntity {
+    throw new Error('Method not implemented.');
+  }
+  public override createSimpleModel(entity: SimpleEntity): SimpleModel {
+    throw new Error('Method not implemented.');
+  }
   private roleDataService: RoleDataService;
 
   public _sort = (a: UserEntity, b: UserEntity): number =>

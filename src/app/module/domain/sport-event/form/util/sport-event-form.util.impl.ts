@@ -10,6 +10,7 @@ import {
   SportEventFormUtil,
   SportEventUtilService,
 } from '@app/api/domain/sport-event';
+import { Participant } from '@app/api/domain/sport-player';
 
 import { FormValidatorService } from '@app/core/form';
 import { Subject, takeUntil } from 'rxjs';
@@ -75,7 +76,7 @@ export class SportEventFormUtilImpl
         sportEvent?.dateTime,
         FormValidatorService.required
       ),
-      participants: new FormArray(
+      participants: this.formBuilder.array(
         (sportEvent?.participants || []).map(
           (participant) =>
             new FormControl(participant, FormValidatorService.required)
@@ -86,7 +87,7 @@ export class SportEventFormUtilImpl
         FormValidatorService.required
       ),
       sportCategoryRule: new FormControl(
-        sportEvent?.sportCategory,
+        sportEvent?.sportCategoryRule,
         FormValidatorService.required
       ),
       sportNetworkId: new FormControl(sportEvent?.sportNetworkId),

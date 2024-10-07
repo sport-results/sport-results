@@ -1,11 +1,11 @@
-import { Entity } from '../../core/entity';
+import { Identifiable, Meta } from '@app/api/common';
+import { Entity, EntityHelper } from '../../core/entity';
 import { SportCategorySimple } from '../sport-category';
 
-export interface Participant extends Entity {
+export interface Participant extends Identifiable {
   name: string;
 }
-export interface SportPlayer extends Participant {
-    name: string;
+export type SportPlayer = Participant & EntityHelper & {
     userId: string | null;
     skills: SportCategorySimple[];
 }
@@ -30,3 +30,7 @@ export enum SportPlayerResourceEnum {
     SPORT_PLAYER_EDIT_PAGE  = 'SportPlayerEditPage',
     SPORT_PLAYER_LIST_PAGE  = 'SportPlayerListPage',
 }
+
+export type SportPlayerEntitySimple = Omit<SportPlayerEntity, 'meta'>;
+
+export type SportPlayerModelSimple = Omit<SportPlayerModel, 'meta'>;

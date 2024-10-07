@@ -8,7 +8,7 @@
         <input name="uid" formControlName="uid" hidden />
         <input name="meta" formControlName="meta" hidden />
         <input name="userId" formControlName="userId" hidden />
-        <input name="networkId" formControlName="networkId" hidden />
+        <input name="sportNetworkId" formControlName="sportNetworkId" hidden />
 
         <div class="flex flex-column">
           <div class="flex-item flex flex-gap-5">
@@ -43,20 +43,22 @@
           @if(entityFormViewModel.selectedParticipantType == 'player') {
           <div class="flex-item flex flex-gap-5" formArrayName="participants">
             @for ( participant of entityFormViewModel.participantsArray; track
-            participant) {
-            <div class="field flex-item">
-              <span class="p-float-label">
-                <p-dropdown
-                  [inputId]="'' + $index"
-                  [options]="entityFormViewModel.sportPlayers"
-                  [formControlName]="$index"
-                  optionLabel="name"
-                >
-                </p-dropdown>
+            participant; let i = $index) {
+              
+                <div class="field flex-item">
+                  <span class="p-float-label">
+                    <p-dropdown
+                      [id]="'' + i"
+                      [options]="entityFormViewModel.sportPlayers"
+                      [formControlName]="i"
+                      optionLabel="name"
+                      dataKey="uid"
+                    />
 
-                <label [for]="$index">Sport Player {{ $index + 1 }}</label>
-              </span>
-            </div>
+                    <label [for]="$index">Sport Player {{ $index + 1 }}</label>
+                  </span>
+                </div>
+              
             }
           </div>
           }

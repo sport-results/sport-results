@@ -25,11 +25,19 @@ import {
   EntityAdd,
   EntityModelAdd,
   EntityUpdate,
+  SimpleEntity,
+  SimpleModel,
 } from '@app/api/core/entity';
 import { SportPlayerStoreService } from '@app/api/domain/sport-player';
 
 @Injectable()
 export class NetworkPlayerUtilServiceImpl extends EntityUtilServiceImpl {
+  public override createSimpleEntity(model: SimpleModel): SimpleEntity {
+    throw new Error('Method not implemented.');
+  }
+  public override createSimpleModel(entity: SimpleEntity): SimpleModel {
+    throw new Error('Method not implemented.');
+  }
   private sportPlayerStoreService = inject(SportPlayerStoreService);
   public _sort = (a: NetworkPlayerEntity, b: NetworkPlayerEntity): number =>
     a.startDate < b.startDate ? 1 : -1;

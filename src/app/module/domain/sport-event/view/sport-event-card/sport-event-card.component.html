@@ -10,7 +10,11 @@
 
         <div class="buttons">
           <ng-template [ngxPermissionsOnly]="updatePermissions">
-            <p-button icon="pi pi-pencil" [rounded]="true" />
+            <p-button
+              icon="pi pi-pencil"
+              [rounded]="true"
+              (click)="handleUpdateClick(sportEvent)"
+            />
           </ng-template>
 
           <ng-template [ngxPermissionsOnly]="deletePermissions">

@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { User } from '@app/api/common';
 import { Signal } from '@angular/core';
+import { SimpleEntity, SimpleModel } from './entity';
 
 export abstract class EntityUtilService<R, S, T, Y, Z, X> {
   public user$$$!: Signal<User | undefined>;
@@ -17,6 +18,8 @@ export abstract class EntityUtilService<R, S, T, Y, Z, X> {
   public abstract createEntitySearchParameter(entity: R | S | T): string[];
   public abstract createFormGroup(entity: R | undefined): FormGroup;
   public abstract updateEntity(formGroup: FormGroup): T;
+  public abstract createSimpleEntity(model: SimpleModel): SimpleEntity;
+  public abstract createSimpleModel(entity: SimpleEntity): SimpleModel;
 
   protected abstract createSearchParameter(name: string): string[];
 }

@@ -38,3 +38,7 @@ export enum SportEventResourceEnum {
     SPORT_EVENT_EDIT_PAGE  = 'SportEventEditPage',
     SPORT_EVENT_LIST_PAGE  = 'SportEventListPage',
 }
+
+export type SportEventEntitySimple = Omit<SportEventEntity, 'meta'>;
+
+export type SportEventModelSimple = Omit<SportEventModel, 'meta'>;

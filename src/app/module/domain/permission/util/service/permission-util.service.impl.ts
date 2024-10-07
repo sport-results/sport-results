@@ -9,10 +9,16 @@ import {
     PermissionModelUpdate,
 } from '@app/api/domain/permission';
 import { EntityUtilServiceImpl } from '@app/core/entity';
-import { Entity, EntityAdd, EntityUpdate } from '@app/api/core/entity';
+import { Entity, EntityAdd, EntityUpdate, SimpleEntity, SimpleModel } from '@app/api/core/entity';
 
 @Injectable()
 export class PermissionUtilServiceImpl extends EntityUtilServiceImpl {
+  public override createSimpleEntity(model: SimpleModel): SimpleEntity {
+    throw new Error('Method not implemented.');
+  }
+  public override createSimpleModel(entity: SimpleEntity): SimpleModel {
+    throw new Error('Method not implemented.');
+  }
     public _sort = (a: PermissionEntity, b: PermissionEntity): number =>
         a.uid < b.uid ? 1 : -1;
 

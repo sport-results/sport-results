@@ -9,10 +9,16 @@ import {
     SportCategoryRuleModelUpdate,
 } from '@app/api/domain/sport-category-rule';
 import { EntityUtilServiceImpl } from '@app/core/entity';
-import { EntityAdd, Entity, EntityUpdate } from '@app/api/core/entity';
+import { EntityAdd, Entity, EntityUpdate, SimpleEntity, SimpleModel } from '@app/api/core/entity';
 
 @Injectable()
 export class SportCategoryRuleUtilServiceImpl extends EntityUtilServiceImpl {
+    public override createSimpleEntity(model: SimpleModel): SimpleEntity {
+      throw new Error('Method not implemented.');
+    }
+    public override createSimpleModel(entity: SimpleEntity): SimpleModel {
+      throw new Error('Method not implemented.');
+    }
     public override createEntity(formGroup: FormGroup): EntityAdd {
         throw new Error('Method not implemented.');
     }

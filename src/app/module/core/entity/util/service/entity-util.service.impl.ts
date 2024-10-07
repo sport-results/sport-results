@@ -11,6 +11,7 @@ import {
   EntityTypeEnum,
   EntityUpdate,
   EntityUtilService,
+  SimpleModel,
 } from '@app/api/core/entity';
 import {
   ParamItem,

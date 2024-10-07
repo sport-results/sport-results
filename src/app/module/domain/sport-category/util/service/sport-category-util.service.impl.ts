@@ -2,7 +2,7 @@ import { map, Observable, of, switchMap } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Entity, EntityAdd, EntityUpdate } from '@app/api/core/entity';
+import { Entity, EntityAdd, EntityUpdate, SimpleEntity, SimpleModel } from '@app/api/core/entity';
 import {
   SportCategoryEntity,
   SportCategoryEntityAdd,
@@ -13,6 +13,12 @@ import { EntityUtilServiceImpl } from '@app/core/entity';
 
 @Injectable()
 export class SportCategoryUtilServiceImpl extends EntityUtilServiceImpl {
+  public override createSimpleEntity(model: SimpleModel): SimpleEntity {
+    throw new Error('Method not implemented.');
+  }
+  public override createSimpleModel(entity: SimpleEntity): SimpleModel {
+    throw new Error('Method not implemented.');
+  }
   public _sort = (a: SportCategoryEntity, b: SportCategoryEntity): number =>
     a.name < b.name ? 1 : -1;
 
