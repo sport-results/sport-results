@@ -66,18 +66,20 @@ export class SportEventFormUtilImpl
         ...sportEvent.meta,
         ownerId: userId,
       },
+      path
     };
   }
 
   public createFormGroup(sportEvent: SportEventEntity | undefined): FormGroup {
     return this.formBuilder.group({
-      uid: new FormControl(sportEvent?.uid),
-      meta: new FormControl(sportEvent?.meta),
-      location: new FormControl(sportEvent?.location),
       dateTime: new FormControl(
         sportEvent?.dateTime,
         FormValidatorService.required
       ),
+      location: new FormControl(sportEvent?.location),
+      uid: new FormControl(sportEvent?.uid),
+      meta: new FormControl(sportEvent?.meta),
+      path: new FormControl(sportEvent?.path),
       participants: this.formBuilder.array(
         (sportEvent?.participants || []).map(
           (participant) =>
@@ -126,6 +128,7 @@ export class SportEventFormUtilImpl
       location: formGroup.value['location'],
       meta: { ...formGroup.value['meta'] },
       participants: formGroup.value['participants'],
+      path: formGroup.value['path'],
       sportCategory: formGroup.value['sportCategory'],
       sportCategoryRule: formGroup.value['sportCategoryRule'],
       uid: formGroup.value['uid'],
