@@ -43,7 +43,7 @@
           <div class="flex-item flex flex-gap-5" formArrayName="participants">
             @for ( participant of entityFormViewModel.participantsArray; track
             participant; let i = $index) {
-              
+
                 <div class="field flex-item">
                   <span class="p-float-label">
                     <p-dropdown
@@ -57,7 +57,7 @@
                     <label [for]="$index">Sport Player {{ $index + 1 }}</label>
                   </span>
                 </div>
-              
+
             }
           </div>
           }
@@ -112,14 +112,16 @@
       </form>
     </p-tabPanel>
 
-    <p-tabPanel [disabled]="entityFormViewModel.isNewEntity" header="Permissions">
-      <p-tabView>
-        @for(permission of entityFormViewModel.permissions; track permission.uid) {
-          <p-tabPanel [header]="permission.userId">
-            <sr-permission-form [entityId]="permission.uid" [backUrl]="this.backUrl"></sr-permission-form>
-          </p-tabPanel>
-        }
-      </p-tabView>
-    </p-tabPanel>
+    @if(entityFormViewModel.isOwner) {
+      <p-tabPanel [disabled]="entityFormViewModel.isNewEntity" header="Permissions">
+        <p-tabView>
+          @for(permission of entityFormViewModel.permissions; track permission.uid) {
+            <p-tabPanel [header]="permission.userId">
+              <sr-permission-form [entityId]="permission.uid" [backUrl]="this.backUrl"></sr-permission-form>
+            </p-tabPanel>
+          }
+        </p-tabView>
+      </p-tabPanel>
+    }
   </p-tabView>
 </section>

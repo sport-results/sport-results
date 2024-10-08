@@ -49,6 +49,7 @@ export interface SportEventFormState
 
 export interface SportEventFormViewModel extends EntityFormViewModel {
   isNewEntity: boolean;
+  isOwner: boolean;
   participantsArray: FormControl[];
   participantTypes: ParticipantTypeEnum[];
   permissions: PermissionEntity[];
@@ -85,9 +86,7 @@ export class SportEventFormService extends EntityFormComponentStore<
     (state) => state.networkPlayers
   );
 
-  private readonly permissions$ = this.select(
-    (state) => state.permissions
-  );
+  private readonly permissions$ = this.select((state) => state.permissions);
 
   private readonly sportCategories$ = this.select(
     (state) => state.sportCategories
@@ -159,18 +158,25 @@ export class SportEventFormService extends EntityFormComponentStore<
     }
   );
 
-  private readonly fetchNetworkPlayers = (
-    networkPlayerId: string | undefined
-  ) =>
-    this.effect(() =>
-      this.networkPlayerStoreService
-        .selectEntitiesBySportNetworkId$(networkPlayerId || '')
-        .pipe(
-          tap((networkPlayers) => {
-            this.updateNetworkPlayersState(networkPlayers);
-          })
+  private readonly fetchNetworkPlayers = this.effect(
+    (entity$: Observable<SportEventEntity | undefined>) =>
+      entity$.pipe(
+        tap((entity) =>
+          this.networkPlayerStoreService.dispatchListEntitiesAction(
+            `${USER_FEATURE_KEY}/${entity?.path[0].value}/${SPORT_NETWORK_FEATURE_KEY}/${entity?.path[1].value}`
+          )
+        ),
+        switchMap((entity) =>
+          this.networkPlayerStoreService
+            .selectEntitiesBySportNetworkId$(entity?.path[1].value || '')
+            .pipe(
+              tap((networkPlayers) => {
+                this.updateNetworkPlayersState(networkPlayers);
+              })
+            )
         )
-    );
+      )
+  );
 
   private readonly handleSubmit = this.effect((submit$: Observable<void>) => {
     return submit$.pipe(
@@ -197,6 +203,7 @@ export class SportEventFormService extends EntityFormComponentStore<
         map((formGroup) => formGroup as FormGroup)
       ),
       isNewEntity: this.isNewEntity$,
+      isOwner: this.isOwner$,
       permissions: this.permissions$,
       sportCategories: this.sportCategories$.pipe(
         map((sportCategories) => sportCategories as SportCategoryEntity[])
@@ -257,7 +264,7 @@ export class SportEventFormService extends EntityFormComponentStore<
     this.fetchEntity(this.entityId$);
     this.fetchSportCategories();
     this.fetchSportCategoryRules();
-    this.fetchNetworkPlayers(sportNetworkId);
+    this.fetchNetworkPlayers(this.entity$);
     this.fetchPermissions(this.entity$);
 
     this.handleSubmit(this.submit$$.asObservable());
@@ -307,6 +314,7 @@ export class SportEventFormService extends EntityFormComponentStore<
       cancel$$: this.cancel$$,
       formGroup: entityFormViewModel.formGroup as FormGroup,
       isNewEntity: entityFormViewModel.isNewEntity as boolean,
+      isOwner: entityFormViewModel.isOwner as boolean,
       participantTypes,
       permissions: entityFormViewModel.permissions as PermissionEntity[],
       participantsArray: (entityFormViewModel.isNewEntity

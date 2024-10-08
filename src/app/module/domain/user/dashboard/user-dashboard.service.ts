@@ -187,7 +187,7 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
       this.sportNetworkStoreService.dispatchListEntitiesAction(
         `${USER_FEATURE_KEY}/${user?.uid}`
       );
-      this.networkPlayerStoreService.dispatchListEntitiesAction;
+
       this.permissionStoreService.dispatchSearchEntitiesByCollectionGroupAction(
         [
           {
