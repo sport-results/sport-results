@@ -1,4 +1,4 @@
-import { Observable, Subject, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
   SportPlayerEntity,
@@ -10,11 +10,9 @@ import {
 
 import { inject, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ComponentStore } from '@ngrx/component-store';
-import { UserEntity, UserStoreService } from '@app/api/domain/user';
+import { UserEntity } from '@app/api/domain/user';
 import {
-  SportCategorySimple,
+  SportCategoryEntitySimple,
   SportCategoryStoreService,
 } from '@app/api/domain/sport-category';
 import {
@@ -26,12 +24,12 @@ import {
 export interface SportPlayerFormState
   extends EntityFormComponentState<SportPlayerEntity> {
   users: UserEntity[];
-  sportCategories: SportCategorySimple[];
+  sportCategories: SportCategoryEntitySimple[];
 }
 
 export interface SportPlayerFormViewModel extends EntityFormViewModel {
   users: UserEntity[];
-  sportCategories: SportCategorySimple[];
+  sportCategories: SportCategoryEntitySimple[];
 }
 
 @Injectable()
@@ -104,7 +102,7 @@ export class SportPlayerFormService extends EntityFormComponentStore<
       ),
       users: this.users$.pipe(map((users) => users as UserEntity[])),
       sportCategories: this.sportCategories$.pipe(
-        map((sportCategories) => sportCategories as SportCategorySimple[])
+        map((sportCategories) => sportCategories as SportCategoryEntitySimple[])
       ),
     }).pipe(
       map((entityFormViewModel) =>
@@ -164,7 +162,7 @@ export class SportPlayerFormService extends EntityFormComponentStore<
       submit$$: this.submit$$,
       users: entityFormViewModel.users as UserEntity[],
       sportCategories:
-        entityFormViewModel.sportCategories as SportCategorySimple[],
+        entityFormViewModel.sportCategories as SportCategoryEntitySimple[],
     };
   }
 
@@ -200,7 +198,7 @@ export class SportPlayerFormService extends EntityFormComponentStore<
   }
 
   private updateSportCategoriesState(
-    sportCategories: SportCategorySimple[]
+    sportCategories: SportCategoryEntitySimple[]
   ): void {
     this.setState((state) => {
       return {

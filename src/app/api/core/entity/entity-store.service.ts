@@ -5,7 +5,7 @@ import { KeyValue } from '@angular/common';
 import { StoreService } from '../store';
 
 export abstract class EntityStoreService<R, S, T> extends StoreService {
-  public dispatchDeleteEntityAction(entity: R): void {
+  public dispatchDeleteEntityAction(entity: R, subCollectionPath?: string,): void {
     throw new Error('Method not implemented.');
   }
 

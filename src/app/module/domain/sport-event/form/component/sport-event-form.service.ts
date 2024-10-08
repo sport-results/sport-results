@@ -4,7 +4,7 @@ import {
   SportCategoryRuleStoreService,
 } from '@app/api/domain/sport-category-rule';
 import { BehaviorSubject, combineLatest, Observable, Subject, tap } from 'rxjs';
-import { map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { map, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import {
   SportEventEntity,
   SportEventEntityAdd,
@@ -14,7 +14,7 @@ import {
 } from '@app/api/domain/sport-event';
 
 import { inject, Injectable } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import {
   EntityFormComponentState,
   EntityFormComponentStore,
@@ -32,6 +32,11 @@ import {
 } from '@app/api/domain/network-player';
 import { USER_FEATURE_KEY, UserEntity } from '@app/api/domain/user';
 import { SPORT_NETWORK_FEATURE_KEY } from '@app/api/domain/sport-network';
+import { KeyValue } from '@angular/common';
+import {
+  PermissionEntity,
+  PermissionStoreService,
+} from '@app/api/domain/permission';
 
 export interface SportEventFormState
   extends EntityFormComponentState<SportEventEntity> {
@@ -39,11 +44,15 @@ export interface SportEventFormState
   sportCategoryRules: SportCategoryRuleEntity[];
   networkPlayers: NetworkPlayerEntity[];
   sportNetworkId: string | undefined;
+  permissions: PermissionEntity[];
 }
 
 export interface SportEventFormViewModel extends EntityFormViewModel {
+  isNewEntity: boolean;
+  isOwner: boolean;
   participantsArray: FormControl[];
   participantTypes: ParticipantTypeEnum[];
+  permissions: PermissionEntity[];
   selectedParticipantType: ParticipantTypeEnum | undefined;
   selectedParticipantSize: number;
   sportCategories: SportCategoryEntity[];
@@ -61,6 +70,7 @@ export class SportEventFormService extends EntityFormComponentStore<
   protected override entityStoreService = inject(SportEventStoreService);
   protected override entityFormUtil = inject(SportEventFormUtil);
   private networkPlayerStoreService = inject(NetworkPlayerStoreService);
+  private permissionStoreService = inject(PermissionStoreService);
   private sportCategoryStoreService = inject(SportCategoryStoreService);
   private sportCategoryRuleStoreService = inject(SportCategoryRuleStoreService);
 
@@ -75,6 +85,8 @@ export class SportEventFormService extends EntityFormComponentStore<
   private readonly networkPlayers$ = this.select(
     (state) => state.networkPlayers
   );
+
+  private readonly permissions$ = this.select((state) => state.permissions);
 
   private readonly sportCategories$ = this.select(
     (state) => state.sportCategories
@@ -107,18 +119,64 @@ export class SportEventFormService extends EntityFormComponentStore<
     );
   });
 
-  private readonly fetchNetworkPlayers = (
-    networkPlayerId: string | undefined
-  ) =>
-    this.effect(() =>
-      this.networkPlayerStoreService
-        .selectEntitiesBySportNetworkId$(networkPlayerId || '')
-        .pipe(
-          tap((networkPlayers) => {
-            this.updateNetworkPlayersState(networkPlayers);
-          })
+  private readonly fetchPermissions = this.effect(
+    (entity$: Observable<SportEventEntity | undefined>) => {
+      this.permissionStoreService.dispatchListEntitiesAction();
+      return entity$.pipe(
+        tap(
+          (entity) =>
+            entity?.path &&
+            this.permissionStoreService.dispatchListEntitiesAction(
+              this.createSubCollectionPath(entity.path, entity.uid)
+            )
+        ),
+        switchMap((entity) => this.permissionStoreService.selectEntities$()),
+        tap((permissions) => {
+          this.updatePermissionsState(permissions);
+        })
+      );
+    }
+  );
+
+  private readonly updateEntityFields = this.effect(
+    (entity$: Observable<SportEventEntity | undefined>) => {
+      return entity$.pipe(
+        withLatestFrom(this.formGroup$),
+        take(1),
+        tap(([entity, formGroup]) => {
+          if (entity) {
+            this.changeSportCategory$$.next(
+              entity.sportCategory as SportCategoryEntity
+            );
+
+            (formGroup?.get('sportCategoryRule') as FormControl).patchValue(
+              entity.sportCategoryRule
+            );
+          }
+        })
+      );
+    }
+  );
+
+  private readonly fetchNetworkPlayers = this.effect(
+    (entity$: Observable<SportEventEntity | undefined>) =>
+      entity$.pipe(
+        tap((entity) =>
+          this.networkPlayerStoreService.dispatchListEntitiesAction(
+            `${USER_FEATURE_KEY}/${entity?.path[0].value}/${SPORT_NETWORK_FEATURE_KEY}/${entity?.path[1].value}`
+          )
+        ),
+        switchMap((entity) =>
+          this.networkPlayerStoreService
+            .selectEntitiesBySportNetworkId$(entity?.path[1].value || '')
+            .pipe(
+              tap((networkPlayers) => {
+                this.updateNetworkPlayersState(networkPlayers);
+              })
+            )
         )
-    );
+      )
+  );
 
   private readonly handleSubmit = this.effect((submit$: Observable<void>) => {
     return submit$.pipe(
@@ -126,7 +184,13 @@ export class SportEventFormService extends EntityFormComponentStore<
         this.getDataForSubmit$.pipe(
           withLatestFrom(this.backUrl$),
           tap(([{ entity, formGroup, sportNetworkId, user }, backUrl]) =>
-            this.submit(entity, formGroup as FormGroup, backUrl, user as UserEntity, sportNetworkId)
+            this.submit(
+              entity,
+              formGroup as FormGroup,
+              backUrl,
+              user as UserEntity,
+              sportNetworkId
+            )
           )
         )
       )
@@ -138,6 +202,9 @@ export class SportEventFormService extends EntityFormComponentStore<
       formGroup: this.formGroup$.pipe(
         map((formGroup) => formGroup as FormGroup)
       ),
+      isNewEntity: this.isNewEntity$,
+      isOwner: this.isOwner$,
+      permissions: this.permissions$,
       sportCategories: this.sportCategories$.pipe(
         map((sportCategories) => sportCategories as SportCategoryEntity[])
       ),
@@ -176,6 +243,7 @@ export class SportEventFormService extends EntityFormComponentStore<
       entityId: undefined,
       backUrl: '',
       networkPlayers: [],
+      permissions: [],
       sportCategories: [],
       sportCategoryRules: [],
       sportNetworkId: undefined,
@@ -196,16 +264,27 @@ export class SportEventFormService extends EntityFormComponentStore<
     this.fetchEntity(this.entityId$);
     this.fetchSportCategories();
     this.fetchSportCategoryRules();
-    this.fetchNetworkPlayers(sportNetworkId);
+    this.fetchNetworkPlayers(this.entity$);
+    this.fetchPermissions(this.entity$);
 
     this.handleSubmit(this.submit$$.asObservable());
 
     this.createFormGroup(this.entity$);
+    this.updateEntityFields(this.entity$);
   }
 
-  private addEntity(formGroup: FormGroup, subCollectionPath: string, userId: string): void {
+  private addEntity(
+    formGroup: FormGroup,
+    subCollectionPath: string,
+    userId: string,
+    path: KeyValue<string, string>[]
+  ): void {
     this.entityStoreService.dispatchAddEntityAction(
-      this.entityFormUtil.createEntityWithUser(formGroup, userId) as SportEventEntityAdd,
+      this.entityFormUtil.createEntityWithUser(
+        formGroup,
+        userId,
+        path
+      ) as SportEventEntityAdd,
       subCollectionPath
     );
   }
@@ -229,13 +308,21 @@ export class SportEventFormService extends EntityFormComponentStore<
   private extendsEntityFormViewModel(
     entityFormViewModel: Partial<SportEventFormViewModel>
   ): SportEventFormViewModel {
+    const formGroup = entityFormViewModel.formGroup as FormGroup;
+
     return {
-      formGroup: entityFormViewModel.formGroup as FormGroup,
       cancel$$: this.cancel$$,
+      formGroup: entityFormViewModel.formGroup as FormGroup,
+      isNewEntity: entityFormViewModel.isNewEntity as boolean,
+      isOwner: entityFormViewModel.isOwner as boolean,
       participantTypes,
-      participantsArray: this.getParticipantsArray(
-        entityFormViewModel.formGroup as FormGroup,
-        entityFormViewModel.selectedParticipantSize || 0
+      permissions: entityFormViewModel.permissions as PermissionEntity[],
+      participantsArray: (entityFormViewModel.isNewEntity
+        ? this.createParticipantsArray(
+            formGroup,
+            entityFormViewModel.selectedParticipantSize || 0
+          )
+        : this.getParticipantsArray(formGroup)
       ).controls as FormControl[],
       selectedParticipantType: entityFormViewModel.selectedParticipantType,
       selectedParticipantSize: entityFormViewModel.selectedParticipantSize || 0,
@@ -253,13 +340,18 @@ export class SportEventFormService extends EntityFormComponentStore<
     formGroup: FormGroup,
     backUrl: string,
     user: UserEntity,
-    sportNetworkId: string | undefined,
+    sportNetworkId: string | undefined
   ): void {
     const subCollectionPath = `${USER_FEATURE_KEY}/${user.uid}/${SPORT_NETWORK_FEATURE_KEY}/${sportNetworkId}`;
     if (entity) {
-      this.updateEntity(formGroup);
+      this.updateEntity(formGroup, subCollectionPath);
     } else {
-      this.addEntity(formGroup, subCollectionPath, user.uid);
+      this.addEntity(
+        formGroup,
+        subCollectionPath,
+        user.uid,
+        this.entityFormUtil.createPath(user.uid, sportNetworkId || '')
+      );
     }
 
     this.router.navigate([backUrl], {
@@ -276,9 +368,10 @@ export class SportEventFormService extends EntityFormComponentStore<
     });
   }
 
-  private updateEntity(formGroup: FormGroup): void {
+  private updateEntity(formGroup: FormGroup, subCollectionPath: string): void {
     this.entityStoreService.dispatchUpdateEntityAction(
-      this.entityFormUtil.updateEntity(formGroup)
+      this.entityFormUtil.updateEntity(formGroup),
+      subCollectionPath
     );
   }
 
@@ -304,6 +397,15 @@ export class SportEventFormService extends EntityFormComponentStore<
     });
   }
 
+  private updatePermissionsState(permissions: PermissionEntity[]): void {
+    this.setState((state) => {
+      return {
+        ...state,
+        permissions,
+      };
+    });
+  }
+
   private updateSportCategoryRulesState(
     sportCategoryRules: SportCategoryRuleEntity[]
   ): void {
@@ -315,9 +417,7 @@ export class SportEventFormService extends EntityFormComponentStore<
     });
   }
 
-  private updateSportNetworkIdState(
-    sportNetworkId: string | undefined
-  ): void {
+  private updateSportNetworkIdState(sportNetworkId: string | undefined): void {
     this.setState((state) => {
       return {
         ...state,
@@ -326,14 +426,18 @@ export class SportEventFormService extends EntityFormComponentStore<
     });
   }
 
-  private getParticipantsArray(
+  private createParticipantsArray(
     formGroup: FormGroup,
     participantsNumber: number
-  ) {
+  ): FormArray {
     const controls = this.entityFormUtil.createParticipants(participantsNumber);
 
     formGroup.controls['participants'] = controls;
 
     return controls;
+  }
+
+  private getParticipantsArray(formGroup: FormGroup): FormArray {
+    return formGroup.controls['participants'] as FormArray;
   }
 }

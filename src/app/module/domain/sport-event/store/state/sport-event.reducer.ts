@@ -46,6 +46,19 @@ const sportEventReducer = createReducer(
     ...state,
     isNewEntityButtonEnabled: enabled,
   })),
+  on(sportEventActions.deleteEntity, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+  on(sportEventActions.deleteEntitySuccess, (state, { entityId }) =>
+    sportEventAdapter.removeOne(entityId, { ...state, loading: false })
+  ),
+  on(sportEventActions.addEntityFail, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false,
+  })),
   on(sportEventActions.loadEntity, (state) => ({
     ...state,
     loading: true,

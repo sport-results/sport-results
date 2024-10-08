@@ -14,7 +14,7 @@ import {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [PermissionFormService],
-  selector: 'app-permission-form',
+  selector: 'sr-permission-form',
   templateUrl: './permission-form.component.html',
   styleUrls: ['./permission-form.component.scss'],
 })
@@ -25,6 +25,9 @@ export class PermissionFormComponent
   public componentService = inject(PermissionFormService);
 
   public ngOnInit(): void {
+    const params = this.extractAllRouteParams(this.router);
+
+    this.userId = params['userId'];
     this.componentService.init$(this.entityId, this.userId, this.backUrl);
     this.entityFormViewModel$ = this.componentService.entityFormViewModel$;
   }

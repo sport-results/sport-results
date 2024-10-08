@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SportEventStoreService } from '@app/api/domain/sport-event';
 import { SportEventAdminPermissionsService } from '@app/api/admin/sport-event';
-import { RoleNames } from '@app/api/common';
+import { RoleNamesEnum } from '@app/api/common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +34,7 @@ export class SportEventAdminPageComponent implements OnInit {
 
     private initButtonPermissions(): void {
         this.buttonPermissions = [
-            RoleNames.ADMIN,
+          RoleNamesEnum.ADMIN,
             SportEventAdminPermissionsService.createSportEventEntity,
         ];
     }

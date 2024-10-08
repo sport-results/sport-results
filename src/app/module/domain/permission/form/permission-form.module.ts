@@ -9,6 +9,7 @@ import { PermissionFormUtil } from '@app/api/domain/permission';
 
 import { PermissionFormComponent } from './component';
 import { PermissionFormUtilImpl } from './util';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @NgModule({
     declarations: [PermissionFormComponent],
@@ -19,7 +20,8 @@ import { PermissionFormUtilImpl } from './util';
         ReactiveFormsModule,
         ButtonModule,
         InputTextModule,
-        InputTextareaModule
+        InputTextareaModule,
+        MultiSelectModule
     ],
     providers: [
     {

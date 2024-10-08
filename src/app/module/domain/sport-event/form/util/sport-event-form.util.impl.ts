@@ -1,26 +1,31 @@
+import { Subject, takeUntil } from 'rxjs';
+
+import { KeyValue } from '@angular/common';
 import { inject, Injectable, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { User } from '@app/api/common';
-import { ApplicationStoreService } from '@app/api/core/application';
 import { SportCategoryEntity } from '@app/api/domain/sport-category';
 import { SportCategoryRuleEntity } from '@app/api/domain/sport-category-rule';
 
 import {
+  SPORT_EVENT_FEATURE_KEY,
   SportEventEntity,
   SportEventEntityAdd,
   SportEventEntityUpdate,
   SportEventFormUtil,
   SportEventUtilService,
 } from '@app/api/domain/sport-event';
+import { SPORT_NETWORK_FEATURE_KEY } from '@app/api/domain/sport-network';
+import { USER_FEATURE_KEY } from '@app/api/domain/user';
 
 import { FormValidatorService } from '@app/core/form';
-import { Subject, takeUntil } from 'rxjs';
 
 @Injectable()
 export class SportEventFormUtilImpl
   extends SportEventFormUtil
   implements OnDestroy
 {
+  private formBuilder = inject(FormBuilder);
+  
   entityUtilService = inject(SportEventUtilService);
   destroy: Subject<void> = new Subject();
 
@@ -28,9 +33,8 @@ export class SportEventFormUtilImpl
     this.destroy.next();
     this.destroy.complete();
   }
-  private formBuilder = inject(FormBuilder);
 
-  public createEntity(formGroup: FormGroup): SportEventEntityAdd {
+  public createEntity(formGroup: FormGroup, path?: KeyValue<string, string>[]): SportEventEntityAdd {
     const now = new Date().toISOString();
     const user = this.entityUtilService.user$$$();
 
@@ -43,6 +47,7 @@ export class SportEventFormUtilImpl
       location: formGroup.value['location'],
       dateTime: formGroup.value['dateTime'],
       participants: formGroup.value['participants'],
+      path: path as KeyValue<string, string>[],
       sportCategory: formGroup.value['sportCategory'],
       sportCategoryRule: formGroup.value['sportCategoryRule'],
     };
@@ -50,7 +55,8 @@ export class SportEventFormUtilImpl
 
   public createEntityWithUser(
     formGroup: FormGroup,
-    userId: string
+    userId: string,
+    path: KeyValue<string, string>[]
   ): SportEventEntityAdd {
     const sportEvent = this.createEntity(formGroup);
 
@@ -60,19 +66,21 @@ export class SportEventFormUtilImpl
         ...sportEvent.meta,
         ownerId: userId,
       },
+      path
     };
   }
 
   public createFormGroup(sportEvent: SportEventEntity | undefined): FormGroup {
     return this.formBuilder.group({
-      uid: new FormControl(sportEvent?.uid),
-      meta: new FormControl(sportEvent?.meta),
-      location: new FormControl(sportEvent?.location),
       dateTime: new FormControl(
         sportEvent?.dateTime,
         FormValidatorService.required
       ),
-      participants: new FormArray(
+      location: new FormControl(sportEvent?.location),
+      uid: new FormControl(sportEvent?.uid),
+      meta: new FormControl(sportEvent?.meta),
+      path: new FormControl(sportEvent?.path),
+      participants: this.formBuilder.array(
         (sportEvent?.participants || []).map(
           (participant) =>
             new FormControl(participant, FormValidatorService.required)
@@ -83,7 +91,7 @@ export class SportEventFormUtilImpl
         FormValidatorService.required
       ),
       sportCategoryRule: new FormControl(
-        sportEvent?.sportCategory,
+        sportEvent?.sportCategoryRule,
         FormValidatorService.required
       ),
     });
@@ -120,6 +128,7 @@ export class SportEventFormUtilImpl
       location: formGroup.value['location'],
       meta: { ...formGroup.value['meta'] },
       participants: formGroup.value['participants'],
+      path: formGroup.value['path'],
       sportCategory: formGroup.value['sportCategory'],
       sportCategoryRule: formGroup.value['sportCategoryRule'],
       uid: formGroup.value['uid'],
@@ -134,5 +143,16 @@ export class SportEventFormUtilImpl
     }
 
     return this.formBuilder.array(newControls);
+  }
+
+  public createPath(
+    userId: string,
+    sportNetworkId: string,
+  ): KeyValue<string, string>[] {
+    return [
+      { key: USER_FEATURE_KEY, value: userId },
+      { key: SPORT_NETWORK_FEATURE_KEY, value: sportNetworkId },
+      { key: SPORT_EVENT_FEATURE_KEY, value: '' },
+    ];
   }
 }

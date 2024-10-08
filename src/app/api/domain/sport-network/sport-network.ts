@@ -1,9 +1,11 @@
+import { KeyValue } from '@angular/common';
 import { Entity } from '../../core/entity';
-import { SportCategorySimple } from '../sport-category';
+import { SportCategoryEntitySimple } from '../sport-category';
 
 export interface SportNetwork {
     name: string;
-    sportCategories: SportCategorySimple[]
+    path: KeyValue<string, string>[];
+    sportCategories: SportCategoryEntitySimple[]
     userId: string;
 }
 

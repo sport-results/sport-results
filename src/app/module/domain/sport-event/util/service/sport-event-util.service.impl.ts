@@ -1,22 +1,69 @@
-import { filter, first, map, Observable, of, switchMap } from 'rxjs';
+import { ParticipantTypeEnum } from './../../../../../api/domain/sport-category-rule/sport-category-rule';
+import { map, Observable, of, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import {
   SportEventEntity,
   SportEventEntityAdd,
+  SportEventEntitySimple,
   SportEventEntityUpdate,
   SportEventModel,
   SportEventModelAdd,
+  SportEventModelSimple,
   SportEventModelUpdate,
 } from '@app/api/domain/sport-event';
 import { EntityUtilServiceImpl } from '@app/core/entity';
-import { SportPlayerStoreService } from '@app/api/domain/sport-player';
+import {
+  SportPlayerEntitySimple,
+  SportPlayerModelSimple,
+  SportPlayerUtilService,
+} from '@app/api/domain/sport-player';
 
 @Injectable()
 export class SportEventUtilServiceImpl extends EntityUtilServiceImpl {
-  private sportPlayerStoreService = inject(SportPlayerStoreService);
+  private sportPlayerUtilService = inject(SportPlayerUtilService);
 
+  public override createSimpleEntity(
+    model: SportEventModelSimple
+  ): SportEventEntitySimple {
+    return {
+      dateTime: new Date(model.dateTime),
+      location: model.location,
+      participants:
+        model.sportCategoryRule.participantType === ParticipantTypeEnum.player
+          ? model.participants.map(
+              (participant) =>
+                this.sportPlayerUtilService.createSimpleEntity(
+                  participant
+                ) as SportPlayerEntitySimple
+            )
+          : model.participants,
+      sportCategory: model.sportCategory,
+      sportCategoryRule: model.sportCategoryRule,
+      uid: model.uid,
+    };
+  }
+  public override createSimpleModel(
+    entity: SportEventEntitySimple
+  ): SportEventModelSimple {
+    return {
+      dateTime: entity.dateTime.toISOString(),
+      location: entity.location,
+      participants:
+        entity.sportCategoryRule.participantType === ParticipantTypeEnum.player
+          ? entity.participants.map(
+              (participant) =>
+                this.sportPlayerUtilService.createSimpleModel(
+                  participant
+                ) as SportPlayerModelSimple
+            )
+          : entity.participants,
+      sportCategory: entity.sportCategory,
+      sportCategoryRule: entity.sportCategoryRule,
+      uid: entity.uid,
+    };
+  }
   public _sort = (a: SportEventEntity, b: SportEventEntity): number =>
     a.dateTime < b.dateTime ? 1 : -1;
 
@@ -31,10 +78,60 @@ export class SportEventUtilServiceImpl extends EntityUtilServiceImpl {
       dateTime: entity.dateTime.toISOString(),
       location: entity.location || null,
       meta: entity.meta,
-      participants: entity.participants,
+      participants: entity.sportCategoryRule.participantType === ParticipantTypeEnum.player
+      ? entity.participants.map(
+          (participant) =>
+            this.sportPlayerUtilService.createSimpleModel(
+              participant
+            ) as SportPlayerModelSimple
+        )
+      : entity.participants,
       sportCategoryRule: entity.sportCategoryRule,
       sportCategory: entity.sportCategory,
+      path: entity.path,
     };
+  }
+
+  public override convertEntityUpdateToModelUpdate(
+    entity: SportEventEntityUpdate
+  ): SportEventModelUpdate {
+    const model: SportEventModelUpdate = {
+      uid: entity.uid,
+      meta: entity.meta,
+    };
+
+    if (entity.dateTime) {
+      model.dateTime = entity.dateTime.toISOString();
+    }
+
+    if (entity.location) {
+      model.location = entity.location || null;
+    }
+
+    if (entity.participants) {
+      model.participants = entity.sportCategoryRule?.participantType === ParticipantTypeEnum.player
+      ? entity.participants.map(
+          (participant) =>
+            this.sportPlayerUtilService.createSimpleModel(
+              participant
+            ) as SportPlayerModelSimple
+        )
+      : entity.participants;
+    }
+
+    if (entity.sportCategory) {
+      model.sportCategory = entity.sportCategory;
+    }
+
+    if (entity.sportCategoryRule) {
+      model.sportCategoryRule = entity.sportCategoryRule;
+    }
+
+    if (entity.path) {
+      model.path = entity.path;
+    }
+
+    return model;
   }
 
   public override convertModelToEntity$(
@@ -44,9 +141,18 @@ export class SportEventUtilServiceImpl extends EntityUtilServiceImpl {
       meta: model.meta,
       dateTime: new Date(model.dateTime),
       location: model.location,
-      participants: model.participants,
+      participants:
+        model.sportCategoryRule.participantType === ParticipantTypeEnum.player
+          ? model.participants.map(
+              (participant) =>
+                this.sportPlayerUtilService.createSimpleEntity(
+                  participant
+                ) as SportPlayerEntitySimple
+            )
+          : model.participants,
       sportCategory: model.sportCategory,
       sportCategoryRule: model.sportCategoryRule,
+      path: model.path,
       uid: model.uid,
     });
   }

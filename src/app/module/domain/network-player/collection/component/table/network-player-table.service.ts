@@ -2,7 +2,7 @@ import { map, Observable, Subject, tap } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RoleNames } from '@app/api/common';
+import { RoleNamesEnum } from '@app/api/common';
 import {
     NetworkPlayerEntity,
     NetworkPlayerPermissionsService,
@@ -47,7 +47,7 @@ export class NetworkPlayerTableService extends ComponentStore<NetworkPlayerTable
             map((entityFormViewModel) => ({
                 ...entityFormViewModel,
                 buttonPermissions: [
-                    RoleNames.ADMIN,
+                  RoleNamesEnum.ADMIN,
                     NetworkPlayerPermissionsService.updateNetworkPlayerEntity,
                 ],
                 editEntity$$: this.editEntity$$,

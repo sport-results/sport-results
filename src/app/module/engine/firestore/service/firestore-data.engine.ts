@@ -6,6 +6,7 @@ import {
   collectionData,
   collectionGroup,
   CollectionReference,
+  deleteDoc,
   doc,
   docData,
   Firestore,
@@ -73,8 +74,20 @@ export class FirestoreDataEngine extends DataEngine {
     });
   }
 
-  public override delete$(entity: EntityModel): Observable<EntityModel> {
-    return this.update$(entity);
+  public override delete$(uid: string, subCollectionPath?: string): Observable<string> {
+    const path = this.dataUtil.createPath(
+      this.featureKey,
+      uid,
+      subCollectionPath
+    );
+    return new Observable((subscriber) => {
+      deleteDoc(doc(this.firestore, path)).then(() => {
+        subscriber.next(uid);
+      })
+      .catch((error) => {
+        subscriber.error(error);
+      });
+    });
   }
 
   public override list$(

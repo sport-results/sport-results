@@ -2,12 +2,15 @@ import { catchError, from, map, mergeMap, of, switchMap } from 'rxjs';
 import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 
 import { inject, Injectable } from '@angular/core';
-import { RoleNames } from '@app/api/common';
+import { RoleNamesEnum } from '@app/api/common';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import * as applicationActions from './application.actions';
 import { UserEntity, UserStoreService } from '../../../../../api/domain/user';
-import { SportNetworkStoreService, SportNetworkUtilService } from '@app/api/domain/sport-network';
+import {
+  SportNetworkStoreService,
+  SportNetworkUtilService,
+} from '@app/api/domain/sport-network';
 
 @Injectable()
 export class ApplicationEffects {
@@ -39,8 +42,8 @@ export class ApplicationEffects {
               {
                 uid: '66001',
                 editable: false,
-                name: RoleNames.USER,
-                permissions: [RoleNames.USER],
+                name: RoleNamesEnum.USER,
+                permissions: [RoleNamesEnum.USER],
               },
             ],
             uid: currentUser.uid || '',

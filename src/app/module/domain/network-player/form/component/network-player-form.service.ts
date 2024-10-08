@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
@@ -157,7 +158,7 @@ export class NetworkPlayerFormService extends EntityFormComponentStore<
     if (entity) {
       this.updateEntity(formGroup);
     } else {
-      this.addEntity(formGroup, subCollectionGroup);
+      this.addEntity(formGroup, subCollectionGroup, this.entityFormUtil.createPath(user.uid, sportNetwork.uid));
     }
 
     this.router.navigate(['../../../..'], {
@@ -165,9 +166,9 @@ export class NetworkPlayerFormService extends EntityFormComponentStore<
     });
   }
 
-  private addEntity(formGroup: FormGroup, subCollectionPath: string): void {
+  private addEntity(formGroup: FormGroup, subCollectionPath: string, path: KeyValue<string, string>[]): void {
     this.entityStoreService.dispatchAddEntityAction(
-      this.entityFormUtil.createEntity(formGroup) as NetworkPlayerEntityAdd,
+      this.entityFormUtil.createEntity(formGroup, path) as NetworkPlayerEntityAdd,
       subCollectionPath
     );
   }

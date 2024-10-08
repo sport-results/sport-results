@@ -26,4 +26,6 @@ export enum SportCategoryResourceEnum {
     SPORT_CATEGORY_LIST_PAGE  = 'SportCategoryListPage',
 }
 
-export type SportCategorySimple = Omit<SportCategoryEntity, 'rules' | 'meta'>;
+export type SportCategoryEntitySimple = Omit<SportCategoryEntity, 'rules' | 'meta'>;
+
+export type SportCategoryModelSimple = Omit<SportCategoryModel, 'rules' | 'meta'>;

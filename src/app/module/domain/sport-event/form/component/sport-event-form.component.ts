@@ -15,7 +15,7 @@ import { EntityFormComponent } from '@app/core/entity';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [SportEventFormService],
-  selector: 'app-sport-event-form',
+  selector: 'sr-sport-event-form',
   templateUrl: './sport-event-form.component.html',
   styleUrls: ['./sport-event-form.component.scss'],
 })

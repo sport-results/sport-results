@@ -3,8 +3,9 @@ import { FormGroup } from '@angular/forms';
 import { Observable, Subject, tap, withLatestFrom } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { inject } from '@angular/core';
-import { EntityFormUtil } from '@app/api/core/entity';
+import { Entity, EntityFormUtil } from '@app/api/core/entity';
 import { EntityComponentState, EntityComponentStore } from '../store';
+import { KeyValue } from '@angular/common';
 
 export interface EntityFormComponentState<S> extends EntityComponentState<S> {
   backUrl: string;
@@ -29,6 +30,10 @@ export class EntityFormComponentStore<
 
   protected readonly backUrl$ = this.select((state) => state.backUrl);
   protected readonly formGroup$ = this.select((state) => state.formGroup);
+  protected readonly isNewEntity$ = this.select((state) => !state.entity);
+  protected readonly isOwner$ = this.select(
+    (state) => (state.entity as Entity).meta.ownerId === state.user?.uid
+  );
 
   protected cancel$$ = new Subject<void>();
   protected submit$$ = new Subject<void>();
@@ -73,5 +78,21 @@ export class EntityFormComponentStore<
         formGroup,
       };
     });
+  }
+
+  protected createSubCollectionPath(
+    path: KeyValue<string, string>[],
+    entityId?: string
+  ): string {
+    if (entityId) {
+      return `${path
+        .map((item) => `${item.key}/${item.value}`)
+        .join('/')}${entityId}`;
+    } else {
+      return `${[...path]
+        .slice(0, path.length - 1)
+        .map((item) => `${item.key}/${item.value}`)
+        .join('/')}`;
+    }
   }
 }

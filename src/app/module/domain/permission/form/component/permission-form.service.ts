@@ -1,5 +1,6 @@
+import { selectableActions } from '@app/api/common';
 import { Observable, Subject, tap } from 'rxjs';
-import { map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
   PermissionEntity,
   PermissionEntityAdd,
@@ -15,6 +16,7 @@ import {
   EntityFormComponentStore,
   EntityFormViewModel,
 } from '@app/core/entity';
+import { ActionEnum } from '@app/api/common';
 
 export interface PermissionFormState
   extends EntityFormComponentState<PermissionEntity> {
@@ -26,6 +28,7 @@ export interface PermissionFormState
 export interface PermissionFormViewModel extends EntityFormViewModel {
   formGroup: FormGroup;
   cancel$$: Subject<void>;
+  selectableActions: ActionEnum[];
   submit$$: Subject<void>;
 }
 
@@ -36,8 +39,8 @@ export class PermissionFormService extends EntityFormComponentStore<
   PermissionEntity,
   PermissionEntityUpdate
 > {
-  private permissionStoreService = inject(PermissionStoreService);
-  private permissionFormUtil = inject(PermissionFormUtil);
+  protected override entityStoreService = inject(PermissionStoreService);
+  protected override entityFormUtil = inject(PermissionFormUtil);
 
   private readonly getDataForSubmit$ = this.select((state) => ({
     entity: state.entity,
@@ -57,9 +60,10 @@ export class PermissionFormService extends EntityFormComponentStore<
     );
   });
 
-  public readonly entityFormViewModel$: Observable<EntityFormViewModel> =
+  public readonly entityFormViewModel$: Observable<PermissionFormViewModel> =
     this.select({
       formGroup: this.formGroup$.pipe(
+        filter((formGroup) => !!formGroup),
         map((formGroup) => formGroup as FormGroup)
       ),
     }).pipe(
@@ -83,22 +87,36 @@ export class PermissionFormService extends EntityFormComponentStore<
     userId: string | undefined,
     backUrl: string
   ): void {
+    this.entity$.subscribe(console.log);
     super.initForm(entityId, userId, backUrl);
+
     this.handleSubmit(this.submit$$.asObservable());
+    this.createFormGroup(this.entity$);
   }
 
   private addEntity(formGroup: FormGroup): void {
-    this.permissionStoreService.dispatchAddEntityAction(
-      this.permissionFormUtil.createEntity(formGroup) as PermissionEntityAdd
+    this.entityStoreService.dispatchAddEntityAction(
+      this.entityFormUtil.createEntity(formGroup) as PermissionEntityAdd
     );
   }
 
+  private readonly createFormGroup = this.effect(
+    (entity$: Observable<PermissionEntity | undefined>) => {
+      return entity$.pipe(
+        tap((entity) =>
+          this.updateFormGroupState(this.entityFormUtil.createFormGroup(entity))
+        )
+      );
+    }
+  );
+
   private extendsEntityFormViewModel(
-    entityFormViewModel: Partial<EntityFormViewModel>
-  ): EntityFormViewModel {
+    entityFormViewModel: Partial<PermissionFormViewModel>
+  ): PermissionFormViewModel {
     return {
-      formGroup: entityFormViewModel.formGroup as FormGroup,
       cancel$$: this.cancel$$,
+      formGroup: entityFormViewModel.formGroup as FormGroup,
+      selectableActions,
       submit$$: this.submit$$,
     };
   }
@@ -109,7 +127,10 @@ export class PermissionFormService extends EntityFormComponentStore<
     backUrl: string
   ): void {
     if (entity) {
-      this.updateEntity(formGroup);
+      this.updateEntity(
+        formGroup,
+        this.createSubCollectionPath(entity.path)
+      );
     } else {
       this.addEntity(formGroup);
     }
@@ -119,9 +140,10 @@ export class PermissionFormService extends EntityFormComponentStore<
     });
   }
 
-  private updateEntity(formGroup: FormGroup): void {
-    this.permissionStoreService.dispatchUpdateEntityAction(
-      this.permissionFormUtil.updateEntity(formGroup)
+  private updateEntity(formGroup: FormGroup, subCollectionPath: string): void {
+    this.entityStoreService.dispatchUpdateEntityAction(
+      this.entityFormUtil.updateEntity(formGroup),
+      subCollectionPath
     );
   }
 }

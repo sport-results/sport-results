@@ -2,7 +2,7 @@ import { NgxPermissionsGuard } from 'ngx-permissions';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SportCategoryRuleAdminPermissionsService } from '@app/api/admin/sport-category-rule';
-import { RoleNames } from '@app/api/common';
+import { RoleNamesEnum } from '@app/api/common';
 
 import { SportCategoryRuleAdminPageComponent } from './page/admin';
 import {
@@ -32,7 +32,7 @@ const routes: Routes = [
                     breadcrumb: 'Edit',
                     permissions: {
                         only: [
-                            RoleNames.ADMIN,
+                          RoleNamesEnum.ADMIN,
                             SportCategoryRuleAdminPermissionsService.viewSportCategoryRuleEditPage,
                         ],
                         redirectTo: '/error',
@@ -49,7 +49,7 @@ const routes: Routes = [
                     breadcrumb: 'List',
                     permissions: {
                         only: [
-                            RoleNames.ADMIN,
+                          RoleNamesEnum.ADMIN,
                             SportCategoryRuleAdminPermissionsService.viewSportCategoryRuleListPage,
                         ],
                         redirectTo: '/error',

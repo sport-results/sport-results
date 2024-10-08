@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoleAdminPermissionsService } from '@app/api/admin/role';
-import { RoleNames } from '@app/api/common';
+import { RoleNamesEnum } from '@app/api/common';
 import { RoleStoreService } from '@app/api/domain/role';
 
 @Component({
@@ -34,7 +34,7 @@ export class RoleAdminPageComponent implements OnInit {
 
   private initButtonPermissions(): void {
     this.buttonPermissions = [
-      RoleNames.ADMIN,
+      RoleNamesEnum.ADMIN,
       RoleAdminPermissionsService.createRoleEntity,
     ];
   }

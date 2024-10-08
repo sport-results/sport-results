@@ -1,1 +1,1 @@
-export * from './sport-event-card.component';
+export * from './sport-event-cards.component';

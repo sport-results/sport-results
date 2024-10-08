@@ -1,3 +1,4 @@
+import { AuthorizationService } from '@app/api/core/authorization';
 import { catchError, map, of, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
@@ -9,16 +10,19 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import * as sportEventActions from './sport-event.actions';
 import {
+  PERMISSION_FEATURE_KEY,
   PermissionEntityAdd,
   PermissionStoreService,
 } from '@app/api/domain/permission';
-import { ActionEnum, Meta } from '@app/api/common';
+import { ActionEnum, Meta, RoleNamesEnum } from '@app/api/common';
 import { ParticipantTypeEnum } from '@app/api/domain/sport-category-rule';
 import { SportPlayerEntity } from '@app/api/domain/sport-player';
+import { KeyValue } from '@angular/common';
 
 @Injectable()
 export class SportEventEffects {
   private actions$ = inject(Actions);
+  private authorizationService = inject(AuthorizationService);
   private sportEventEffectService = inject(SportEventEffectService);
   private permissionStoreService = inject(PermissionStoreService);
 
@@ -50,6 +54,10 @@ export class SportEventEffects {
                       resourceId: entity.uid,
                       resourceType: typeof entity,
                       userId: (participant as SportPlayerEntity).userId || '',
+                      path: [
+                        ...this.addEntityIdToPath([...entity.path], entity.uid),
+                        { key: PERMISSION_FEATURE_KEY, value: '' },
+                      ],
                       meta: {} as Meta,
                     };
                     this.permissionStoreService.dispatchAddEntityAction(
@@ -70,6 +78,26 @@ export class SportEventEffects {
     )
   );
 
+  deleteEvent$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(sportEventActions.deleteEntity),
+      switchMap((action) =>
+        this.sportEventEffectService
+          .deleteEntity$(action.entityId, action.subCollectionPath)
+          .pipe(
+            map(() => {
+              return sportEventActions.deleteEntitySuccess({
+                entityId: action.entityId,
+              });
+            }),
+            catchError((error) => {
+              return of(sportEventActions.deleteEntityFail({ error }));
+            })
+          )
+      )
+    )
+  );
+
   listEntities$ = createEffect(() =>
     this.actions$.pipe(
       ofType(sportEventActions.listEntities),
@@ -81,9 +109,18 @@ export class SportEventEffects {
             action.queryParams
           )
           .pipe(
-            map((entities) => {
+            map((sportEvents) => {
+              sportEvents.forEach((sportEvent) =>
+                this.authorizationService.addPermission(
+                  this.authorizationService.generatePermissionName(
+                    RoleNamesEnum.OWNER,
+                    sportEvent.uid
+                  )
+                )
+              );
+
               return sportEventActions.listEntitiesSuccess({
-                sportEvents: entities,
+                sportEvents,
               });
             })
           )
@@ -96,13 +133,11 @@ export class SportEventEffects {
       ofType(sportEventActions.listEntitiesByIds),
       switchMap((action) =>
         this.sportEventEffectService
-          .listEntitiesByCollectionGroup$(
-            action.ids,
-          )
+          .listEntitiesByCollectionGroup$(action.ids)
           .pipe(
-            map((entities) => {
+            map((sportEvents) => {
               return sportEventActions.listEntitiesByIdsSuccess({
-                sportEvents: entities,
+                sportEvents,
               });
             }),
             catchError((error) => {
@@ -112,7 +147,6 @@ export class SportEventEffects {
       )
     )
   );
-
 
   loadEntity$ = createEffect(() =>
     this.actions$.pipe(
@@ -151,4 +185,15 @@ export class SportEventEffects {
       )
     )
   );
+
+  addEntityIdToPath(
+    path: KeyValue<string, string>[],
+    id: string
+  ): KeyValue<string, string>[] {
+    const newPath = [...path];
+    const pathItem =  {...newPath[newPath.length - 1], value: id};
+    newPath[newPath.length - 1] = pathItem
+
+    return newPath;
+  }
 }

@@ -2,7 +2,7 @@ import { ngxPermissionsGuard } from 'ngx-permissions';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SportEventAdminPermissionsService } from '@app/api/admin/sport-event';
-import { RoleNames } from '@app/api/common';
+import { RoleNamesEnum } from '@app/api/common';
 
 import { SportEventAdminPageComponent } from './page/admin';
 import {
@@ -32,7 +32,7 @@ const routes: Routes = [
                     breadcrumb: 'Edit',
                     permissions: {
                         only: [
-                            RoleNames.ADMIN,
+                          RoleNamesEnum.ADMIN,
                             SportEventAdminPermissionsService.viewSportEventEditPage,
                         ],
                         redirectTo: '/error',
@@ -48,7 +48,7 @@ const routes: Routes = [
                     breadcrumb: 'List',
                     permissions: {
                         only: [
-                            RoleNames.ADMIN,
+                          RoleNamesEnum.ADMIN,
                             SportEventAdminPermissionsService.viewSportEventListPage,
                         ],
                         redirectTo: '/error',

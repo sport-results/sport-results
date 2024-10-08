@@ -1,6 +1,3 @@
-import { FormGroup } from '@angular/forms';
+import { EntityFormUtil } from '../../core';
 
-import { EntityAdd, EntityFormUtil } from '../../core';
-
-export abstract class SportNetworkFormUtil extends EntityFormUtil {
-}
+export abstract class SportNetworkFormUtil extends EntityFormUtil {}

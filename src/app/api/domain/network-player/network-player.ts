@@ -1,9 +1,11 @@
+import { KeyValue } from '@angular/common';
+
 import { Entity } from '../../core/entity';
-import { SportNetworkEntity } from '../sport-network';
 import { SportPlayerEntity } from '../sport-player';
 
 export interface NetworkPlayer {
   sportNetworkId: string;
+  path: KeyValue<string, string>[];
 }
 
 export type NetworkPlayerEntity = NetworkPlayer &

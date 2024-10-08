@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import { Identifiable } from '../../common/identifiable';
 import { Meta } from '../../common/meta';
 
@@ -23,3 +24,7 @@ export type EntityModel = Entity;
 export type EntityModelAdd = Omit<EntityModel, 'uid'>;
 
 export type EntityModelUpdate = Partial<EntityModel> & Identifiable & EntityHelper;
+
+export type SimpleEntity = Omit<Entity, 'meta'>;
+
+export type SimpleModel = Omit<EntityModel, 'meta'>;

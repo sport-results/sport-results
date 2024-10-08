@@ -1,4 +1,5 @@
-import { SportEventCardComponent } from './../../sport-event/collection/component/card/sport-event-card.component';
+import { SportEventCardsComponent } from '@app/domain/sport-event';
+
 import { Component, inject, Input, Signal } from '@angular/core';
 import { UserEntity } from '@app/api/domain/user';
 import { ButtonModule } from 'primeng/button';
@@ -19,7 +20,7 @@ import {
     CardModule,
     TabViewModule,
     PanelModule,
-    SportEventCardComponent,
+    SportEventCardsComponent,
   ],
   templateUrl: './user-dashboard.component.html',
   styleUrl: './user-dashboard.component.scss',

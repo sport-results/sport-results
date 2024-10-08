@@ -1,4 +1,3 @@
-import { getEntities } from './../../../user/store/service/user.selectors';
 import { Observable } from 'rxjs';
 
 import { KeyValue } from '@angular/common';
@@ -35,6 +34,15 @@ export class SportEventStoreServiceImpl extends SportEventStoreService {
   public dispatchChangeNewEntityButtonEnabled(enabled: boolean): void {
     this.store.dispatch(
       sportEventActions.changeNewEntityButtonEnabled({ enabled })
+    );
+  }
+
+  public override dispatchDeleteEntityAction(
+    sportEvent: SportEventEntity,
+    subCollectionPath?: string,
+  ): void {
+    this.store.dispatch(
+      sportEventActions.deleteEntity({ entityId: sportEvent.uid, subCollectionPath })
     );
   }
 
@@ -105,7 +113,6 @@ export class SportEventStoreServiceImpl extends SportEventStoreService {
   public selectEntitiesByIds$(ids: string[]): Observable<SportEventEntity[]> {
     return this.store.pipe(select(SportEventSelectors.getEntitiesByIds(ids)));
   }
-
 
   public selectNewEntityButtonEnabled$(): Observable<boolean> {
     return this.store.pipe(

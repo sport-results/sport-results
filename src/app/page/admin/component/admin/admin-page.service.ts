@@ -5,7 +5,7 @@ import { SportCategoryAdminPermissionsService } from '@app/api/admin/sport-categ
 import { SportNetworkAdminPermissionsService } from '@app/api/admin/sport-network';
 import { SportPlayerAdminPermissionsService } from '@app/api/admin/sport-player';
 import { UserAdminPermissionsService } from '@app/api/admin/user';
-import { RoleNames } from '@app/api/common';
+import { RoleNamesEnum } from '@app/api/common';
 import { AuthorizationService } from '@app/api/core/authorization';
 import { ComponentStore } from '@ngrx/component-store';
 import { MenuItem } from 'primeng/api';
@@ -40,7 +40,7 @@ export class AdminPageService extends ComponentStore<AdminPageState> {
     const items: MenuItem[] = [];
 
     if (
-      this.authorizationService.hasPermission(RoleNames.ADMIN) ||
+      this.authorizationService.hasPermission(RoleNamesEnum.ADMIN) ||
       this.authorizationService.hasPermission(
         SportCategoryAdminPermissionsService.viewSportCategoryAdminPage
       )
@@ -53,7 +53,7 @@ export class AdminPageService extends ComponentStore<AdminPageState> {
     }
 
     if (
-      this.authorizationService.hasPermission(RoleNames.ADMIN) ||
+      this.authorizationService.hasPermission(RoleNamesEnum.ADMIN) ||
       this.authorizationService.hasPermission(
         SportPlayerAdminPermissionsService.viewSportPlayerAdminPage
       )
@@ -65,7 +65,7 @@ export class AdminPageService extends ComponentStore<AdminPageState> {
     }
 
     if (
-      this.authorizationService.hasPermission(RoleNames.ADMIN) ||
+      this.authorizationService.hasPermission(RoleNamesEnum.ADMIN) ||
       this.authorizationService.hasPermission(
         SportNetworkAdminPermissionsService.viewSportNetworkAdminPage
       )
@@ -77,7 +77,7 @@ export class AdminPageService extends ComponentStore<AdminPageState> {
     }
 
     if (
-      this.authorizationService.hasPermission(RoleNames.ADMIN) ||
+      this.authorizationService.hasPermission(RoleNamesEnum.ADMIN) ||
       this.authorizationService.hasPermission(
         RoleAdminPermissionsService.viewRoleAdminPage
       )
@@ -90,7 +90,7 @@ export class AdminPageService extends ComponentStore<AdminPageState> {
     }
 
     if (
-      this.authorizationService.hasPermission(RoleNames.ADMIN) ||
+      this.authorizationService.hasPermission(RoleNamesEnum.ADMIN) ||
       this.authorizationService.hasPermission(
         UserAdminPermissionsService.viewUserAdminPage
       )

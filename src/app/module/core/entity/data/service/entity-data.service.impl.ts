@@ -28,8 +28,8 @@ export abstract class EntityDataServiceImpl extends EntityDataService<
     return this.dataEngine.add$(entityAdd, subCollectionPath);
   }
 
-  public override delete$(entity: EntityModel): Observable<EntityModel> {
-    return this.dataEngine.delete$(entity);
+  public override delete$(uid: string, subCollectionPath?: string): Observable<string> {
+    return this.dataEngine.delete$(uid, subCollectionPath);
   }
 
   public override list$(

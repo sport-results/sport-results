@@ -1,6 +1,6 @@
 import { SelectItemGroup } from 'primeng/api';
 
-import { RoleNames } from '../role';
+import { RoleNamesEnum } from '../role';
 
 export abstract class PermissionsService {
     public static permissions: SelectItemGroup[] = [
@@ -8,8 +8,8 @@ export abstract class PermissionsService {
             label: 'App',
             items: [
                 {
-                    label: RoleNames.ADMIN,
-                    value: RoleNames.ADMIN,
+                    label: RoleNamesEnum.ADMIN,
+                    value: RoleNamesEnum.ADMIN,
                 },
             ],
         },

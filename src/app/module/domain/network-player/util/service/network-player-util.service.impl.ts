@@ -25,11 +25,19 @@ import {
   EntityAdd,
   EntityModelAdd,
   EntityUpdate,
+  SimpleEntity,
+  SimpleModel,
 } from '@app/api/core/entity';
 import { SportPlayerStoreService } from '@app/api/domain/sport-player';
 
 @Injectable()
 export class NetworkPlayerUtilServiceImpl extends EntityUtilServiceImpl {
+  public override createSimpleEntity(model: SimpleModel): SimpleEntity {
+    throw new Error('Method not implemented.');
+  }
+  public override createSimpleModel(entity: SimpleEntity): SimpleModel {
+    throw new Error('Method not implemented.');
+  }
   private sportPlayerStoreService = inject(SportPlayerStoreService);
   public _sort = (a: NetworkPlayerEntity, b: NetworkPlayerEntity): number =>
     a.startDate < b.startDate ? 1 : -1;
@@ -43,6 +51,7 @@ export class NetworkPlayerUtilServiceImpl extends EntityUtilServiceImpl {
   ): NetworkPlayerModelAdd {
     return {
       meta: entity.meta,
+      path: entity.path,
       sportNetworkId: entity.sportNetworkId,
       sportPlayerId: entity.sportPlayer.uid,
       startDate: entity.startDate.toISOString(),
@@ -67,8 +76,9 @@ export class NetworkPlayerUtilServiceImpl extends EntityUtilServiceImpl {
         first(),
         map((sportPlayer) => {
           return {
-            meta: model.meta,
             endDate: model.endDate ? new Date(model.endDate) : null,
+            meta: model.meta,
+            path: model.path,
             startDate: new Date(model.startDate),
             sportNetworkId: model.sportNetworkId,
             sportPlayer,

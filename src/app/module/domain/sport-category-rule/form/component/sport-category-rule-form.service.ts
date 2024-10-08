@@ -24,6 +24,9 @@ import {
   EntityFormComponentStore,
   EntityFormViewModel,
 } from '@app/core/entity';
+import { KeyValue } from '@angular/common';
+import { USER_FEATURE_KEY } from '@app/api/domain/user';
+import { SPORT_NETWORK_FEATURE_KEY } from '@app/api/domain/sport-network';
 
 export interface SportCategoryRuleFormState
   extends EntityFormComponentState<SportCategoryRuleEntity> {
@@ -132,7 +135,7 @@ export class SportCategoryRuleFormService extends EntityFormComponentStore<
       throw new Error('No parent entity');
     }
     this.entityStoreService.dispatchAddEntityAction(
-      this.entityFormUtil.createEntity(
+      this.entityFormUtil.createEntityWithCategory(
         formGroup,
         parentEntity
       ) as SportCategoryRuleEntityAdd,
@@ -207,5 +210,14 @@ export class SportCategoryRuleFormService extends EntityFormComponentStore<
         parentEntityId,
       };
     });
+  }
+
+  public createPath(
+    userId: string,
+  ): KeyValue<string, string>[] {
+    return [
+      { key: USER_FEATURE_KEY, value: userId },
+      { key: SPORT_NETWORK_FEATURE_KEY, value: '' },
+    ];
   }
 }

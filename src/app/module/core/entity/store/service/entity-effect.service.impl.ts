@@ -79,6 +79,10 @@ export class EntityEffectServiceImpl extends EntityEffectService<
       );
   }
 
+  public deleteEntity$(entityId: string, subCollectionPath?: string,): Observable<string> {
+    return this.entityDataService.delete$(entityId, subCollectionPath);
+  }
+
   public override listEntities$(
     subCollectionPath?: string,
     pathParams?: string[],

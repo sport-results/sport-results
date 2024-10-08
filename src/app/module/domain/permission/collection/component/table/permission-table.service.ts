@@ -2,7 +2,7 @@ import { map, Observable, Subject, tap } from 'rxjs';
 
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RoleNames } from '@app/api/common';
+import { RoleNamesEnum } from '@app/api/common';
 import {
     PermissionEntity,
     PermissionPermissionsService,
@@ -47,7 +47,7 @@ export class PermissionTableService extends ComponentStore<PermissionTableState>
             map((entityFormViewModel) => ({
                 ...entityFormViewModel,
                 buttonPermissions: [
-                    RoleNames.ADMIN,
+                  RoleNamesEnum.ADMIN,
                     PermissionPermissionsService.updatePermissionEntity,
                 ],
                 editEntity$$: this.editEntity$$,

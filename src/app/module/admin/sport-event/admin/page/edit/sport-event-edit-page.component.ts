@@ -7,7 +7,7 @@ import { SportEventEditPageResolverService } from './sport-event-edit-page-resol
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [SportEventFormModule],
-  selector: 'app-sport-event-edit-page',
+  selector: 'sr-sport-event-edit-page',
   templateUrl: './sport-event-edit-page.component.html',
   styleUrls: ['./sport-event-edit-page.component.scss'],
   providers: [SportEventEditPageResolverService],

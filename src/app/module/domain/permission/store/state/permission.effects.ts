@@ -7,10 +7,12 @@ import {
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import * as permissionActions from './permission.actions';
+import { AuthorizationService } from '@app/api/core/authorization';
 
 @Injectable()
 export class PermissionEffects {
   private actions$ = inject(Actions);
+  private authorizationService = inject(AuthorizationService);
   private permissionEffectService = inject(PermissionEffectService);
 
   addEntity$ = createEffect(() =>
@@ -73,9 +75,10 @@ export class PermissionEffects {
         this.permissionEffectService
           .searchEntitiesByCollectionGroup$(action.searchParams)
           .pipe(
-            map((entities) => {
+            map((permissions) => {
+              this.authorizationService.addUserPermissions(permissions);
               return permissionActions.searchEntitiesByCollectionGroupSuccess({
-                permissions: entities,
+                permissions,
               });
             }),
             catchError((error) => {
