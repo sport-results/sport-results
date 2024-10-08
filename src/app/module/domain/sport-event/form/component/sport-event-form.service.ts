@@ -96,6 +96,10 @@ export class SportEventFormService extends EntityFormComponentStore<
     (state) => state.sportCategoryRules
   );
 
+  private readonly sportNetworkId$ = this.select(
+    (state) => state.sportNetworkId
+  );
+
   private readonly getDataForSubmit$ = this.select((state) => ({
     entity: state.entity,
     formGroup: state.formGroup,
@@ -161,14 +165,24 @@ export class SportEventFormService extends EntityFormComponentStore<
   private readonly fetchNetworkPlayers = this.effect(
     (entity$: Observable<SportEventEntity | undefined>) =>
       entity$.pipe(
-        tap((entity) =>
-          this.networkPlayerStoreService.dispatchListEntitiesAction(
-            `${USER_FEATURE_KEY}/${entity?.path[0].value}/${SPORT_NETWORK_FEATURE_KEY}/${entity?.path[1].value}`
-          )
-        ),
-        switchMap((entity) =>
+        withLatestFrom(this.sportNetworkId$),
+        withLatestFrom(this.user$),
+        tap(([[entity, sportNetworkId], user]) => {
+          if (entity) {
+            this.networkPlayerStoreService.dispatchListEntitiesAction(
+              `${USER_FEATURE_KEY}/${entity?.path[0].value}/${SPORT_NETWORK_FEATURE_KEY}/${entity?.path[1].value}`
+            );
+          } else {
+            this.networkPlayerStoreService.dispatchListEntitiesAction(
+              `${USER_FEATURE_KEY}/${user?.uid}/${SPORT_NETWORK_FEATURE_KEY}/${sportNetworkId}`
+            );
+          }
+        }),
+        switchMap(([[entity, sportNetworkId], user]) =>
           this.networkPlayerStoreService
-            .selectEntitiesBySportNetworkId$(entity?.path[1].value || '')
+            .selectEntitiesBySportNetworkId$(
+              entity?.path[1].value || sportNetworkId || ''
+            )
             .pipe(
               tap((networkPlayers) => {
                 this.updateNetworkPlayersState(networkPlayers);

@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { Observable, Subject, tap, withLatestFrom } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { inject } from '@angular/core';
-import { Entity, EntityFormUtil } from '@app/api/core/entity';
+import { Entity, EntityFormUtil, EntityHelper } from '@app/api/core/entity';
 import { EntityComponentState, EntityComponentStore } from '../store';
 import { KeyValue } from '@angular/common';
 
@@ -32,7 +32,15 @@ export class EntityFormComponentStore<
   protected readonly formGroup$ = this.select((state) => state.formGroup);
   protected readonly isNewEntity$ = this.select((state) => !state.entity);
   protected readonly isOwner$ = this.select(
-    (state) => (state.entity as Entity).meta.ownerId === state.user?.uid
+    (state) => {
+      if (state.entity) {
+        const entityHelper: EntityHelper = state.entity as unknown as EntityHelper;
+
+        return entityHelper.meta.ownerId === state.user?.uid
+      } else {
+        return true;
+      }
+    }
   );
 
   protected cancel$$ = new Subject<void>();
