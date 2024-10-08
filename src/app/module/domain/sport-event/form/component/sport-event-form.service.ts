@@ -319,8 +319,21 @@ export class SportEventFormService extends EntityFormComponentStore<
       sportCategoryRules:
         entityFormViewModel.sportCategoryRules as SportCategoryRuleEntity[],
       sportPlayers: entityFormViewModel.sportPlayers as SportPlayerEntity[],
+      sportPlayersMapByUserId: this.createSportPlayersMap(entityFormViewModel.sportPlayers as SportPlayerEntity[]),
       submit$$: this.submit$$,
     };
+  }
+
+  private createSportPlayersMap(sportPlayers: SportPlayerEntity[]): Map<string, SportPlayerEntity> {
+    const sportPlayersMapByUserId = new Map<string, SportPlayerEntity>();
+
+    sportPlayers.forEach((sportPlayer) => {
+      if (sportPlayer.userId) {
+        sportPlayersMapByUserId.set(sportPlayer.userId, sportPlayer);
+      }
+    });
+
+    return sportPlayersMapByUserId;
   }
 
   public submit(

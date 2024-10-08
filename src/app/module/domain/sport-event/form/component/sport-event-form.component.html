@@ -44,19 +44,19 @@
             @for ( participant of entityFormViewModel.participantsArray; track
             participant; let i = $index) {
 
-                <div class="field flex-item">
-                  <span class="p-float-label">
-                    <p-dropdown
-                      [id]="'' + i"
-                      [options]="entityFormViewModel.sportPlayers"
-                      [formControlName]="i"
-                      optionLabel="name"
-                      dataKey="uid"
-                    />
+            <div class="field flex-item">
+              <span class="p-float-label">
+                <p-dropdown
+                  [id]="'' + i"
+                  [options]="entityFormViewModel.sportPlayers"
+                  [formControlName]="i"
+                  optionLabel="name"
+                  dataKey="uid"
+                />
 
-                    <label [for]="$index">Sport Player {{ $index + 1 }}</label>
-                  </span>
-                </div>
+                <label [for]="$index">Sport Player {{ $index + 1 }}</label>
+              </span>
+            </div>
 
             }
           </div>
@@ -113,15 +113,27 @@
     </p-tabPanel>
 
     @if(entityFormViewModel.isOwner) {
-      <p-tabPanel [disabled]="entityFormViewModel.isNewEntity" header="Permissions">
-        <p-tabView>
-          @for(permission of entityFormViewModel.permissions; track permission.uid) {
-            <p-tabPanel [header]="permission.userId">
-              <sr-permission-form [entityId]="permission.uid" [backUrl]="this.backUrl"></sr-permission-form>
-            </p-tabPanel>
-          }
-        </p-tabView>
-      </p-tabPanel>
+    <p-tabPanel
+      [disabled]="entityFormViewModel.isNewEntity"
+      header="Permissions"
+    >
+      <p-tabView>
+        @for(permission of entityFormViewModel.permissions; track
+        permission.uid) {
+        <p-tabPanel
+          [header]="
+            entityFormViewModel.sportPlayersMapByUserId.get(permission.userId)
+              ?.name || ''
+          "
+        >
+          <sr-permission-form
+            [entityId]="permission.uid"
+            [backUrl]="this.backUrl"
+          ></sr-permission-form>
+        </p-tabPanel>
+        }
+      </p-tabView>
+    </p-tabPanel>
     }
   </p-tabView>
 </section>

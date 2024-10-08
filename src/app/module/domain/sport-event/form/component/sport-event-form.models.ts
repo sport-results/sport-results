@@ -34,5 +34,6 @@ export interface SportEventFormViewModel extends EntityFormViewModel {
   sportCategories: SportCategoryEntity[];
   sportCategoryRules: SportCategoryRuleEntity[];
   sportPlayers: SportPlayerEntity[];
+  sportPlayersMapByUserId: Map<string, SportPlayerEntity>;
   submit$$: Subject<void>;
 }
