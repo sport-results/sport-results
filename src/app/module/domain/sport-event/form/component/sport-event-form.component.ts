@@ -1,16 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  Input,
-  OnInit,
-} from '@angular/core';
-
-import {
-  SportEventFormService,
-  SportEventFormViewModel,
-} from './sport-event-form.service';
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from '@angular/core';
 import { EntityFormComponent } from '@app/core/entity';
+
+import { SportEventFormViewModel } from './sport-event-form.models';
+import { SportEventFormService } from './sport-event-form.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

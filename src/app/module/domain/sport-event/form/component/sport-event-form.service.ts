@@ -3,7 +3,7 @@ import {
   SportCategoryRuleEntity,
   SportCategoryRuleStoreService,
 } from '@app/api/domain/sport-category-rule';
-import { BehaviorSubject, combineLatest, Observable, Subject, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, tap } from 'rxjs';
 import { map, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import {
   SportEventEntity,
@@ -15,16 +15,11 @@ import {
 
 import { inject, Injectable } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import {
-  EntityFormComponentState,
-  EntityFormComponentStore,
-  EntityFormViewModel,
-} from '@app/core/entity';
+import { EntityFormComponentStore } from '@app/core/entity';
 import {
   SportCategoryEntity,
   SportCategoryStoreService,
 } from '@app/api/domain/sport-category';
-import { ParticipantTypeEnum } from '@app/api/domain/sport-category-rule';
 import { SportPlayerEntity } from '@app/api/domain/sport-player';
 import {
   NetworkPlayerEntity,
@@ -37,29 +32,8 @@ import {
   PermissionEntity,
   PermissionStoreService,
 } from '@app/api/domain/permission';
+import { SportEventFormState, SportEventFormViewModel } from './sport-event-form.models';
 
-export interface SportEventFormState
-  extends EntityFormComponentState<SportEventEntity> {
-  sportCategories: SportCategoryEntity[];
-  sportCategoryRules: SportCategoryRuleEntity[];
-  networkPlayers: NetworkPlayerEntity[];
-  sportNetworkId: string | undefined;
-  permissions: PermissionEntity[];
-}
-
-export interface SportEventFormViewModel extends EntityFormViewModel {
-  isNewEntity: boolean;
-  isOwner: boolean;
-  participantsArray: FormControl[];
-  participantTypes: ParticipantTypeEnum[];
-  permissions: PermissionEntity[];
-  selectedParticipantType: ParticipantTypeEnum | undefined;
-  selectedParticipantSize: number;
-  sportCategories: SportCategoryEntity[];
-  sportCategoryRules: SportCategoryRuleEntity[];
-  sportPlayers: SportPlayerEntity[];
-  submit$$: Subject<void>;
-}
 @Injectable()
 export class SportEventFormService extends EntityFormComponentStore<
   SportEventFormState,
@@ -134,7 +108,7 @@ export class SportEventFormService extends EntityFormComponentStore<
               this.createSubCollectionPath(entity.path, entity.uid)
             )
         ),
-        switchMap((entity) => this.permissionStoreService.selectEntities$()),
+        switchMap((entity) => this.permissionStoreService.selectEntitiesByResourceId$(entity?.uid || '')),
         tap((permissions) => {
           this.updatePermissionsState(permissions);
         })

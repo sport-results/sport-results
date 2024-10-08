@@ -51,3 +51,10 @@ export const getEntityById = (uid: string) =>
     createSelector(getEntities, (entities: Dictionary<PermissionEntity>) => {
         return entities[uid];
     });
+
+    export const getEntitiesByResourceId = (resourceId: string) =>
+      createSelector(getAll, (permissions: PermissionEntity[]) => {
+        return (permissions || []).filter((permission) =>
+          permission.resourceId === resourceId
+        );
+      });

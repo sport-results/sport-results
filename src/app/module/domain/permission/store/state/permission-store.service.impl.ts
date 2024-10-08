@@ -104,6 +104,12 @@ export class PermissionStoreServiceImpl extends PermissionStoreService {
     return this.store.pipe(select(PermissionSelectors.getEntityById(entityId)));
   }
 
+  public selectEntitiesByResourceId$(
+    resourceId: string
+  ): Observable<PermissionEntity[]> {
+    return this.store.pipe(select(PermissionSelectors.getEntitiesByResourceId(resourceId)));
+  }
+
   public selectNewEntityButtonEnabled$(): Observable<boolean> {
     return this.store.pipe(
       select(PermissionSelectors.isNewEntityButtonEnabled)

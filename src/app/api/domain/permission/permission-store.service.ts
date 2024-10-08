@@ -17,4 +17,7 @@ export abstract class PermissionStoreService extends EntityStoreService<
     searchParams: SearchParam[]
   ): void;
   public abstract selectNewEntityButtonEnabled$(): Observable<boolean>;
+  public abstract selectEntitiesByResourceId$(
+    resourceId: string
+  ): Observable<PermissionEntity[]>;
 }
