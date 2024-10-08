@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
 import {
   FormBuilder,
@@ -17,7 +18,7 @@ import {
 export class PermissionFormUtilImpl extends PermissionFormUtil {
   private formBuilder = inject(FormBuilder);
 
-  public createEntity(formGroup: FormGroup): PermissionEntityAdd {
+  public createEntity(formGroup: FormGroup, path: KeyValue<string, string>[]): PermissionEntityAdd {
         const now = new Date().toISOString();
 
         return {
@@ -28,6 +29,7 @@ export class PermissionFormUtilImpl extends PermissionFormUtil {
             actions: formGroup.value['actions'],
             resourceId: formGroup.value['resourceId'],
             resourceType: formGroup.value['resourceType'],
+            path: path || null,
             userId: formGroup.value['userId'],
         };
     }
@@ -37,6 +39,7 @@ export class PermissionFormUtilImpl extends PermissionFormUtil {
             uid: [permission?.uid],
             meta: [permission?.meta],
             actions: [permission?.actions, Validators.required],
+            path: [permission?.path],
             resourceId: [permission?.resourceId],
             resourceType: [permission?.resourceType],
             userId: [permission?.userId],
@@ -50,6 +53,7 @@ export class PermissionFormUtilImpl extends PermissionFormUtil {
             actions: formGroup.value['actions'],
             resourceId: formGroup.value['resourceId'],
             resourceType: formGroup.value['resourceType'],
+            path: formGroup.value['path'],
             userId: formGroup.value['userId'],
         };
     }

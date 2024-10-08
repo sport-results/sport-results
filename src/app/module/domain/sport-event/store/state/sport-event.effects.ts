@@ -10,12 +10,14 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import * as sportEventActions from './sport-event.actions';
 import {
+  PERMISSION_FEATURE_KEY,
   PermissionEntityAdd,
   PermissionStoreService,
 } from '@app/api/domain/permission';
 import { ActionEnum, Meta, RoleNamesEnum } from '@app/api/common';
 import { ParticipantTypeEnum } from '@app/api/domain/sport-category-rule';
 import { SportPlayerEntity } from '@app/api/domain/sport-player';
+import { KeyValue } from '@angular/common';
 
 @Injectable()
 export class SportEventEffects {
@@ -52,6 +54,10 @@ export class SportEventEffects {
                       resourceId: entity.uid,
                       resourceType: typeof entity,
                       userId: (participant as SportPlayerEntity).userId || '',
+                      path: [
+                        ...this.addEntityIdToPath([...entity.path], entity.uid),
+                        { key: PERMISSION_FEATURE_KEY, value: '' },
+                      ],
                       meta: {} as Meta,
                     };
                     this.permissionStoreService.dispatchAddEntityAction(
@@ -179,4 +185,15 @@ export class SportEventEffects {
       )
     )
   );
+
+  addEntityIdToPath(
+    path: KeyValue<string, string>[],
+    id: string
+  ): KeyValue<string, string>[] {
+    const newPath = [...path];
+    const pathItem =  {...newPath[newPath.length - 1], value: id};
+    newPath[newPath.length - 1] = pathItem
+
+    return newPath;
+  }
 }

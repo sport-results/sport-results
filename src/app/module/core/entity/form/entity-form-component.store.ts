@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { EntityFormUtil } from '@app/api/core/entity';
 import { EntityComponentState, EntityComponentStore } from '../store';
+import { KeyValue } from '@angular/common';
 
 export interface EntityFormComponentState<S> extends EntityComponentState<S> {
   backUrl: string;
@@ -74,5 +75,21 @@ export class EntityFormComponentStore<
         formGroup,
       };
     });
+  }
+
+  protected createSubCollectionPath(
+    path: KeyValue<string, string>[],
+    entityId?: string
+  ): string {
+    if (entityId) {
+      return `${path
+        .map((item) => `${item.key}/${item.value}`)
+        .join('/')}${entityId}`;
+    } else {
+      return `${[...path]
+        .slice(0, path.length - 1)
+        .map((item) => `${item.key}/${item.value}`)
+        .join('/')}`;
+    }
   }
 }

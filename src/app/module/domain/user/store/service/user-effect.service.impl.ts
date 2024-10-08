@@ -39,7 +39,7 @@ export class UserEffectServiceImpl extends EntityEffectServiceImpl {
             ),
             `${USER_FEATURE_KEY}/${user.uid}`
           );
-
+          
           return this.entityDataService
             .update$(
               this.entityUtilService.convertEntityUpdateToModelUpdate(

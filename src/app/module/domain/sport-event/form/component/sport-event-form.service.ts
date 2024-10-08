@@ -1,18 +1,10 @@
-import { updateEntity } from './../../../user/store/service/user.actions';
 import {
   participantTypes,
   SportCategoryRuleEntity,
   SportCategoryRuleStoreService,
 } from '@app/api/domain/sport-category-rule';
 import { BehaviorSubject, combineLatest, Observable, Subject, tap } from 'rxjs';
-import {
-  combineLatestAll,
-  delay,
-  map,
-  switchMap,
-  take,
-  withLatestFrom,
-} from 'rxjs/operators';
+import { map, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import {
   SportEventEntity,
   SportEventEntityAdd,
@@ -41,6 +33,10 @@ import {
 import { USER_FEATURE_KEY, UserEntity } from '@app/api/domain/user';
 import { SPORT_NETWORK_FEATURE_KEY } from '@app/api/domain/sport-network';
 import { KeyValue } from '@angular/common';
+import {
+  PermissionEntity,
+  PermissionStoreService,
+} from '@app/api/domain/permission';
 
 export interface SportEventFormState
   extends EntityFormComponentState<SportEventEntity> {
@@ -48,12 +44,14 @@ export interface SportEventFormState
   sportCategoryRules: SportCategoryRuleEntity[];
   networkPlayers: NetworkPlayerEntity[];
   sportNetworkId: string | undefined;
+  permissions: PermissionEntity[];
 }
 
 export interface SportEventFormViewModel extends EntityFormViewModel {
   isNewEntity: boolean;
   participantsArray: FormControl[];
   participantTypes: ParticipantTypeEnum[];
+  permissions: PermissionEntity[];
   selectedParticipantType: ParticipantTypeEnum | undefined;
   selectedParticipantSize: number;
   sportCategories: SportCategoryEntity[];
@@ -71,6 +69,7 @@ export class SportEventFormService extends EntityFormComponentStore<
   protected override entityStoreService = inject(SportEventStoreService);
   protected override entityFormUtil = inject(SportEventFormUtil);
   private networkPlayerStoreService = inject(NetworkPlayerStoreService);
+  private permissionStoreService = inject(PermissionStoreService);
   private sportCategoryStoreService = inject(SportCategoryStoreService);
   private sportCategoryRuleStoreService = inject(SportCategoryRuleStoreService);
 
@@ -84,6 +83,10 @@ export class SportEventFormService extends EntityFormComponentStore<
 
   private readonly networkPlayers$ = this.select(
     (state) => state.networkPlayers
+  );
+
+  private readonly permissions$ = this.select(
+    (state) => state.permissions
   );
 
   private readonly sportCategories$ = this.select(
@@ -116,6 +119,25 @@ export class SportEventFormService extends EntityFormComponentStore<
       })
     );
   });
+
+  private readonly fetchPermissions = this.effect(
+    (entity$: Observable<SportEventEntity | undefined>) => {
+      this.permissionStoreService.dispatchListEntitiesAction();
+      return entity$.pipe(
+        tap(
+          (entity) =>
+            entity?.path &&
+            this.permissionStoreService.dispatchListEntitiesAction(
+              this.createSubCollectionPath(entity.path, entity.uid)
+            )
+        ),
+        switchMap((entity) => this.permissionStoreService.selectEntities$()),
+        tap((permissions) => {
+          this.updatePermissionsState(permissions);
+        })
+      );
+    }
+  );
 
   private readonly updateEntityFields = this.effect(
     (entity$: Observable<SportEventEntity | undefined>) => {
@@ -175,6 +197,7 @@ export class SportEventFormService extends EntityFormComponentStore<
         map((formGroup) => formGroup as FormGroup)
       ),
       isNewEntity: this.isNewEntity$,
+      permissions: this.permissions$,
       sportCategories: this.sportCategories$.pipe(
         map((sportCategories) => sportCategories as SportCategoryEntity[])
       ),
@@ -213,6 +236,7 @@ export class SportEventFormService extends EntityFormComponentStore<
       entityId: undefined,
       backUrl: '',
       networkPlayers: [],
+      permissions: [],
       sportCategories: [],
       sportCategoryRules: [],
       sportNetworkId: undefined,
@@ -234,6 +258,7 @@ export class SportEventFormService extends EntityFormComponentStore<
     this.fetchSportCategories();
     this.fetchSportCategoryRules();
     this.fetchNetworkPlayers(sportNetworkId);
+    this.fetchPermissions(this.entity$);
 
     this.handleSubmit(this.submit$$.asObservable());
 
@@ -283,6 +308,7 @@ export class SportEventFormService extends EntityFormComponentStore<
       formGroup: entityFormViewModel.formGroup as FormGroup,
       isNewEntity: entityFormViewModel.isNewEntity as boolean,
       participantTypes,
+      permissions: entityFormViewModel.permissions as PermissionEntity[],
       participantsArray: (entityFormViewModel.isNewEntity
         ? this.createParticipantsArray(
             formGroup,
@@ -359,6 +385,15 @@ export class SportEventFormService extends EntityFormComponentStore<
       return {
         ...state,
         networkPlayers,
+      };
+    });
+  }
+
+  private updatePermissionsState(permissions: PermissionEntity[]): void {
+    this.setState((state) => {
+      return {
+        ...state,
+        permissions,
       };
     });
   }

@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import {
   collection,
   CollectionReference,
@@ -26,5 +27,15 @@ export class FirestoreDataUtil {
     return subCollectionPath
     ? `${subCollectionPath}/${featureKey}/${uid}`
     : `${featureKey}/${uid}`;
+  }
+
+  public addEntityIdToPath(
+    path: KeyValue<string, string>[],
+    id: string
+  ): KeyValue<string, string>[] {
+    const newPath = [...path];
+    newPath[newPath.length - 1].value = id;
+
+    return newPath;
   }
 }

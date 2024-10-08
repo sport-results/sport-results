@@ -1,11 +1,16 @@
+import { KeyValue } from '@angular/common';
 import { Permission } from '@app/api/common';
 
 import { Entity } from '../../core/entity';
 
-export type PermissionEntity = Permission & Entity;
+export type PermissionEntity = Permission & Entity & {
+  path: KeyValue<string, string>[];
+};
 export type PermissionEntityAdd = Omit<PermissionEntity, 'uid'>;
 export type PermissionEntityUpdate = Partial<PermissionEntity> & Entity;
-export type PermissionModel = Permission & Entity;
+export type PermissionModel = Permission & Entity & {
+  path: KeyValue<string, string>[];
+};
 export type PermissionModelAdd = Omit<PermissionModel, 'uid'>;
 export type PermissionModelUpdate = Partial<PermissionModel> & Entity;
 
