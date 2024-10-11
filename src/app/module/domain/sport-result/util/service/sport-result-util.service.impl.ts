@@ -6,6 +6,8 @@ import {
     SportResultEntity,
     SportResultEntityAdd,
     SportResultEntityUpdate,
+    SportResultModel,
+    SportResultModelAdd,
     SportResultModelUpdate,
 } from '@app/api/domain/sport-result';
 import { EntityUtilServiceImpl } from '@app/core/entity';
@@ -14,7 +16,7 @@ import { Entity, EntityAdd, EntityUpdate, SimpleEntity, SimpleModel } from '@app
 @Injectable()
 export class SportResultUtilServiceImpl extends EntityUtilServiceImpl {
     public _sort = (a: SportResultEntity, b: SportResultEntity): number =>
-        a.name < b.name ? 1 : -1;
+        a.sportCategoryRule.name < b.sportCategoryRule.name ? 1 : -1;
 
     public constructor(formBuilder: FormBuilder) {
         super(formBuilder);
@@ -26,8 +28,8 @@ export class SportResultUtilServiceImpl extends EntityUtilServiceImpl {
         return super.convertModelUpdateToEntityUpdate$(model).pipe(
             map((entity) => entity as SportResultEntityUpdate),
             switchMap((entity) => {
-                if (model.name) {
-                    entity.name = model.name;
+                if (model.sportCategoryRule) {
+                    entity.sportCategoryRule = model.sportCategoryRule;
                 }
 
                 return of(entity);

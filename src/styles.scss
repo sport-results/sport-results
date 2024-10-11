@@ -80,11 +80,15 @@ table {
   justify-content: center;
 }
 
+.flex-row-space-between {
+  justify-content: space-between;
+}
+
 .flex-item {
   flex: 1;
 }
 
-.flex-gap {
+.gap {
   &-1{
     gap: 0.4rem;
   }
@@ -100,6 +104,14 @@ table {
   &-5{
     gap: 2rem;
   }
+}
+
+.contents {
+  display: contents;
+}
+
+.inline-grid {
+  display: inline-grid;
 }
 
 .form {
@@ -183,4 +195,10 @@ table {
 
 .p-toolbar {
   border: none;
+}
+
+.player {
+  font-size: large;
+  font-weight: 600;
+  margin: 0.4rem 0;
 }

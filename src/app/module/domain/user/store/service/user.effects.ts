@@ -1,5 +1,5 @@
 import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, first, map, switchMap } from 'rxjs/operators';
 
 import { inject, Injectable } from '@angular/core';
 import { ActionEnum } from '@app/api/common';

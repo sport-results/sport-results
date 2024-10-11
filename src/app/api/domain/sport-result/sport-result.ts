@@ -1,19 +1,24 @@
 import { KeyValue } from '@angular/common';
 
 import { Entity } from '../../core/entity';
+import { SportCategoryRuleEntitySimple, SportCategoryRuleModelSimple } from '../sport-category-rule';
 
 export interface SportResult {
-    name: string;
     path: KeyValue<string, string>[];
+    periodResults: PeriodResult[];
 }
 
-export type SportResultEntity = SportResult & Entity;
+export type SportResultEntity = SportResult & Entity & {
+  sportCategoryRule: SportCategoryRuleEntitySimple;
+};
 
 export type SportResultEntityAdd = Omit<SportResultEntity, 'uid'>;
 
 export type SportResultEntityUpdate = Partial<SportResultEntity> & Entity;
 
-export type SportResultModel = SportResult & Entity;
+export type SportResultModel = SportResult & Entity & {
+  sportCategoryRule: SportCategoryRuleModelSimple;
+};
 
 export type SportResultModelAdd = Omit<SportResultModel, 'uid'>;
 
@@ -31,3 +36,8 @@ export enum SportResultResourceEnum {
 export type SportResultEntitySimple = Omit<SportResultEntity, 'meta' | 'path'>;
 
 export type SportResultModelSimple = Omit<SportResultModel, 'meta' | 'path'>;
+
+export type PeriodResult = {
+  index: number;
+  results: KeyValue<string, number>[];
+}

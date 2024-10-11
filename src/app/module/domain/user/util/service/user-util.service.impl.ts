@@ -1,4 +1,4 @@
-import { exhaustMap, map, mergeMap, Observable, of, switchMap } from 'rxjs';
+import { delay, first, map, mergeMap, Observable, of, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -105,6 +105,8 @@ export class UserUtilServiceImpl extends EntityUtilServiceImpl {
       map((entity) => entity as UserEntity),
       mergeMap((entity) => {
         return this.convertRoleIdsToRoles$(model.roleIds || []).pipe(
+          delay(100),
+          first(),
           map((roles) => ({
             ...entity,
             roles,

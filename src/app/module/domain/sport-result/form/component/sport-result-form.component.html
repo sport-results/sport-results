@@ -1,18 +1,33 @@
 <section class="sport-result-form" *ngIf="entityFormViewModel$ | async as entityFormViewModel">
-	<form [formGroup]="entityFormViewModel.formGroup">
+	<form class="form" [formGroup]="entityFormViewModel.formGroup">
 		<input name="uid" formControlName="uid" hidden />
 		<input name="meta" formControlName="meta" hidden />
 
-		<div class="field">
-			<span class="p-float-label">
-				<input id="name" type="text" pInputText formControlName="name" />
+    <header class="flex gap-5 flex-row-space-between">
+      @for(headerItem of entityFormViewModel.headerItems; track headerItem){
+        <div>{{headerItem}}</div>
+      }
+    </header>
 
-				<label for="name">Name</label>
-			</span>
-		</div>
+    <div class="flex gap-5 flex-row-space-between margin-top-5" formArrayName="periodResults">
+      <div class="inline-grid gap-2">
+        @for(participant of entityFormViewModel.sportEvent?.participants; track participant.uid) {
+          <div class="flex-item player">
+            {{ participant.name }}
+          </div>
+        }
+      </div>
 
+      <div class="contents">
+        @for(periodResultControl of entityFormViewModel.periodResultControls; track periodResultControl) {
+          <div class="">
+              <sr-period-result [id]="'' + $index" [formControlName]="$index"  />
+          </div>
+        }
+      </div>
+    </div>
 
-		<div style="margin-top: 10px" fxLayout="row" fxLayoutAlign="space-around">
+		<div class="flex margin-top-5 flex-row-center">
 			<button pButton type="button" label="Submit" (click)="entityFormViewModel.submit$$.next()"
 				[disabled]="!entityFormViewModel.formGroup.valid"></button>
 

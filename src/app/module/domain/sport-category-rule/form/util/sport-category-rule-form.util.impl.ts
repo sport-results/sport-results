@@ -37,6 +37,7 @@ export class SportCategoryRuleFormUtilImpl extends SportCategoryRuleFormUtil {
       name: formGroup.value['name'],
       participantSize: formGroup.value['participantSize'],
       participantType: formGroup.value['participantType'],
+      periodSize: formGroup.value['periodSize'],
       periodType: formGroup.value['periodType'],
       periodTypeWinningSize: formGroup.value['periodTypeWinningSize'],
       periodWinningSize: formGroup.value['periodWinningSize'],
@@ -53,6 +54,10 @@ export class SportCategoryRuleFormUtilImpl extends SportCategoryRuleFormUtil {
       name: [sportCategoryRule?.name, FormValidatorService.required],
       participantSize: [
         sportCategoryRule?.participantSize,
+        FormValidatorService.required,
+      ],
+      periodSize: [
+        sportCategoryRule?.periodSize,
         FormValidatorService.required,
       ],
       participantType: [
@@ -82,6 +87,7 @@ export class SportCategoryRuleFormUtilImpl extends SportCategoryRuleFormUtil {
       name: formGroup.value['name'],
       participantSize: formGroup.value['participantSize'],
       participantType: formGroup.value['participantType'],
+      periodSize: formGroup.value['periodSize'],
       periodType: formGroup.value['periodType'],
       periodTypeWinningSize: formGroup.value['periodTypeWinningSize'],
       periodWinningSize: formGroup.value['periodWinningSize'],

@@ -8,6 +8,7 @@ import {
 } from '@app/api/domain/sport-category-rule';
 import { SportEventEntity } from '@app/api/domain/sport-event';
 import { SportPlayerEntity } from '@app/api/domain/sport-player';
+import { SportResultEntity } from '@app/api/domain/sport-result';
 import {
   EntityFormComponentState,
   EntityFormViewModel,
@@ -21,19 +22,23 @@ export interface SportEventFormState
   sportCategories: SportCategoryEntity[];
   sportCategoryRules: SportCategoryRuleEntity[];
   sportNetworkId: string | undefined;
+  sportResult: SportResultEntity | undefined;
 }
 
 export interface SportEventFormViewModel extends EntityFormViewModel {
+  entity: SportEventEntity | undefined;
   isNewEntity: boolean;
   isOwner: boolean;
   participantTypes: ParticipantTypeEnum[];
   participantsArray: FormControl[];
   permissions: PermissionEntity[];
+  resultPermissions: string[];
   selectedParticipantSize: number;
   selectedParticipantType: ParticipantTypeEnum | undefined;
   sportCategories: SportCategoryEntity[];
   sportCategoryRules: SportCategoryRuleEntity[];
   sportPlayers: SportPlayerEntity[];
   sportPlayersMapByUserId: Map<string, SportPlayerEntity>;
+  sportResult: SportResultEntity | undefined;
   submit$$: Subject<void>;
 }

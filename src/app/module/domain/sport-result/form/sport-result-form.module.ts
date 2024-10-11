@@ -9,18 +9,20 @@ import { SportResultFormUtil } from '@app/api/domain/sport-result';
 
 import { SportResultFormComponent } from './component';
 import { SportResultFormUtilImpl } from './util';
+import { PeriodResultComponent } from "../../../core/form/component/period-result/period-result.component";
 
 @NgModule({
     declarations: [SportResultFormComponent],
     exports: [SportResultFormComponent],
     imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        ButtonModule,
-        InputTextModule,
-        InputTextareaModule
-    ],
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    InputTextModule,
+    InputTextareaModule,
+    PeriodResultComponent
+],
     providers: [
     {
       provide: SportResultFormUtil,

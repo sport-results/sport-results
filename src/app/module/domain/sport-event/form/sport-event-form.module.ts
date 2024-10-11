@@ -14,6 +14,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TabViewModule } from 'primeng/tabview';
 import { PermissionFormModule } from '../../permission';
+import { NgxPermissionsModule } from 'ngx-permissions';
+import { SportResultFormModule } from '../../sport-result';
 
 @NgModule({
     declarations: [SportEventFormComponent],
@@ -29,7 +31,9 @@ import { PermissionFormModule } from '../../permission';
         InputTextareaModule,
         PermissionFormModule,
         SelectButtonModule,
-        TabViewModule
+        TabViewModule,
+        NgxPermissionsModule,
+        SportResultFormModule
     ],
     providers: [
     {

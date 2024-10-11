@@ -10,7 +10,7 @@
         <input name="path" formControlName="path" hidden />
 
         <div class="flex flex-column">
-          <div class="flex-item flex flex-gap-5">
+          <div class="flex-item flex gap-5">
             <div class="field flex-item">
               <span class="p-float-label">
                 <p-dropdown
@@ -40,7 +40,7 @@
           </div>
 
           @if(entityFormViewModel.selectedParticipantType == 'player') {
-          <div class="flex-item flex flex-gap-5" formArrayName="participants">
+          <div class="flex-item flex gap-5" formArrayName="participants">
             @for ( participant of entityFormViewModel.participantsArray; track
             participant; let i = $index) {
 
@@ -135,5 +135,15 @@
       </p-tabView>
     </p-tabPanel>
     }
+
+    <ng-template [ngxPermissionsOnly]="entityFormViewModel.resultPermissions">
+      <p-tabPanel [disabled]="entityFormViewModel.isNewEntity" header="Result">
+        <sr-sport-result-form
+          [entityId]="entityFormViewModel.sportResult?.uid"
+          [backUrl]="this.backUrl"
+          [sportEvent]="entityFormViewModel.entity"
+        ></sr-sport-result-form>
+      </p-tabPanel>
+    </ng-template>
   </p-tabView>
 </section>

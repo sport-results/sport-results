@@ -5,6 +5,7 @@ export interface SportCategoryRule {
   name: string;
   participantSize: number;
   participantType: ParticipantTypeEnum;
+  periodSize: number;
   periodType: PeriodTypeEnum;
   periodTypeWinningSize: number;
   periodWinningSize: number;
@@ -53,3 +54,7 @@ export const periodTypes: PeriodTypeEnum[] = [
   PeriodTypeEnum.point,
   PeriodTypeEnum.time,
 ]
+
+export type SportCategoryRuleEntitySimple = Omit<SportCategoryRuleEntity, 'meta' | 'path'>;
+
+export type SportCategoryRuleModelSimple = Omit<SportCategoryRuleModel, 'meta' | 'path'>;
