@@ -117,32 +117,36 @@
       [disabled]="entityFormViewModel.isNewEntity"
       header="Permissions"
     >
-      <p-tabView>
-        @for(permission of entityFormViewModel.permissions; track
-        permission.uid) {
-        <p-tabPanel
-          [header]="
-            entityFormViewModel.sportPlayersMapByUserId.get(permission.userId)
-              ?.name || ''
-          "
-        >
-          <sr-permission-form
-            [entityId]="permission.uid"
-            [backUrl]="this.backUrl"
-          ></sr-permission-form>
-        </p-tabPanel>
-        }
-      </p-tabView>
+      <ng-template pTemplate="content">
+        <p-tabView>
+          @for(permission of entityFormViewModel.permissions; track
+          permission.uid) {
+          <p-tabPanel
+            [header]="
+              entityFormViewModel.sportPlayersMapByUserId.get(permission.userId)
+                ?.name || ''
+            "
+          >
+            <sr-permission-form
+              [entityId]="permission.uid"
+              [backUrl]="this.backUrl"
+            ></sr-permission-form>
+          </p-tabPanel>
+          }
+        </p-tabView>
+      </ng-template>
     </p-tabPanel>
     }
 
     <ng-template [ngxPermissionsOnly]="entityFormViewModel.resultPermissions">
       <p-tabPanel [disabled]="entityFormViewModel.isNewEntity" header="Result">
-        <sr-sport-result-form
-          [entityId]="entityFormViewModel.sportResult?.uid"
-          [backUrl]="this.backUrl"
-          [sportEvent]="entityFormViewModel.entity"
-        ></sr-sport-result-form>
+        <ng-template pTemplate="content">
+          <sr-sport-result-form
+            [entityId]="entityFormViewModel.sportResult?.uid"
+            [backUrl]="this.backUrl"
+            [sportEvent]="entityFormViewModel.entity"
+          ></sr-sport-result-form>
+        </ng-template>
       </p-tabPanel>
     </ng-template>
   </p-tabView>

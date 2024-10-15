@@ -17,8 +17,9 @@ export interface ApplicationStoreConfig {
       {},
       {
         runtimeChecks: {
-          strictActionImmutability: true,
-          strictStateImmutability: true,
+          strictActionImmutability: false,
+          strictStateImmutability: false,
+          
         },
       }
     ),

@@ -38,6 +38,10 @@ import {
 } from './sport-event-form.models';
 import { ActionEnum, RoleNamesEnum } from '@app/api/common';
 import { AuthorizationService } from '@app/api/core/authorization';
+import {
+  SportResultEntity,
+  SportResultStoreService,
+} from '@app/api/domain/sport-result';
 
 @Injectable()
 export class SportEventFormService extends EntityFormComponentStore<
@@ -52,8 +56,9 @@ export class SportEventFormService extends EntityFormComponentStore<
   private authorizationService = inject(AuthorizationService);
   private networkPlayerStoreService = inject(NetworkPlayerStoreService);
   private permissionStoreService = inject(PermissionStoreService);
-  private sportCategoryStoreService = inject(SportCategoryStoreService);
   private sportCategoryRuleStoreService = inject(SportCategoryRuleStoreService);
+  private sportCategoryStoreService = inject(SportCategoryStoreService);
+  private sportResultStoreService = inject(SportResultStoreService);
 
   private changeSportCategory$$ = new BehaviorSubject<
     SportCategoryEntity | undefined
@@ -108,7 +113,6 @@ export class SportEventFormService extends EntityFormComponentStore<
 
   private readonly fetchPermissions = this.effect(
     (entity$: Observable<SportEventEntity | undefined>) => {
-      this.permissionStoreService.dispatchListEntitiesAction();
       return entity$.pipe(
         tap(
           (entity) =>
@@ -129,24 +133,25 @@ export class SportEventFormService extends EntityFormComponentStore<
     }
   );
 
-  private readonly updateEntityFields = this.effect(
-    (entity$: Observable<SportEventEntity | undefined>) => {
-      return entity$.pipe(
-        withLatestFrom(this.formGroup$),
-        take(1),
-        tap(([entity, formGroup]) => {
-          if (entity) {
-            this.changeSportCategory$$.next(
-              entity.sportCategory as SportCategoryEntity
-            );
-
-            (formGroup?.get('sportCategoryRule') as FormControl).patchValue(
-              entity.sportCategoryRule
-            );
-          }
-        })
-      );
-    }
+  private readonly fetchSportResult = this.effect(
+    (entity$: Observable<SportEventEntity | undefined>) =>
+      entity$.pipe(
+        filter((entity) => !!entity),
+        tap((entity) => {
+          this.sportResultStoreService.dispatchListEntitiesAction(
+            this.createSubCollectionPath(entity.path, entity.uid)
+          );
+        }),
+        switchMap((entity) =>
+          this.sportResultStoreService
+            .selectEntityBySportEventId$(entity.uid)
+            .pipe(
+              tap((sportResult) => {
+                this.updateSportResultState(sportResult);
+              })
+            )
+        )
+      )
   );
 
   private readonly fetchNetworkPlayers = this.effect(
@@ -155,15 +160,15 @@ export class SportEventFormService extends EntityFormComponentStore<
         withLatestFrom(this.sportNetworkId$),
         withLatestFrom(this.user$),
         tap(([[entity, sportNetworkId], user]) => {
+          let sportNetworkIdForPath = sportNetworkId;
+
           if (entity) {
-            this.networkPlayerStoreService.dispatchListEntitiesAction(
-              `${USER_FEATURE_KEY}/${entity?.path[0].value}/${SPORT_NETWORK_FEATURE_KEY}/${entity?.path[1].value}`
-            );
-          } else {
-            this.networkPlayerStoreService.dispatchListEntitiesAction(
-              `${USER_FEATURE_KEY}/${user?.uid}/${SPORT_NETWORK_FEATURE_KEY}/${sportNetworkId}`
-            );
+            sportNetworkIdForPath = entity?.path[1].value;
           }
+
+          this.networkPlayerStoreService.dispatchListEntitiesAction(
+            `${USER_FEATURE_KEY}/${entity?.path[0].value}/${SPORT_NETWORK_FEATURE_KEY}/${sportNetworkIdForPath}`
+          );
         }),
         switchMap(([[entity, sportNetworkId], user]) =>
           this.networkPlayerStoreService
@@ -270,6 +275,7 @@ export class SportEventFormService extends EntityFormComponentStore<
     this.fetchSportCategoryRules();
     this.fetchNetworkPlayers(this.entity$);
     this.fetchPermissions(this.entity$);
+    this.fetchSportResult(this.entity$);
 
     this.handleSubmit(this.submit$$.asObservable());
 
@@ -414,6 +420,26 @@ export class SportEventFormService extends EntityFormComponentStore<
     );
   }
 
+  private readonly updateEntityFields = this.effect(
+    (entity$: Observable<SportEventEntity | undefined>) => {
+      return entity$.pipe(
+        withLatestFrom(this.formGroup$),
+        take(1),
+        tap(([entity, formGroup]) => {
+          if (entity) {
+            this.changeSportCategory$$.next(
+              entity.sportCategory as SportCategoryEntity
+            );
+
+            (formGroup?.get('sportCategoryRule') as FormControl).patchValue(
+              entity.sportCategoryRule
+            );
+          }
+        })
+      );
+    }
+  );
+
   private updateSportCategoriesState(
     sportCategories: SportCategoryEntity[]
   ): void {
@@ -421,6 +447,17 @@ export class SportEventFormService extends EntityFormComponentStore<
       return {
         ...state,
         sportCategories,
+      };
+    });
+  }
+
+  private updateSportResultState(
+    sportResult: SportResultEntity | undefined
+  ): void {
+    this.setState((state) => {
+      return {
+        ...state,
+        sportResult,
       };
     });
   }

@@ -12,14 +12,13 @@ import { inject, Injectable } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { EntityFormComponentStore } from '@app/core/entity';
 import { KeyValue } from '@angular/common';
-import { USER_FEATURE_KEY, UserEntity } from '@app/api/domain/user';
 
 import {
   SportResultFormState,
   SportResultFormViewModel,
 } from './sport-result-form.models';
 import { SPORT_EVENT_FEATURE_KEY, SportEventEntity } from '@app/api/domain/sport-event';
-import { SPORT_NETWORK_FEATURE_KEY } from '@app/api/domain/sport-network';
+import { SportCategoryRuleEntity } from '@app/api/domain/sport-category-rule';
 
 @Injectable()
 export class SportResultFormService extends EntityFormComponentStore<
@@ -50,7 +49,6 @@ export class SportResultFormService extends EntityFormComponentStore<
               entity,
               formGroup as FormGroup,
               backUrl,
-              user as UserEntity,
               sportEvent as SportEventEntity
             )
           )
@@ -100,11 +98,11 @@ export class SportResultFormService extends EntityFormComponentStore<
   private addEntity(
     formGroup: FormGroup,
     subCollectionPath: string,
-
-    path: KeyValue<string, string>[]
+    path: KeyValue<string, string>[],
+    sportCategoryRule: SportCategoryRuleEntity,
   ): void {
     this.entityStoreService.dispatchAddEntityAction(
-      this.entityFormUtil.createEntity(formGroup, path) as SportResultEntityAdd,
+      this.entityFormUtil.createExtendedEntity(formGroup, sportCategoryRule, path) as SportResultEntityAdd,
       subCollectionPath
     );
   }
@@ -159,10 +157,9 @@ export class SportResultFormService extends EntityFormComponentStore<
     entity: SportResultEntity | undefined,
     formGroup: FormGroup,
     backUrl: string,
-    user: UserEntity,
     sportEvent: SportEventEntity
   ): void {
-    const subCollectionPath = `${sportEvent.path}/${SPORT_EVENT_FEATURE_KEY}/${sportEvent.uid}`;
+    const subCollectionPath = `${this.createSubCollectionPath(sportEvent.path)}/${SPORT_EVENT_FEATURE_KEY}/${sportEvent.uid}`;
 
     if (entity) {
       this.updateEntity(formGroup, subCollectionPath);
@@ -170,7 +167,8 @@ export class SportResultFormService extends EntityFormComponentStore<
       this.addEntity(
         formGroup,
         subCollectionPath,
-        this.entityFormUtil.createPath(user.uid)
+        this.entityFormUtil.createPath(sportEvent.path, sportEvent.uid ),
+        sportEvent.sportCategoryRule
       );
     }
 

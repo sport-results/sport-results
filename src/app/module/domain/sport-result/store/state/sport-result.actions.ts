@@ -12,7 +12,7 @@ export const addEntity = createAction(
     '[SportResult Admin] Add SportResult',
     props<{
         sportResult: SportResultEntityAdd,
-        parentEntityId?: string;
+        subCollectionPath?: string;
     }>()
 );
 
@@ -44,7 +44,7 @@ export const loadEntityFail = createAction(
 export const changeNewEntityButtonEnabled = createAction(
 	'[SportResult Admin] Change new Entity Button Enabled',
 	props<{ enabled: boolean }>()
-); 
+);
 
 export const listEntities = createAction(
     '[SportResult Admin] List SportResults',

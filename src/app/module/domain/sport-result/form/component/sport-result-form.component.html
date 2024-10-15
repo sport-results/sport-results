@@ -2,6 +2,7 @@
 	<form class="form" [formGroup]="entityFormViewModel.formGroup">
 		<input name="uid" formControlName="uid" hidden />
 		<input name="meta" formControlName="meta" hidden />
+    <input name="path" formControlName="path" hidden />
 
     <header class="flex gap-5 flex-row-space-between">
       @for(headerItem of entityFormViewModel.headerItems; track headerItem){
