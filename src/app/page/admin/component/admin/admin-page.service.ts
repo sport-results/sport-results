@@ -4,6 +4,7 @@ import { RoleAdminPermissionsService } from '@app/api/admin/role';
 import { SportCategoryAdminPermissionsService } from '@app/api/admin/sport-category';
 import { SportNetworkAdminPermissionsService } from '@app/api/admin/sport-network';
 import { SportPlayerAdminPermissionsService } from '@app/api/admin/sport-player';
+import { SportResultAdminPermissionsService } from '@app/api/admin/sport-result';
 import { UserAdminPermissionsService } from '@app/api/admin/user';
 import { RoleNamesEnum } from '@app/api/common';
 import { AuthorizationService } from '@app/api/core/authorization';
@@ -100,6 +101,18 @@ export class AdminPageService extends ComponentStore<AdminPageState> {
         routerLink: 'user',
         tabindex: '1',
       });
+    }
+
+    if (
+      this.authorizationService.hasPermission(RoleNamesEnum.ADMIN) ||
+      this.authorizationService.hasPermission(
+          SportResultAdminPermissionsService.viewSportResultAdminPage
+      )
+    ) {
+        items.push({
+            label: ' SportResult',
+            routerLink: 'sport-result',
+        });
     }
 
     return items;

@@ -24,6 +24,8 @@
               [rounded]="true"
               (click)="handleDeleteClick(sportEvent)"
             />
+
+            <p-confirmDialog />
           </ng-template>
         </div>
       </header>
@@ -31,9 +33,9 @@
 
     <div class="flex">
       @for(participant of sportEvent.participants; track participant.uid) {
-      <p class="flex-item">
+      <div class="flex-item participant">
         {{ participant.name }}
-      </p>
+      </div>
       }
     </div>
 
@@ -41,7 +43,5 @@
       <div></div>
     </ng-template>
   </p-card>
-
-  <p-confirmDialog />
 </section>
 }

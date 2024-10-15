@@ -20,4 +20,7 @@ export abstract class PermissionStoreService extends EntityStoreService<
   public abstract selectEntitiesByResourceId$(
     resourceId: string
   ): Observable<PermissionEntity[]>;
+  public abstract selectEntitiesByUserId$(
+    userId: string
+  ): Observable<PermissionEntity[]>
 }

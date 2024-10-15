@@ -1,6 +1,7 @@
 import {
   exhaustMap,
   forkJoin,
+  mergeAll,
   mergeMap,
   Observable,
   of,
@@ -91,7 +92,7 @@ export class EntityEffectServiceImpl extends EntityEffectService<
     return this.entityDataService
       .list$(subCollectionPath, pathParams, queryParams)
       .pipe(
-        exhaustMap((models) => {
+        mergeMap((models) => {
           const x =
             models && models.length
               ? forkJoin(

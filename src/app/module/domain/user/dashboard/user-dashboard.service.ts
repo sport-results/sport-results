@@ -98,7 +98,7 @@ export class UserDashboardService extends ComponentStore<UserDashboardState> {
       user$.pipe(
         filter((user) => !!user),
         switchMap((user) =>
-          this.permissionStoreService.selectEntities$().pipe(
+          this.permissionStoreService.selectEntitiesByUserId$(user.uid).pipe(
             filter(permissions => permissions.length > 0),
             tap((permissions) => {
               this.updatePermissionState(permissions);

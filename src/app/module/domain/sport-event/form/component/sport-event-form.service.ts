@@ -4,7 +4,7 @@ import {
   SportCategoryRuleStoreService,
 } from '@app/api/domain/sport-category-rule';
 import { BehaviorSubject, combineLatest, Observable, tap } from 'rxjs';
-import { map, switchMap, take, withLatestFrom } from 'rxjs/operators';
+import { filter, map, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import {
   SportEventEntity,
   SportEventEntityAdd,
@@ -32,7 +32,16 @@ import {
   PermissionEntity,
   PermissionStoreService,
 } from '@app/api/domain/permission';
-import { SportEventFormState, SportEventFormViewModel } from './sport-event-form.models';
+import {
+  SportEventFormState,
+  SportEventFormViewModel,
+} from './sport-event-form.models';
+import { ActionEnum, RoleNamesEnum } from '@app/api/common';
+import { AuthorizationService } from '@app/api/core/authorization';
+import {
+  SportResultEntity,
+  SportResultStoreService,
+} from '@app/api/domain/sport-result';
 
 @Injectable()
 export class SportEventFormService extends EntityFormComponentStore<
@@ -43,10 +52,13 @@ export class SportEventFormService extends EntityFormComponentStore<
 > {
   protected override entityStoreService = inject(SportEventStoreService);
   protected override entityFormUtil = inject(SportEventFormUtil);
+
+  private authorizationService = inject(AuthorizationService);
   private networkPlayerStoreService = inject(NetworkPlayerStoreService);
   private permissionStoreService = inject(PermissionStoreService);
-  private sportCategoryStoreService = inject(SportCategoryStoreService);
   private sportCategoryRuleStoreService = inject(SportCategoryRuleStoreService);
+  private sportCategoryStoreService = inject(SportCategoryStoreService);
+  private sportResultStoreService = inject(SportResultStoreService);
 
   private changeSportCategory$$ = new BehaviorSubject<
     SportCategoryEntity | undefined
@@ -74,6 +86,8 @@ export class SportEventFormService extends EntityFormComponentStore<
     (state) => state.sportNetworkId
   );
 
+  private readonly sportResult$ = this.select((state) => state.sportResult);
+
   private readonly getDataForSubmit$ = this.select((state) => ({
     entity: state.entity,
     formGroup: state.formGroup,
@@ -99,7 +113,6 @@ export class SportEventFormService extends EntityFormComponentStore<
 
   private readonly fetchPermissions = this.effect(
     (entity$: Observable<SportEventEntity | undefined>) => {
-      this.permissionStoreService.dispatchListEntitiesAction();
       return entity$.pipe(
         tap(
           (entity) =>
@@ -108,7 +121,11 @@ export class SportEventFormService extends EntityFormComponentStore<
               this.createSubCollectionPath(entity.path, entity.uid)
             )
         ),
-        switchMap((entity) => this.permissionStoreService.selectEntitiesByResourceId$(entity?.uid || '')),
+        switchMap((entity) =>
+          this.permissionStoreService.selectEntitiesByResourceId$(
+            entity?.uid || ''
+          )
+        ),
         tap((permissions) => {
           this.updatePermissionsState(permissions);
         })
@@ -116,24 +133,25 @@ export class SportEventFormService extends EntityFormComponentStore<
     }
   );
 
-  private readonly updateEntityFields = this.effect(
-    (entity$: Observable<SportEventEntity | undefined>) => {
-      return entity$.pipe(
-        withLatestFrom(this.formGroup$),
-        take(1),
-        tap(([entity, formGroup]) => {
-          if (entity) {
-            this.changeSportCategory$$.next(
-              entity.sportCategory as SportCategoryEntity
-            );
-
-            (formGroup?.get('sportCategoryRule') as FormControl).patchValue(
-              entity.sportCategoryRule
-            );
-          }
-        })
-      );
-    }
+  private readonly fetchSportResult = this.effect(
+    (entity$: Observable<SportEventEntity | undefined>) =>
+      entity$.pipe(
+        filter((entity) => !!entity),
+        tap((entity) => {
+          this.sportResultStoreService.dispatchListEntitiesAction(
+            this.createSubCollectionPath(entity.path, entity.uid)
+          );
+        }),
+        switchMap((entity) =>
+          this.sportResultStoreService
+            .selectEntityBySportEventId$(entity.uid)
+            .pipe(
+              tap((sportResult) => {
+                this.updateSportResultState(sportResult);
+              })
+            )
+        )
+      )
   );
 
   private readonly fetchNetworkPlayers = this.effect(
@@ -142,15 +160,15 @@ export class SportEventFormService extends EntityFormComponentStore<
         withLatestFrom(this.sportNetworkId$),
         withLatestFrom(this.user$),
         tap(([[entity, sportNetworkId], user]) => {
+          let sportNetworkIdForPath = sportNetworkId;
+
           if (entity) {
-            this.networkPlayerStoreService.dispatchListEntitiesAction(
-              `${USER_FEATURE_KEY}/${entity?.path[0].value}/${SPORT_NETWORK_FEATURE_KEY}/${entity?.path[1].value}`
-            );
-          } else {
-            this.networkPlayerStoreService.dispatchListEntitiesAction(
-              `${USER_FEATURE_KEY}/${user?.uid}/${SPORT_NETWORK_FEATURE_KEY}/${sportNetworkId}`
-            );
+            sportNetworkIdForPath = entity?.path[1].value;
           }
+
+          this.networkPlayerStoreService.dispatchListEntitiesAction(
+            `${USER_FEATURE_KEY}/${entity?.path[0].value}/${SPORT_NETWORK_FEATURE_KEY}/${sportNetworkIdForPath}`
+          );
         }),
         switchMap(([[entity, sportNetworkId], user]) =>
           this.networkPlayerStoreService
@@ -187,6 +205,7 @@ export class SportEventFormService extends EntityFormComponentStore<
 
   public readonly entityFormViewModel$: Observable<SportEventFormViewModel> =
     this.select({
+      entity: this.entity$,
       formGroup: this.formGroup$.pipe(
         map((formGroup) => formGroup as FormGroup)
       ),
@@ -218,6 +237,7 @@ export class SportEventFormService extends EntityFormComponentStore<
       selectedParticipantSize: this.changeSportCategoryRule$$.pipe(
         map((sportCategoryRule) => sportCategoryRule?.participantSize)
       ),
+      sportResult: this.sportResult$,
     }).pipe(
       map((entityFormViewModel) => {
         return this.extendsEntityFormViewModel(entityFormViewModel);
@@ -235,6 +255,7 @@ export class SportEventFormService extends EntityFormComponentStore<
       sportCategories: [],
       sportCategoryRules: [],
       sportNetworkId: undefined,
+      sportResult: undefined,
       user: undefined,
     });
   }
@@ -254,6 +275,7 @@ export class SportEventFormService extends EntityFormComponentStore<
     this.fetchSportCategoryRules();
     this.fetchNetworkPlayers(this.entity$);
     this.fetchPermissions(this.entity$);
+    this.fetchSportResult(this.entity$);
 
     this.handleSubmit(this.submit$$.asObservable());
 
@@ -293,13 +315,29 @@ export class SportEventFormService extends EntityFormComponentStore<
     }
   );
 
+  private createResultPermissions(sportEvent: SportEventEntity): string[] {
+    return [
+      RoleNamesEnum.ADMIN,
+      this.authorizationService.generatePermissionName(
+        RoleNamesEnum.OWNER,
+        sportEvent?.uid || ''
+      ),
+      this.authorizationService.generatePermissionName(
+        ActionEnum.RESULT,
+        sportEvent?.uid || ''
+      ),
+    ];
+  }
+
   private extendsEntityFormViewModel(
     entityFormViewModel: Partial<SportEventFormViewModel>
   ): SportEventFormViewModel {
     const formGroup = entityFormViewModel.formGroup as FormGroup;
+    const entity = entityFormViewModel.entity as SportEventEntity;
 
     return {
       cancel$$: this.cancel$$,
+      entity,
       formGroup: entityFormViewModel.formGroup as FormGroup,
       isNewEntity: entityFormViewModel.isNewEntity as boolean,
       isOwner: entityFormViewModel.isOwner as boolean,
@@ -312,6 +350,7 @@ export class SportEventFormService extends EntityFormComponentStore<
           )
         : this.getParticipantsArray(formGroup)
       ).controls as FormControl[],
+      resultPermissions: this.createResultPermissions(entity),
       selectedParticipantType: entityFormViewModel.selectedParticipantType,
       selectedParticipantSize: entityFormViewModel.selectedParticipantSize || 0,
       sportCategories:
@@ -319,12 +358,17 @@ export class SportEventFormService extends EntityFormComponentStore<
       sportCategoryRules:
         entityFormViewModel.sportCategoryRules as SportCategoryRuleEntity[],
       sportPlayers: entityFormViewModel.sportPlayers as SportPlayerEntity[],
-      sportPlayersMapByUserId: this.createSportPlayersMap(entityFormViewModel.sportPlayers as SportPlayerEntity[]),
+      sportPlayersMapByUserId: this.createSportPlayersMap(
+        entityFormViewModel.sportPlayers as SportPlayerEntity[]
+      ),
+      sportResult: entityFormViewModel.sportResult,
       submit$$: this.submit$$,
     };
   }
 
-  private createSportPlayersMap(sportPlayers: SportPlayerEntity[]): Map<string, SportPlayerEntity> {
+  private createSportPlayersMap(
+    sportPlayers: SportPlayerEntity[]
+  ): Map<string, SportPlayerEntity> {
     const sportPlayersMapByUserId = new Map<string, SportPlayerEntity>();
 
     sportPlayers.forEach((sportPlayer) => {
@@ -376,6 +420,26 @@ export class SportEventFormService extends EntityFormComponentStore<
     );
   }
 
+  private readonly updateEntityFields = this.effect(
+    (entity$: Observable<SportEventEntity | undefined>) => {
+      return entity$.pipe(
+        withLatestFrom(this.formGroup$),
+        take(1),
+        tap(([entity, formGroup]) => {
+          if (entity) {
+            this.changeSportCategory$$.next(
+              entity.sportCategory as SportCategoryEntity
+            );
+
+            (formGroup?.get('sportCategoryRule') as FormControl).patchValue(
+              entity.sportCategoryRule
+            );
+          }
+        })
+      );
+    }
+  );
+
   private updateSportCategoriesState(
     sportCategories: SportCategoryEntity[]
   ): void {
@@ -383,6 +447,17 @@ export class SportEventFormService extends EntityFormComponentStore<
       return {
         ...state,
         sportCategories,
+      };
+    });
+  }
+
+  private updateSportResultState(
+    sportResult: SportResultEntity | undefined
+  ): void {
+    this.setState((state) => {
+      return {
+        ...state,
+        sportResult,
       };
     });
   }

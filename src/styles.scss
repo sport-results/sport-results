@@ -80,31 +80,55 @@ table {
   justify-content: center;
 }
 
+.flex-row-space-between {
+  justify-content: space-between;
+}
+
+.flex-align-items-start {
+  align-items: flex-start;
+}
+
 .flex-item {
   flex: 1;
 }
 
-.flex-gap {
-  &-1{
+.gap {
+  &-1 {
     gap: 0.4rem;
   }
-  &-2{
+  &-2 {
     gap: 0.8rem;
   }
-  &-3{
+  &-3 {
     gap: 1.2rem;
   }
-  &-4{
+  &-4 {
     gap: 1.6rem;
   }
-  &-5{
+  &-5 {
     gap: 2rem;
   }
+}
+
+.contents {
+  display: contents;
+}
+
+.inline-grid {
+  display: inline-grid;
 }
 
 .form {
   margin: auto;
   width: 80%;
+
+  .error {
+    border-color: crimson;
+  }
+
+  .error-message {
+    color: crimson;
+  }
 }
 
 .margin {
@@ -183,4 +207,10 @@ table {
 
 .p-toolbar {
   border: none;
+}
+
+.player {
+  font-size: large;
+  font-weight: 600;
+  margin: 0.4rem 0;
 }

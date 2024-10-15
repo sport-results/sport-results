@@ -1,5 +1,5 @@
 @if(entityCardViewModel$ | async; as entityCardViewModel) {
-<section class="sport-event-card flex flex-column flex-gap-1">
+<section class="sport-event-card flex flex-column gap-1">
   @for(sportEvent of entityCardViewModel.entities; track sportEvent.uid) {
   <sr-sport-event-card [sportEvent]="sportEvent" />
   }

@@ -1,0 +1,63 @@
+<section
+  class="sport-result-form"
+  *ngIf="entityFormViewModel$ | async as entityFormViewModel"
+>
+  <form class="form" [formGroup]="entityFormViewModel.formGroup">
+    <input name="uid" formControlName="uid" hidden />
+    <input name="meta" formControlName="meta" hidden />
+    <input name="path" formControlName="path" hidden />
+
+    <header class="flex gap-5 flex-row-space-between">
+      @for(headerItem of entityFormViewModel.headerItems; track headerItem){
+      <div>{{ headerItem }}</div>
+      }
+    </header>
+
+    <div
+      class="flex gap-5 flex-row-space-between flex-align-items-start margin-top-5"
+      formArrayName="periodResults"
+    >
+      <div class="inline-grid gap-2">
+        @for(participant of entityFormViewModel.sportEvent?.participants; track
+        participant.uid) {
+        <div class="flex-item player">
+          {{ participant.name }}
+        </div>
+        }
+      </div>
+
+      <div class="contents">
+        @for(periodResultControl of entityFormViewModel.periodResultControls;
+        track periodResultControl) {
+        <div class="">
+          <sr-period-result [id]="'' + $index" [formControlName]="$index" />
+
+          <div
+            class="error-message"
+            appValidationMessage
+            [control]="periodResultControl"
+            [validationErrors]="validationErrors"
+          ></div>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="flex margin-top-5 flex-row-center">
+      <button
+        pButton
+        type="button"
+        label="Submit"
+        (click)="entityFormViewModel.submit$$.next()"
+        [disabled]="!entityFormViewModel.formGroup.valid"
+      ></button>
+
+      <button
+        pButton
+        type="button"
+        label="Cancel"
+        (click)="entityFormViewModel.cancel$$.next()"
+      ></button>
+    </div>
+  </form>
+</section>

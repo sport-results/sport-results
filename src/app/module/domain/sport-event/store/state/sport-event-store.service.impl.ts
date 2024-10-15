@@ -58,8 +58,8 @@ export class SportEventStoreServiceImpl extends SportEventStoreService {
     this.store.dispatch(
       sportEventActions.listEntities({
         subCollectionPath,
-        pathParams: pathParams,
-        queryParams: queryParams,
+        pathParams,
+        queryParams,
       })
     );
   }

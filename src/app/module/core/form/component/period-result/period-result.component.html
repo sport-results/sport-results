@@ -1,0 +1,11 @@
+<div class="period-result inline-grid">
+  @for(result of value?.results; track result) {
+  <input
+    [id]="$index"
+    type="number"
+    [value]="result.value"
+    (change)="changeHandler($event, $index)"
+    [disabled]="disabled"
+  />
+  }
+</div>

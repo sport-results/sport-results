@@ -24,6 +24,7 @@
       ],
       "@app/api/core/application": ["./src/app/api/core/application/index.ts"],
       "@app/api/core/entity": ["./src/app/api/core/entity/index.ts"],
+      "@app/api/core/form": ["./src/app/api/core/form/index.ts"],
       "@app/api/core/search": ["./src/app/api/core/search/index.ts"],
       "@app/api/core/store": ["./src/app/api/core/store/index.ts"],
       "@app/api/domain/role": ["./src/app/api/domain/role/index.ts"],
@@ -116,6 +117,18 @@
       ],
       "@app/module/admin/permission": [
         "./src/app/module/admin/permission/index.ts"
+      ],
+      "@app/api/domain/sport-result": [
+        "./src/app/api/domain/sport-result/index.ts"
+      ],
+      "@app/api/admin/sport-result": [
+        "./src/app/api/admin/sport-result/index.ts"
+      ],
+      "@app/module/domain/sport-result": [
+        "./src/app/module/domain/sport-result/index.ts"
+      ],
+      "@app/module/admin/sport-result": [
+        "./src/app/module/admin/sport-result/index.ts"
       ]
     }
   },
