@@ -84,24 +84,28 @@ table {
   justify-content: space-between;
 }
 
+.flex-align-items-start {
+  align-items: flex-start;
+}
+
 .flex-item {
   flex: 1;
 }
 
 .gap {
-  &-1{
+  &-1 {
     gap: 0.4rem;
   }
-  &-2{
+  &-2 {
     gap: 0.8rem;
   }
-  &-3{
+  &-3 {
     gap: 1.2rem;
   }
-  &-4{
+  &-4 {
     gap: 1.6rem;
   }
-  &-5{
+  &-5 {
     gap: 2rem;
   }
 }
@@ -117,6 +121,14 @@ table {
 .form {
   margin: auto;
   width: 80%;
+
+  .error {
+    border-color: crimson;
+  }
+
+  .error-message {
+    color: crimson;
+  }
 }
 
 .margin {

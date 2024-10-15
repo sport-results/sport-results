@@ -4,9 +4,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import {
   SportCategoryRule,
   SportCategoryRuleEntity,
-  SportCategoryRuleEntitySimple,
 } from '@app/api/domain/sport-category-rule';
-import { SPORT_EVENT_FEATURE_KEY } from '@app/api/domain/sport-event';
 import { Participant } from '@app/api/domain/sport-player';
 import {
   PeriodResult,
@@ -15,7 +13,6 @@ import {
   SportResultEntityAdd,
   SportResultEntityUpdate,
   SportResultFormUtil,
-  SportResultUtilService,
 } from '@app/api/domain/sport-result';
 import { FormValidatorService } from '@app/core/form';
 
@@ -78,6 +75,7 @@ export class SportResultFormUtilImpl extends SportResultFormUtil {
       this.createPeriodResults(
         sportResult?.periodResults,
         sportCategoryRule.periodSize,
+        sportCategoryRule.periodTypeWinningSize,
         participants
       )
     );
@@ -88,13 +86,14 @@ export class SportResultFormUtilImpl extends SportResultFormUtil {
   private createPeriodResults(
     periodResults: PeriodResult[] | undefined,
     periodSize: number,
+    periodTypeWinningSize: number,
     participants: Participant[]
   ) {
     return this.formBuilder.array(
       periodResults
         ? periodResults.map(
             (periodResult) =>
-              new FormControl(periodResult, FormValidatorService.required)
+              new FormControl(periodResult, [FormValidatorService.periodResult(periodTypeWinningSize)])
           )
         : [...Array(periodSize)].map((_, index) => {
             return new FormControl({
@@ -103,7 +102,7 @@ export class SportResultFormUtilImpl extends SportResultFormUtil {
                 key: participant.uid,
                 value: 0,
               })),
-            });
+            }, [FormValidatorService.periodResult(periodTypeWinningSize)]);
           })
     );
   }

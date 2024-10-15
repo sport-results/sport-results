@@ -4,6 +4,8 @@ import { EntityFormComponent } from '@app/core/entity';
 import {SportResultFormViewModel } from './sport-result-form.models';
 import { SportResultFormService } from './sport-result-form.service';
 import { SportEventEntity } from '@app/api/domain/sport-event';
+import { ValidationMessageDirective } from '@app/core/form';
+import { ValidationError } from '@app/api/core/form';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,6 +19,13 @@ export class SportResultFormComponent
     implements OnInit
     {
     private componentService = inject(SportResultFormService);
+
+    public validationErrors: ValidationError[] = [
+      {
+        key: 'periodResult',
+        value: 'Invalid value',
+      },
+    ]
 
     @Input()
     sportEvent?: SportEventEntity;
