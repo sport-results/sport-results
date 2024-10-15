@@ -1,16 +1,47 @@
+import { of } from 'rxjs';
+
 import { TestBed } from '@angular/core/testing';
+import { ApplicationStoreService } from '@app/api/core/application';
+import { RoleDataService } from '@app/api/domain/role';
 
 import { UserUtilServiceImpl } from './user-util.service.impl';
 
 describe('UserUtilServiceImpl', () => {
-	let service: UserUtilServiceImpl;
+  let service: UserUtilServiceImpl;
+  let applicationStoreServiceMock;
+  let roleDataServiceMock;
 
-	beforeEach(() => {
-		TestBed.configureTestingModule({});
-		service = TestBed.inject(UserUtilServiceImpl);
-	});
+  beforeEach(() => {
+    applicationStoreServiceMock = {
+      selectAuthenticatedUser$: jest.fn(),
+    };
+    roleDataServiceMock = {
+      listByIds$: jest.fn(),
+    };
 
-	it('should be created', () => {
-		expect(service).toBeTruthy();
-	});
+    applicationStoreServiceMock.selectAuthenticatedUser$.mockReturnValueOnce(
+      of({})
+    );
+    roleDataServiceMock.listByIds$.mockReturnValueOnce(of([]));
+
+    TestBed.configureTestingModule({
+      providers: [
+        UserUtilServiceImpl,
+        {
+          provide: ApplicationStoreService,
+          useValue: applicationStoreServiceMock,
+        },
+        {
+          provide: RoleDataService,
+          useValue: roleDataServiceMock,
+        },
+      ],
+    });
+
+    service = TestBed.inject(UserUtilServiceImpl);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
 });
