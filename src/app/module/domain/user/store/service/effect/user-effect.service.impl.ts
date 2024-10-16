@@ -1,4 +1,4 @@
-import { first, map, Observable, of, switchMap, tap } from 'rxjs';
+import { map, Observable, of, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 import { User } from '@app/api/common';
@@ -39,7 +39,7 @@ export class UserEffectServiceImpl extends EntityEffectServiceImpl {
             ),
             `${USER_FEATURE_KEY}/${user.uid}`
           );
-          
+
           return this.entityDataService
             .update$(
               this.entityUtilService.convertEntityUpdateToModelUpdate(
