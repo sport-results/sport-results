@@ -1,14 +1,33 @@
 import { TestBed } from '@angular/core/testing';
 
 import { UserDataServiceImpl } from './user-data.service.impl';
+import { Firestore } from '@angular/fire/firestore';
+
+jest.mock('@app/engine', () => {
+  return {
+    FirestoreDataEngine: jest.fn(),
+  };
+});
 
 describe('UserDataServiceImpl', () => {
-	beforeEach(() => TestBed.configureTestingModule({}));
+  let userDataService: UserDataServiceImpl;
+  let firestoreMock;
+  let firestoreDataEngineMock;
 
-	it('should be created', () => {
-		const service: UserDataServiceImpl =
-			TestBed.inject(UserDataServiceImpl);
+  beforeEach(() => {
+    firestoreDataEngineMock = {};
+    firestoreMock = {};
+    TestBed.configureTestingModule({
+      providers: [
+        UserDataServiceImpl,
+        { provide: Firestore, useValue: firestoreMock },
+      ],
+    });
+  });
 
-		expect(service).toBeTruthy();
-	});
+  it('should be created', () => {
+    userDataService = TestBed.inject(UserDataServiceImpl);
+
+    expect(userDataService).toBeTruthy();
+  });
 });
