@@ -10,9 +10,9 @@ import {
 } from '@app/api/domain/role';
 import { select, Store } from '@ngrx/store';
 
-import * as roleActions from './role.actions';
-import * as fromRole from './role.reducer';
-import * as RoleSelectors from './role.selectors';
+import * as roleActions from '../../state/role.actions';
+import * as fromRole from '../../state/role.reducer';
+import * as RoleSelectors from '../../state/role.selectors';
 
 @Injectable()
 export class RoleStoreServiceImpl extends RoleStoreService {

@@ -10,9 +10,9 @@ import {
   NetworkPlayerStoreService,
 } from '@app/api/domain/network-player';
 
-import * as networkPlayerActions from './network-player.actions';
-import * as fromNetworkPlayer from './network-player.reducer';
-import * as NetworkPlayerSelectors from './network-player.selectors';
+import * as networkPlayerActions from '../../state/network-player.actions';
+import * as fromNetworkPlayer from '../../state/network-player.reducer';
+import * as NetworkPlayerSelectors from '../../state/network-player.selectors';
 
 @Injectable()
 export class NetworkPlayerStoreServiceImpl extends NetworkPlayerStoreService {

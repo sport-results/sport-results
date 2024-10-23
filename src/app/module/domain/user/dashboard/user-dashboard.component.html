@@ -1,9 +1,9 @@
 <section class="user-dashboard">
+  @if(userDashboardViewModel$$$(); as userDashboardViewModel) {
   <p-tabView
     (onChange)="onChangeHandler($event)"
     (activeIndexChange)="onActiveIndexChangeHandler($event)"
   >
-    @if(userDashboardViewModel$$$(); as userDashboardViewModel) {
     @for(sportNetwork of userDashboardViewModel.sportNetworks; track
     sportNetwork.uid) {
     <p-tabPanel [header]="sportNetwork.name">
@@ -56,6 +56,7 @@
         </div>
       </div>
     </p-tabPanel>
-    } }
+    }
   </p-tabView>
+  }
 </section>

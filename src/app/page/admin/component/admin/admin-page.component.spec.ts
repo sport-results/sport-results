@@ -2,25 +2,43 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdminPageComponent } from './admin-page.component';
+import { provideRouter } from '@angular/router';
+import { AdminPageService } from './admin-page.service';
 
 describe('AdminPageComponent', () => {
-    let component: AdminPageComponent;
-    let fixture: ComponentFixture<AdminPageComponent>;
+  let component: AdminPageComponent;
+  let fixture: ComponentFixture<AdminPageComponent>;
+  let componentServiceMock: unknown;
 
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            declarations: [AdminPageComponent],
-            schemas: [NO_ERRORS_SCHEMA],
-        }).compileComponents();
+  beforeEach(() => {
+    componentServiceMock = {
+      init$: jest.fn(),
+    };
+  });
 
-        fixture = TestBed.createComponent(AdminPageComponent);
-
-        component = fixture.componentInstance;
-
-        fixture.detectChanges();
+  beforeEach(async () => {
+    TestBed.overrideComponent(AdminPageComponent, {
+      set: {
+        providers: [
+          { provide: AdminPageService, useValue: componentServiceMock },
+        ],
+      },
     });
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
+    await TestBed.configureTestingModule({
+      declarations: [AdminPageComponent],
+      providers: [provideRouter([])],
+      schemas: [NO_ERRORS_SCHEMA],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(AdminPageComponent);
+
+    component = fixture.componentInstance;
+
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

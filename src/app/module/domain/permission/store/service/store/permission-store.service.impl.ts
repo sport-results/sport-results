@@ -2,18 +2,18 @@ import { Observable } from 'rxjs';
 
 import { KeyValue } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { SearchParam } from '@app/api/core/search';
 import {
   PermissionEntity,
   PermissionEntityAdd,
   PermissionEntityUpdate,
   PermissionStoreService,
 } from '@app/api/domain/permission';
+import { select, Store } from '@ngrx/store';
 
-import * as permissionActions from './permission.actions';
-import * as fromPermission from './permission.reducer';
-import * as PermissionSelectors from './permission.selectors';
-import { SearchParam } from '@app/api/core/search';
+import * as permissionActions from '../../state/permission.actions';
+import * as fromPermission from '../../state/permission.reducer';
+import * as PermissionSelectors from '../../state/permission.selectors';
 
 @Injectable()
 export class PermissionStoreServiceImpl extends PermissionStoreService {
@@ -90,30 +90,34 @@ export class PermissionStoreServiceImpl extends PermissionStoreService {
     return this.store.pipe(select(PermissionSelectors.getEntityLoading));
   }
 
-  public selectEntity$(uid: string): Observable<PermissionEntity | undefined> {
-    return this.store.pipe(select(PermissionSelectors.getEntityById(uid)));
-  }
-
   public selectEntities$(): Observable<PermissionEntity[]> {
     return this.store.pipe(select(PermissionSelectors.getAll));
+  }
+
+  public selectEntitiesByResourceId$(
+    resourceId: string
+  ): Observable<PermissionEntity[]> {
+    return this.store.pipe(
+      select(PermissionSelectors.getEntitiesByResourceId(resourceId))
+    );
+  }
+
+  public selectEntitiesByUserId$(
+    userId: string
+  ): Observable<PermissionEntity[]> {
+    return this.store.pipe(
+      select(PermissionSelectors.getEntitiesByUserId(userId))
+    );
+  }
+
+  public selectEntity$(uid: string): Observable<PermissionEntity | undefined> {
+    return this.store.pipe(select(PermissionSelectors.getEntityById(uid)));
   }
 
   public override selectEntityById$(
     entityId: string
   ): Observable<PermissionEntity | undefined> {
     return this.store.pipe(select(PermissionSelectors.getEntityById(entityId)));
-  }
-
-  public selectEntitiesByResourceId$(
-    resourceId: string
-  ): Observable<PermissionEntity[]> {
-    return this.store.pipe(select(PermissionSelectors.getEntitiesByResourceId(resourceId)));
-  }
-
-  public selectEntitiesByUserId$(
-    userId: string
-  ): Observable<PermissionEntity[]> {
-    return this.store.pipe(select(PermissionSelectors.getEntitiesByUserId(userId)));
   }
 
   public selectNewEntityButtonEnabled$(): Observable<boolean> {

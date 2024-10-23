@@ -2,7 +2,13 @@ import { delay, first, map, mergeMap, Observable, of, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Entity, EntityAdd, EntityUpdate, SimpleEntity, SimpleModel } from '@app/api/core/entity';
+import {
+  Entity,
+  EntityAdd,
+  EntityUpdate,
+  SimpleEntity,
+  SimpleModel,
+} from '@app/api/core/entity';
 import { RoleDataService, RoleEntity } from '@app/api/domain/role';
 import {
   UserEntity,

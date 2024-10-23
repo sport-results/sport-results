@@ -8,23 +8,7 @@ import {
 } from '@angular/core';
 
 import { AdminPageService, AdminPageViewModel } from './admin-page.service';
-import {
-  AdminSportCategoryPermissionsService,
-  AdminSportCategoryRulePermissionsService,
-  AdminSportNetworkPermissionsService,
-  AdminSportPlayerPermissionsService, AdminNetworkPlayerPermissionsService, AdminSportEventPermissionsService, AdminPermissionPermissionsService, AdminSportResultPermissionsService,
-} from '../../permissions';
-import { AuthorizationService } from '@app/api/core/authorization';
-import { AdminRolePermissionsService } from '../../permissions/admin-role-permissions.service';
-import { AdminUserPermissionsService } from '../../permissions/admin-user-permissions.service';
-import { AdminPermissionsService } from '@app/api/module/admin';
-import { SportCategoryRuleAdminPermissionsService } from '@app/api/admin/sport-category-rule';
-import { SportNetworkAdminPermissionsService } from '@app/api/admin/sport-network';
-import { SportPlayerAdminPermissionsService } from '@app/api/admin/sport-player';
-import { NetworkPlayerAdminPermissionsService } from '@app/api/admin/network-player';
-import { SportEventAdminPermissionsService } from '@app/api/admin/sport-event';
-import { PermissionAdminPermissionsService } from '@app/api/admin/permission';
-import { SportResultAdminPermissionsService } from '@app/api/admin/sport-result';
+
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
