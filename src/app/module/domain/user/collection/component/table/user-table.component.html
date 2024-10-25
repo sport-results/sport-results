@@ -1,6 +1,6 @@
 <section
     class="artist-table"
-    *ngIf="userTableViewModel$ | async as userTableViewModel"
+    *ngIf="userTableViewModel$$$() as userTableViewModel"
 >
     <p-table
         [value]="userTableViewModel.userEntities"

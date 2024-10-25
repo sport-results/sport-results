@@ -1,9 +1,9 @@
 <section class="admin-page">
-	<ng-container *ngIf="adminPageViewModel$ | async as adminPageViewModel">
+	<ng-container *ngIf="adminPageViewModel$$$() as adminPageViewModel">
 		<div class="menu">
 			<p-menu [model]="adminPageViewModel.menuItems"></p-menu>
 		</div>
-	
+
 		<div class="content">
 			<router-outlet></router-outlet>
 		</div>

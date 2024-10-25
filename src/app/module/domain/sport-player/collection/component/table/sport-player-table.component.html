@@ -1,31 +1,44 @@
-<section class="sport-player-table" *ngIf="entityTableViewModel$ | async as entityTableViewModel">
-	<p-table [value]="entityTableViewModel.entities" sortField="name" sortMode="multiple" styleClass="p-datatable-striped p-datatable-sm"
-		responsiveLayout="scroll" [paginator]="true" [rows]="10">
-		<ng-template pTemplate="header">
-			<tr>
-				<th pSortableColumn="name">
-					Name <p-sortIcon field="name"></p-sortIcon>
-				</th>
+<section
+  class="sport-player-table"
+  *ngIf="entityTableViewModel$$$() as entityTableViewModel"
+>
+  <p-table
+    [value]="entityTableViewModel.entities"
+    sortField="name"
+    sortMode="multiple"
+    styleClass="p-datatable-striped p-datatable-sm"
+    responsiveLayout="scroll"
+    [paginator]="true"
+    [rows]="10"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="name">
+          Name <p-sortIcon field="name"></p-sortIcon>
+        </th>
 
-				<th></th>
-			</tr>
-		</ng-template>
+        <th></th>
+      </tr>
+    </ng-template>
 
-		<ng-template pTemplate="body" let-entity>
-			<tr>
-				<td>{{ entity.name }}</td>
+    <ng-template pTemplate="body" let-entity>
+      <tr>
+        <td>{{ entity.name }}</td>
 
-				<td>
-					<ng-template
-                        [ngxPermissionsOnly]="
-                            entityTableViewModel.buttonPermissions
-                        "
-                    >
-						<button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
-							(click)="entityTableViewModel.editEntity$$.next(entity)"></button>
-					</ng-template>
-				</td>
-			</tr>
-		</ng-template>
-	</p-table>
+        <td>
+          <ng-template
+            [ngxPermissionsOnly]="entityTableViewModel.buttonPermissions"
+          >
+            <button
+              pButton
+              pRipple
+              icon="pi pi-pencil"
+              class="p-button-rounded p-button-success mr-2"
+              (click)="entityTableViewModel.editEntity$$.next(entity)"
+            ></button>
+          </ng-template>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
 </section>

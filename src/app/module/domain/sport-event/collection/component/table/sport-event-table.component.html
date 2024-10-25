@@ -1,4 +1,4 @@
-@if(entityTableViewModel$ | async; as entityTableViewModel) {
+@if(entityTableViewModel$$$(); as entityTableViewModel) {
   <section class="sport-event-table">
     <p-table [value]="entityTableViewModel.entities" sortField="name" sortMode="multiple" styleClass="p-datatable-striped p-datatable-sm"
       responsiveLayout="scroll" [paginator]="true" [rows]="10">

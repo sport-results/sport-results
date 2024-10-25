@@ -1,14 +1,20 @@
-import { Observable } from 'rxjs';
-import { Component, inject, Input } from '@angular/core';
+import {
+  Component,
+  EnvironmentInjector,
+  inject,
+  Input,
+  Signal,
+} from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 
 @Component({
   template: '',
 })
 export class EntityFormComponent<T> {
+  protected injector = inject(EnvironmentInjector);
   protected router = inject(Router);
 
-  entityFormViewModel$!: Observable<T>;
+  entityFormViewModel$$$!: Signal<T | undefined>;
 
   @Input()
   entityId: string | undefined;

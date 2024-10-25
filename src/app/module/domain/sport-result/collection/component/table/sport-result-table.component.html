@@ -1,4 +1,4 @@
-<section class="sport-result-table" *ngIf="entityTableViewModel$ | async as entityTableViewModel">
+<section class="sport-result-table" *ngIf="entityTableViewModel$$$() as entityTableViewModel">
 	<p-table [value]="entityTableViewModel.entities" sortField="name" sortMode="multiple" styleClass="p-datatable-striped p-datatable-sm"
 		responsiveLayout="scroll" [paginator]="true" [rows]="10">
 		<ng-template pTemplate="header">

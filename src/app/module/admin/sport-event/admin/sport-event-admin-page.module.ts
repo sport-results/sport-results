@@ -5,10 +5,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import {
-  SportEventCollectionModule,
-  SportEventFormModule,
-} from '@app/domain/sport-event';
+import { SportEventFormModule } from '@app/domain/sport-event';
 
 import { SportEventAdminPageComponent } from './page/admin';
 import {
@@ -23,13 +20,10 @@ import { SportEventAdminPageRoutingModule } from './sport-event-admin-page-routi
     CommonModule,
     SportEventAdminPageRoutingModule,
     SportEventFormModule,
-    SportEventCollectionModule,
     ButtonModule,
     NgxPermissionsModule,
     ToolbarModule,
   ],
-  providers: [
-    SportEventListPageResolverService,
-  ],
+  providers: [SportEventListPageResolverService],
 })
 export class SportEventAdminPageModule {}

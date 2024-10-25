@@ -1,23 +1,28 @@
-import { Observable } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-
-import { RoleTableService, RoleTableViewModel } from './role-table.service';
+import { RoleTableService } from './role-table.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [RoleTableService],
-    selector: 'sr-role-table',
-    templateUrl: './role-table.component.html',
-    styleUrls: ['./role-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [RoleTableService],
+  selector: 'sr-role-table',
+  templateUrl: './role-table.component.html',
+  styleUrls: ['./role-table.component.scss'],
 })
 export class RoleTableComponent implements OnInit {
-    public roleTableViewModel$!: Observable<RoleTableViewModel>;
+  private componentService = inject(RoleTableService);
 
-    public constructor(private componentService: RoleTableService) {}
+  public roleTableViewModel$$$ = toSignal(
+    this.componentService.roleTableViewModel$
+  );
 
-    public ngOnInit(): void {
-        this.componentService.init$();
-        this.roleTableViewModel$ = this.componentService.roleTableViewModel$;
-    }
+  public ngOnInit(): void {
+    this.componentService.init$();
+  }
 }

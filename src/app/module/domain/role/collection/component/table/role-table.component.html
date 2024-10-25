@@ -1,6 +1,6 @@
 <section
     class="artist-table"
-    *ngIf="roleTableViewModel$ | async as roleTableViewModel"
+    *ngIf="roleTableViewModel$$$() as roleTableViewModel"
 >
     <p-table
         [value]="roleTableViewModel.roleEntities"

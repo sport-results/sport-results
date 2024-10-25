@@ -1,10 +1,14 @@
-import { Observable } from 'rxjs';
-
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SportCategoryStoreService } from '@app/api/domain/sport-category';
 import { SportCategoryAdminPermissionsService } from '@app/api/admin/sport-category';
 import { RoleNamesEnum } from '@app/api/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,12 +18,14 @@ import { RoleNamesEnum } from '@app/api/common';
 })
 export class SportCategoryAdminPageComponent implements OnInit {
   public buttonPermissions: string[] = [];
-  public isNewEntityButtonEnabled$!: Observable<boolean>;
+  public isNewEntityButtonEnabled$$$ = toSignal(
+    inject(SportCategoryStoreService).selectNewEntityButtonEnabled$(),
+    { initialValue: false }
+  );
 
   public constructor(
     private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private sportCategoryStoreService: SportCategoryStoreService
+    private router: Router
   ) {}
 
   public clickHandler(): void {
@@ -28,8 +34,6 @@ export class SportCategoryAdminPageComponent implements OnInit {
 
   public ngOnInit(): void {
     this.initButtonPermissions();
-    this.isNewEntityButtonEnabled$ =
-      this.sportCategoryStoreService.selectNewEntityButtonEnabled$();
   }
 
   private initButtonPermissions(): void {

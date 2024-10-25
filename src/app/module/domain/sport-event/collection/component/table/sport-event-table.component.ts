@@ -1,30 +1,34 @@
-import { Observable } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-
-import { SportEventTableService, EntityTableViewModel } from './sport-event-table.service';
+import { SportEventTableService } from './sport-event-table.service';
 import { TableModule } from 'primeng/table';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { ButtonModule } from 'primeng/button';
 import { AsyncPipe } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
-	changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AsyncPipe, ButtonModule, NgxPermissionsModule, TableModule],
-	providers: [SportEventTableService],
-	selector: 'app-sport-event-table',
-	templateUrl: './sport-event-table.component.html',
+  providers: [SportEventTableService],
+  selector: 'app-sport-event-table',
+  templateUrl: './sport-event-table.component.html',
   standalone: true,
-	styleUrls: ['./sport-event-table.component.scss'],
+  styleUrls: ['./sport-event-table.component.scss'],
 })
 export class SportEventTableComponent implements OnInit {
-	public entityTableViewModel$!: Observable<EntityTableViewModel>;
+  private componentService = inject(SportEventTableService);
 
-	public constructor(private componentService: SportEventTableService) {
-	}
+  public entityTableViewModel$$$ = toSignal(
+    this.componentService.entityTableViewModel$
+  );
 
-	public ngOnInit(): void {
-		this.componentService.init$();
-        this.entityTableViewModel$ = this.componentService.entityTableViewModel$;
-	}
+  public ngOnInit(): void {
+    this.componentService.init$();
+  }
 }

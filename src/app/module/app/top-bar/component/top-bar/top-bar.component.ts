@@ -1,14 +1,13 @@
-import { Observable } from 'rxjs';
-
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   Input,
   OnInit,
 } from '@angular/core';
 
-import { TopBarParams } from '../../api';
 import { TopBarService } from './top-bar.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,10 +16,9 @@ import { TopBarService } from './top-bar.service';
   styleUrls: ['./top-bar.component.scss'],
   templateUrl: './top-bar.component.html',
 })
-export class TopBarComponent implements OnInit {
-  params$!: Observable<TopBarParams>;
-
-  constructor(private componentService: TopBarService) {}
+export class TopBarComponent {
+  private componentService = inject(TopBarService);
+  params$$$ = toSignal(this.componentService.init$());
 
   @Input()
   title: string = '';
@@ -35,10 +33,6 @@ export class TopBarComponent implements OnInit {
 
   logoutHandler(): void {
     this.componentService.logout();
-  }
-
-  ngOnInit(): void {
-    this.params$ = this.componentService.init$();
   }
 
   logoClickHandler(): void {

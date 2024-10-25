@@ -1,11 +1,12 @@
-import { Observable } from 'rxjs';
-
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-
 import {
-  SportCategoryExpandableTableService,
-  EntityTableViewModel,
-} from './sport-category-expandable-table.service';
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
+
+import { SportCategoryExpandableTableService } from './sport-category-expandable-table.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,14 +16,13 @@ import {
   styleUrls: ['./sport-category-expandable-table.component.scss'],
 })
 export class SportCategoryExpandableTableComponent implements OnInit {
-  public entityTableViewModel$!: Observable<EntityTableViewModel>;
+  private componentService = inject(SportCategoryExpandableTableService);
 
-  public constructor(
-    private componentService: SportCategoryExpandableTableService
-  ) {}
+  public entityTableViewModel$$$ = toSignal(
+    this.componentService.entityTableViewModel$
+  );
 
   public ngOnInit(): void {
     this.componentService.init$();
-    this.entityTableViewModel$ = this.componentService.entityTableViewModel$;
   }
 }

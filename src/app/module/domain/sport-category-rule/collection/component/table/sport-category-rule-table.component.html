@@ -1,6 +1,6 @@
 <section
   class="sport-category-rule-table"
-  *ngIf="entityTableViewModel$ | async as entityTableViewModel"
+  *ngIf="entityTableViewModel$$$() as entityTableViewModel"
 >
   <p-table
     [value]="entityTableViewModel.entities"
