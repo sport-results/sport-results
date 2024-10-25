@@ -1,27 +1,31 @@
-import { Observable } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Input,
+  OnInit,
+} from '@angular/core';
 
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-
-import { SportCategoryRuleTableService, EntityTableViewModel } from './sport-category-rule-table.service';
+import { SportCategoryRuleTableService } from './sport-category-rule-table.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [SportCategoryRuleTableService],
-	selector: 'sr-sport-category-rule-table',
-	templateUrl: './sport-category-rule-table.component.html',
-	styleUrls: ['./sport-category-rule-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SportCategoryRuleTableService],
+  selector: 'sr-sport-category-rule-table',
+  templateUrl: './sport-category-rule-table.component.html',
+  styleUrls: ['./sport-category-rule-table.component.scss'],
 })
 export class SportCategoryRuleTableComponent implements OnInit {
-	@Input()
-	sportCategoryId!: string;
+  private componentService = inject(SportCategoryRuleTableService);
+  @Input()
+  sportCategoryId!: string;
 
-	public entityTableViewModel$!: Observable<EntityTableViewModel>;
+  public entityTableViewModel$$$ = toSignal(
+    this.componentService.entityTableViewModel$
+  );
 
-	public constructor(private componentService: SportCategoryRuleTableService) {
-	}
-
-	public ngOnInit(): void {
-		this.componentService.init$(this.sportCategoryId);
-        this.entityTableViewModel$ = this.componentService.entityTableViewModel$;
-	}
+  public ngOnInit(): void {
+    this.componentService.init$(this.sportCategoryId);
+  }
 }

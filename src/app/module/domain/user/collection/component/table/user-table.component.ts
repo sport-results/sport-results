@@ -1,27 +1,28 @@
-import { Observable } from 'rxjs';
-
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-
 import {
-    UserTableService,
-    UserTableViewModel,
-} from './user-table.service';
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
+
+import { UserTableService } from './user-table.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [UserTableService],
-    selector: 'sr-user-table',
-    templateUrl: './user-table.component.html',
-    styleUrls: ['./user-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [UserTableService],
+  selector: 'sr-user-table',
+  templateUrl: './user-table.component.html',
+  styleUrls: ['./user-table.component.scss'],
 })
 export class UserTableComponent implements OnInit {
-    public userTableViewModel$!: Observable<UserTableViewModel>;
+  private componentService = inject(UserTableService);
 
-    public constructor(private componentService: UserTableService) {}
+  public userTableViewModel$$$ = toSignal(
+    this.componentService.userTableViewModel$
+  );
 
-    public ngOnInit(): void {
-        this.componentService.init$();
-        this.userTableViewModel$ =
-            this.componentService.userTableViewModel$;
-    }
+  public ngOnInit(): void {
+    this.componentService.init$();
+  }
 }

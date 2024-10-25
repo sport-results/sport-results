@@ -1,24 +1,28 @@
-import { Observable } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-
-import { SportNetworkTableService, EntityTableViewModel } from './sport-network-table.service';
+import { SportNetworkTableService } from './sport-network-table.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	providers: [SportNetworkTableService],
-	selector: 'sr-sport-network-table',
-	templateUrl: './sport-network-table.component.html',
-	styleUrls: ['./sport-network-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [SportNetworkTableService],
+  selector: 'sr-sport-network-table',
+  templateUrl: './sport-network-table.component.html',
+  styleUrls: ['./sport-network-table.component.scss'],
 })
 export class SportNetworkTableComponent implements OnInit {
-	public entityTableViewModel$!: Observable<EntityTableViewModel>;
+  private componentService = inject(SportNetworkTableService);
 
-	public constructor(private componentService: SportNetworkTableService) {
-	}
+  public entityTableViewModel$$$ = toSignal(
+    this.componentService.entityTableViewModel$
+  );
 
-	public ngOnInit(): void {
-		this.componentService.init$();
-        this.entityTableViewModel$ = this.componentService.entityTableViewModel$;
-	}
+  public ngOnInit(): void {
+    this.componentService.init$();
+  }
 }

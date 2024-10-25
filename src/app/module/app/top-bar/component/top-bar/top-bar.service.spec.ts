@@ -7,6 +7,7 @@ import { NetworkPlayerStoreService } from '@app/api/domain/network-player';
 import { SportNetworkStoreService } from '@app/api/domain/sport-network';
 import { SportEventStoreService } from '@app/api/domain/sport-event';
 import { PermissionStoreService } from '@app/api/domain/permission';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 describe('TopBarService', () => {
   let service: TopBarService;
@@ -29,6 +30,7 @@ describe('TopBarService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
+        provideExperimentalZonelessChangeDetection(),
         TopBarService,
         {
           provide: ApplicationStoreService,

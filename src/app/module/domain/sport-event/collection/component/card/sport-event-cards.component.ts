@@ -1,23 +1,20 @@
-import { Observable } from 'rxjs';
-
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   Input,
   OnInit,
 } from '@angular/core';
 
-import {
-  SportEventCardsService,
-  EntityCardsViewModel,
-} from './sport-event-cards.service';
+import { SportEventCardsService } from './sport-event-cards.service';
 
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { ButtonModule } from 'primeng/button';
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 
 import { SportEventEntity } from '@app/api/domain/sport-event';
 import { SportEventCardComponent } from '../../../view';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,14 +31,15 @@ import { SportEventCardComponent } from '../../../view';
   styleUrls: ['./sport-event-cards.component.scss'],
 })
 export class SportEventCardsComponent implements OnInit {
+  private componentService = inject(SportEventCardsService);
+
   @Input()
   public sportEventsByPermissions!: SportEventEntity[];
-  public entityCardViewModel$!: Observable<EntityCardsViewModel>;
-
-  public constructor(private componentService: SportEventCardsService) {}
+  public entityCardViewModel$$$ = toSignal(
+    this.componentService.entityCardViewModel$
+  );
 
   public ngOnInit(): void {
     this.componentService.init$(this.sportEventsByPermissions);
-    this.entityCardViewModel$ = this.componentService.entityCardViewModel$;
   }
 }

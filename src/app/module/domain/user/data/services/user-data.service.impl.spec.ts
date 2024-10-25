@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { UserDataServiceImpl } from './user-data.service.impl';
 import { Firestore } from '@angular/fire/firestore';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 jest.mock('@app/engine', () => {
   return {
@@ -19,6 +20,7 @@ describe('UserDataServiceImpl', () => {
     firestoreMock = {};
     TestBed.configureTestingModule({
       providers: [
+        provideExperimentalZonelessChangeDetection(),
         UserDataServiceImpl,
         { provide: Firestore, useValue: firestoreMock },
       ],

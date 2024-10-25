@@ -1,10 +1,14 @@
-import { Observable } from 'rxjs';
-
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserAdminPermissionsService } from '@app/api/admin/user';
 import { UserStoreService } from '@app/api/domain/user';
 import { RoleNamesEnum } from '@app/api/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,12 +18,14 @@ import { RoleNamesEnum } from '@app/api/common';
 })
 export class UserAdminPageComponent implements OnInit {
   public buttonPermissions: string[] = [];
-  public isNewEntityButtonEnabled$!: Observable<boolean>;
+  public isNewEntityButtonEnabled$$$ = toSignal(
+    inject(UserStoreService).selectNewEntityButtonEnabled$(),
+    { initialValue: false }
+  );
 
   public constructor(
     private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private userStoreService: UserStoreService
+    private router: Router
   ) {}
 
   public clickHandler(): void {
@@ -28,8 +34,6 @@ export class UserAdminPageComponent implements OnInit {
 
   public ngOnInit(): void {
     this.initButtonPermissions();
-    this.isNewEntityButtonEnabled$ =
-      this.userStoreService.selectNewEntityButtonEnabled$();
   }
 
   private initButtonPermissions(): void {

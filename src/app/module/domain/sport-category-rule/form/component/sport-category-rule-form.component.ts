@@ -4,6 +4,7 @@ import {
   inject,
   Input,
   OnInit,
+  runInInjectionContext,
 } from '@angular/core';
 
 import {
@@ -11,6 +12,7 @@ import {
   SportCategoryRuleFormViewModel,
 } from './sport-category-rule-form.service';
 import { EntityFormComponent } from '@app/core/entity';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,7 +34,15 @@ export class SportCategoryRuleFormComponent
     const params = this.extractAllRouteParams(this.router);
 
     this.userId = params['userId'];
-    this.componentService.init$(this.entityId, this.userId, this.backUrl, this.parentEntityId);
-    this.entityFormViewModel$ = this.componentService.entityFormViewModel$;
+    this.componentService.init$(
+      this.entityId,
+      this.userId,
+      this.backUrl,
+      this.parentEntityId
+    );
+
+    runInInjectionContext(this.injector, () => {
+      this.entityFormViewModel$$$ = toSignal(this.componentService.entityFormViewModel$);
+    });
   }
 }

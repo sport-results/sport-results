@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PeriodResultComponent } from './period-result.component';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 describe('PeriodResultComponent', () => {
   let component: PeriodResultComponent;
@@ -8,7 +9,8 @@ describe('PeriodResultComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PeriodResultComponent]
+      declarations: [PeriodResultComponent],
+      providers: [provideExperimentalZonelessChangeDetection()],
     });
     fixture = TestBed.createComponent(PeriodResultComponent);
     component = fixture.componentInstance;

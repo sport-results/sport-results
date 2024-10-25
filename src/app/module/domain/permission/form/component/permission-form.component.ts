@@ -3,6 +3,7 @@ import {
   Component,
   inject,
   OnInit,
+  runInInjectionContext,
 } from '@angular/core';
 import { EntityFormComponent } from '@app/core/entity';
 
@@ -10,6 +11,7 @@ import {
   PermissionFormService,
   PermissionFormViewModel,
 } from './permission-form.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,13 +24,16 @@ export class PermissionFormComponent
   extends EntityFormComponent<PermissionFormViewModel>
   implements OnInit
 {
-  public componentService = inject(PermissionFormService);
+  private componentService = inject(PermissionFormService);
 
   public ngOnInit(): void {
     const params = this.extractAllRouteParams(this.router);
 
     this.userId = params['userId'];
     this.componentService.init$(this.entityId, this.userId, this.backUrl);
-    this.entityFormViewModel$ = this.componentService.entityFormViewModel$;
+
+    runInInjectionContext(this.injector, () => {
+      this.entityFormViewModel$$$ = toSignal(this.componentService.entityFormViewModel$);
+    });
   }
 }

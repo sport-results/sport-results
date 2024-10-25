@@ -1,8 +1,16 @@
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Input,
+  OnInit,
+  runInInjectionContext,
+} from '@angular/core';
 import { EntityFormComponent } from '@app/core/entity';
 
 import { SportEventFormViewModel } from './sport-event-form.models';
 import { SportEventFormService } from './sport-event-form.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,13 +33,15 @@ export class SportEventFormComponent
 
     this.userId = params['userId'];
     this.sportNetworkId = params['sportNetworkId'];
-
     this.componentService.init$(
       this.entityId,
       this.sportNetworkId,
       this.userId,
       this.backUrl
     );
-    this.entityFormViewModel$ = this.componentService.entityFormViewModel$;
+
+    runInInjectionContext(this.injector, () => {
+      this.entityFormViewModel$$$ = toSignal(this.componentService.entityFormViewModel$);
+    });
   }
 }

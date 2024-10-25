@@ -1,4 +1,7 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import {
+  NO_ERRORS_SCHEMA,
+  provideExperimentalZonelessChangeDetection,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdminPageComponent } from './admin-page.component';
@@ -27,7 +30,10 @@ describe('AdminPageComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [AdminPageComponent],
-      providers: [provideRouter([])],
+      providers: [
+        provideExperimentalZonelessChangeDetection(),
+        provideRouter([]),
+      ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 

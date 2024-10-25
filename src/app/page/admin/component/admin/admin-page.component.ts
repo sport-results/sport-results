@@ -1,5 +1,3 @@
-import { Observable } from 'rxjs';
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,8 +5,8 @@ import {
   OnInit,
 } from '@angular/core';
 
-import { AdminPageService, AdminPageViewModel } from './admin-page.service';
-
+import { AdminPageService } from './admin-page.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,10 +18,11 @@ import { AdminPageService, AdminPageViewModel } from './admin-page.service';
 export class AdminPageComponent implements OnInit {
   private componentService = inject(AdminPageService);
 
-  public adminPageViewModel$!: Observable<AdminPageViewModel>;
+  public adminPageViewModel$$$ = toSignal(
+    this.componentService.adminPageViewModel$
+  );
 
   public ngOnInit(): void {
     this.componentService.init$();
-    this.adminPageViewModel$ = this.componentService.adminPageViewModel$;
   }
 }

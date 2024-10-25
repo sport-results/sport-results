@@ -4,7 +4,11 @@ import { UserProfileComponent } from './user-profile.component';
 import { ApplicationStoreService } from '@app/api/core/application';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
-import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import {
+  Component,
+  NO_ERRORS_SCHEMA,
+  provideExperimentalZonelessChangeDetection,
+} from '@angular/core';
 import { UserDashboardComponent } from '../../../dashboard';
 
 @Component({
@@ -24,8 +28,8 @@ describe('UserProfileComponent', () => {
     };
 
     TestBed.overrideComponent(UserProfileComponent, {
-        remove: { imports: [UserDashboardComponent] },
-        add: { imports: [UserDashboardComponentMock] },
+      remove: { imports: [UserDashboardComponent] },
+      add: { imports: [UserDashboardComponentMock] },
     });
   });
 
@@ -33,6 +37,7 @@ describe('UserProfileComponent', () => {
     await TestBed.configureTestingModule({
       imports: [UserProfileComponent],
       providers: [
+        provideExperimentalZonelessChangeDetection(),
         provideRouter([]),
         {
           provide: ApplicationStoreService,

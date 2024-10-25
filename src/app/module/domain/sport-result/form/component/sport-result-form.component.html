@@ -1,6 +1,6 @@
 <section
   class="sport-result-form"
-  *ngIf="entityFormViewModel$ | async as entityFormViewModel"
+  *ngIf="entityFormViewModel$$$() as entityFormViewModel"
 >
   <form class="form" [formGroup]="entityFormViewModel.formGroup">
     <input name="uid" formControlName="uid" hidden />

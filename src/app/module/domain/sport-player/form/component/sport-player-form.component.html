@@ -1,4 +1,4 @@
-<section class="sport-player-form" *ngIf="entityFormViewModel$ | async as entityFormViewModel">
+<section class="sport-player-form" *ngIf="entityFormViewModel$$$() as entityFormViewModel">
 	<form [formGroup]="entityFormViewModel.formGroup">
 		<input name="uid" formControlName="uid" hidden />
 		<input name="meta" formControlName="meta" hidden />

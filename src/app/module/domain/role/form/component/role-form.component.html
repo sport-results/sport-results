@@ -1,6 +1,6 @@
 <section
     class="artist-form"
-    *ngIf="entityFormViewModel$ | async as roleFormViewModel"
+    *ngIf="entityFormViewModel$$$() as roleFormViewModel"
 >
     <form [formGroup]="roleFormViewModel.formGroup" *ngIf="roleFormViewModel.formGroup">
         <input name="uid" formControlName="uid" hidden />

@@ -1,10 +1,11 @@
 import { Observable } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal, Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NetworkPlayerStoreService } from '@app/api/domain/network-player';
 import { NetworkPlayerAdminPermissionsService } from '@app/api/admin/network-player';
 import { RoleNamesEnum } from '@app/api/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -14,7 +15,7 @@ import { RoleNamesEnum } from '@app/api/common';
 })
 export class NetworkPlayerAdminPageComponent implements OnInit {
   public buttonPermissions: string[] = [];
-  public isNewEntityButtonEnabled$!: Observable<boolean>;
+  public isNewEntityButtonEnabled$$$: Signal<boolean | undefined> = signal(false);
 
   public constructor(
     private activatedRoute: ActivatedRoute,
@@ -28,8 +29,8 @@ export class NetworkPlayerAdminPageComponent implements OnInit {
 
   public ngOnInit(): void {
     this.initButtonPermissions();
-    this.isNewEntityButtonEnabled$ =
-      this.networkPlayerStoreService.selectNewEntityButtonEnabled$();
+    this.isNewEntityButtonEnabled$$$ =
+      toSignal(this.networkPlayerStoreService.selectNewEntityButtonEnabled$());
   }
 
   private initButtonPermissions(): void {

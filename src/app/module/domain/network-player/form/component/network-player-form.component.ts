@@ -4,6 +4,7 @@ import {
   inject,
   Input,
   OnInit,
+  runInInjectionContext,
 } from '@angular/core';
 
 import {
@@ -11,6 +12,7 @@ import {
   NetworkPlayerFormViewModel,
 } from './network-player-form.service';
 import { EntityFormComponent } from '@app/core/entity';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,6 +42,8 @@ export class NetworkPlayerFormComponent
       this.userId,
       this.backUrl
     );
-    this.entityFormViewModel$ = this.componentService.entityFormViewModel$;
+    runInInjectionContext(this.injector, () => {
+      this.entityFormViewModel$$$ = toSignal(this.componentService.entityFormViewModel$);
+    });
   }
 }

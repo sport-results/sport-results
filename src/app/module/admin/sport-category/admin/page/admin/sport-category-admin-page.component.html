@@ -8,7 +8,7 @@
 					label="Add SportCategory"
 					icon="pi pi-plus"
 					(onClick)="clickHandler()"
-					[disabled]="(isNewEntityButtonEnabled$ | async) === false"
+					[disabled]="isNewEntityButtonEnabled$$$() === false"
 				>
 				</p-button>
 			</ng-template>

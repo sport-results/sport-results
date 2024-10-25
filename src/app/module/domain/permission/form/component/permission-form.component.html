@@ -1,30 +1,43 @@
-<section class="permission-form" *ngIf="entityFormViewModel$ | async as entityFormViewModel">
-	<form [formGroup]="entityFormViewModel.formGroup">
-		<input name="uid" formControlName="uid" hidden />
-		<input name="meta" formControlName="meta" hidden />
+<section
+  class="permission-form"
+  *ngIf="entityFormViewModel$$$() as entityFormViewModel"
+>
+  <form [formGroup]="entityFormViewModel.formGroup">
+    <input name="uid" formControlName="uid" hidden />
+    <input name="meta" formControlName="meta" hidden />
     <input name="resourceId" formControlName="resourceId" hidden />
     <input name="resourceType" formControlName="resourceType" hidden />
     <input name="userId" formControlName="userId" hidden />
 
-		<div class="field">
+    <div class="field">
       <span class="p-float-label">
-          <p-multiSelect
-              id="actions"
-              [options]="entityFormViewModel.selectableActions"
-              placeholder="Select an action"
-              formControlName="actions"
-              display="chip"
-          />
+        <p-multiSelect
+          id="actions"
+          [options]="entityFormViewModel.selectableActions"
+          placeholder="Select an action"
+          formControlName="actions"
+          display="chip"
+        />
 
-          <label for="actions">Actions</label>
+        <label for="actions">Actions</label>
       </span>
-  </div>
+    </div>
 
-		<div style="margin-top: 10px" fxLayout="row" fxLayoutAlign="space-around">
-			<button pButton type="button" label="Submit" (click)="entityFormViewModel.submit$$.next()"
-				[disabled]="!entityFormViewModel.formGroup.valid"></button>
+    <div style="margin-top: 10px" fxLayout="row" fxLayoutAlign="space-around">
+      <button
+        pButton
+        type="button"
+        label="Submit"
+        (click)="entityFormViewModel.submit$$.next()"
+        [disabled]="!entityFormViewModel.formGroup.valid"
+      ></button>
 
-			<button pButton type="button" label="Cancel" (click)="entityFormViewModel.cancel$$.next()"></button>
-		</div>
-	</form>
+      <button
+        pButton
+        type="button"
+        label="Cancel"
+        (click)="entityFormViewModel.cancel$$.next()"
+      ></button>
+    </div>
+  </form>
 </section>

@@ -6,6 +6,7 @@ import {
   SportNetworkUtilService,
 } from '@app/api/domain/sport-network';
 import { UserDataService, UserUtilService } from '@app/api/domain/user';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 jest.mock('@app/engine', () => {
   return {
@@ -28,6 +29,7 @@ describe('UserEffectServiceImpl', () => {
 
     TestBed.configureTestingModule({
       providers: [
+        provideExperimentalZonelessChangeDetection(),
         UserEffectServiceImpl,
         {
           provide: SportNetworkStoreService,

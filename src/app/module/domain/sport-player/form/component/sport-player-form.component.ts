@@ -3,6 +3,7 @@ import {
   Component,
   inject,
   OnInit,
+  runInInjectionContext,
 } from '@angular/core';
 
 import {
@@ -10,6 +11,7 @@ import {
   SportPlayerFormViewModel,
 } from './sport-player-form.service';
 import { EntityFormComponent } from '@app/core/entity';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,6 +31,11 @@ export class SportPlayerFormComponent
 
     this.userId = params['userId'];
     this.componentService.init$(this.entityId, this.userId, this.backUrl);
-    this.entityFormViewModel$ = this.componentService.entityFormViewModel$;
+
+    runInInjectionContext(this.injector, () => {
+      this.entityFormViewModel$$$ = toSignal(
+        this.componentService.entityFormViewModel$
+      );
+    });
   }
 }

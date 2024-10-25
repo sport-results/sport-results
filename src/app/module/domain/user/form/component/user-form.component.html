@@ -1,6 +1,6 @@
 <section
     class="artist-form"
-    *ngIf="userFormViewModel$ | async as userFormViewModel"
+    *ngIf="userFormViewModel$$$() as userFormViewModel"
 >
     <form
         [formGroup]="userFormViewModel.formGroup"

@@ -1,4 +1,4 @@
-<ng-container *ngIf="params$ | async as params">
+<ng-container *ngIf="params$$$() as params">
   <section class="top-bar">
     <p-menubar [model]="params.menuItems">
       <ng-template pTemplate="start">
@@ -15,12 +15,12 @@
               (logout)="logoutHandler()"
             ></sr-user-avatar>
           </ng-container>
-  
+
           <ng-container *mcIsAuthenticated="false">
             <div class="login-container">
               <a class="login" (click)="loginClickHandler()"
                 ><i class="pi pi-sign-in"></i>
-  
+
                 <span> login </span></a
               >
             </div>
