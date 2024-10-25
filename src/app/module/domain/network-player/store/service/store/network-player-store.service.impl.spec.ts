@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { NetworkPlayerStoreServiceImpl } from './network-player-store.service.impl';
 import { Firestore } from '@angular/fire/firestore';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 jest.mock('@app/engine', () => {
   return {
@@ -20,6 +21,7 @@ describe('NetworkPlayerStoreServiceImpl', () => {
     firestoreMock = {};
     TestBed.configureTestingModule({
       providers: [
+        provideExperimentalZonelessChangeDetection(),
         NetworkPlayerStoreServiceImpl,
         provideMockStore(),
         { provide: Firestore, useValue: firestoreMock },

@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserDashboardComponent } from './user-dashboard.component';
 import { UserDashboardService } from './user-dashboard.service';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 describe('UserDashboardComponent', () => {
   let component: UserDashboardComponent;
@@ -26,6 +27,7 @@ describe('UserDashboardComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [UserDashboardComponent],
+      providers: [provideExperimentalZonelessChangeDetection()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserDashboardComponent);

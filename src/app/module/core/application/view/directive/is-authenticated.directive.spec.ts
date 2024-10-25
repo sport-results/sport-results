@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  provideExperimentalZonelessChangeDetection,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IsAuthenticatedDirective } from './is-authenticated.directive';
 import { ApplicationStoreService } from '@app/api/core/application';
@@ -16,22 +19,26 @@ describe('IsAuthenticatedDirective', () => {
 
   beforeEach(() => {
     applicationStoreServiceMock = {
-      selectIsAuthenticated$: () => of(true)
+      selectIsAuthenticated$: () => of(true),
     };
-  })
+  });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [IsAuthenticatedDirective, HostComponent],
-      providers: [{
-        provide: ApplicationStoreService, useValue: applicationStoreServiceMock
-      }]
+      providers: [
+        provideExperimentalZonelessChangeDetection(),
+        {
+          provide: ApplicationStoreService,
+          useValue: applicationStoreServiceMock,
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
 
-    element =  fixture.nativeElement;
+    element = fixture.nativeElement;
   });
   it('should create an instance', () => {
     expect(element).toBeTruthy();

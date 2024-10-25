@@ -5,6 +5,7 @@ import { ApplicationStoreService } from '@app/api/core/application';
 import { RoleDataService } from '@app/api/domain/role';
 
 import { UserUtilServiceImpl } from './user-util.service.impl';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 describe('UserUtilServiceImpl', () => {
   let service: UserUtilServiceImpl;
@@ -26,6 +27,7 @@ describe('UserUtilServiceImpl', () => {
 
     TestBed.configureTestingModule({
       providers: [
+        provideExperimentalZonelessChangeDetection(),
         UserUtilServiceImpl,
         {
           provide: ApplicationStoreService,

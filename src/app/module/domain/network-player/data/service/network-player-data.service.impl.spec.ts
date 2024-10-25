@@ -4,6 +4,7 @@ import {
 import { TestBed } from '@angular/core/testing';
 
 import { NetworkPlayerDataServiceImpl } from './network-player-data.service.impl';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 describe('NetworkPlayerDataServiceImpl', () => {
     let service: NetworkPlayerDataServiceImpl;
@@ -11,7 +12,9 @@ describe('NetworkPlayerDataServiceImpl', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
-            providers: [NetworkPlayerDataServiceImpl],
+            providers: [
+              provideExperimentalZonelessChangeDetection(),
+              NetworkPlayerDataServiceImpl],
         });
 
         service = TestBed.inject(NetworkPlayerDataServiceImpl);

@@ -4,6 +4,7 @@ import {
 import { TestBed } from '@angular/core/testing';
 
 import { PermissionDataServiceImpl } from './permission-data.service.impl';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 describe('PermissionDataServiceImpl', () => {
     let service: PermissionDataServiceImpl;
@@ -11,7 +12,9 @@ describe('PermissionDataServiceImpl', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
-            providers: [PermissionDataServiceImpl],
+            providers: [
+              provideExperimentalZonelessChangeDetection(),
+              PermissionDataServiceImpl],
         });
 
         service = TestBed.inject(PermissionDataServiceImpl);

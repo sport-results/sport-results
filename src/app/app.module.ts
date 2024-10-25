@@ -1,7 +1,7 @@
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { ToastModule } from 'primeng/toast';
 
-import { NgModule } from '@angular/core';
+import { NgModule, provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
@@ -69,6 +69,7 @@ import { SportResultModule } from './module/domain/sport-result';
 
       return initializeAppCheck(getApp(), appCheckConfig);
     }),
+    provideExperimentalZonelessChangeDetection(),
     MessageService,
   ],
   bootstrap: [AppComponent],

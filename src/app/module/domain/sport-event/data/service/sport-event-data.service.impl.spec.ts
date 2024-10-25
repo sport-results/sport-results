@@ -1,23 +1,25 @@
-import {
-    HttpClientTestingModule,
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
 import { SportEventDataServiceImpl } from './sport-event-data.service.impl';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 describe('SportEventDataServiceImpl', () => {
-    let service: SportEventDataServiceImpl;
+  let service: SportEventDataServiceImpl;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: [SportEventDataServiceImpl],
-        });
-
-        service = TestBed.inject(SportEventDataServiceImpl);
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [
+        provideExperimentalZonelessChangeDetection(),
+        SportEventDataServiceImpl,
+      ],
     });
 
-    it('should be created', () => {
-        expect(service).toBeTruthy();
-    });
+    service = TestBed.inject(SportEventDataServiceImpl);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
 });
