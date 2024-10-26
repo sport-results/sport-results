@@ -1,26 +1,36 @@
-import {
-    HttpClientTestingModule,
-} from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
 import { NetworkPlayerDataServiceImpl } from './network-player-data.service.impl';
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { Firestore } from '@angular/fire/firestore';
+
+jest.mock('@app/engine', () => {
+  return {
+    FirestoreDataEngine: jest.fn(),
+  };
+});
 
 describe('NetworkPlayerDataServiceImpl', () => {
-    let service: NetworkPlayerDataServiceImpl;
+  let service: NetworkPlayerDataServiceImpl;
+  let firestoreMock;
+  let firestoreDataEngineMock;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: [
-              provideExperimentalZonelessChangeDetection(),
-              NetworkPlayerDataServiceImpl],
-        });
+  beforeEach(() => {
+    firestoreDataEngineMock = {};
+    firestoreMock = {};
 
-        service = TestBed.inject(NetworkPlayerDataServiceImpl);
+    TestBed.configureTestingModule({
+      providers: [
+        provideExperimentalZonelessChangeDetection(),
+        NetworkPlayerDataServiceImpl,
+        { provide: Firestore, useValue: firestoreMock },
+      ],
     });
 
-    it('should be created', () => {
-        expect(service).toBeTruthy();
-    });
+    service = TestBed.inject(NetworkPlayerDataServiceImpl);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
 });

@@ -1,4 +1,5 @@
 import { KeyValue } from '@angular/common';
+import { Injectable } from '@angular/core';
 import {
   collection,
   CollectionReference,
@@ -7,6 +8,9 @@ import {
   Firestore,
 } from '@angular/fire/firestore';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class FirestoreDataUtil {
   public createCollectionReference<R>(
     firestore: Firestore,
