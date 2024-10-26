@@ -3,7 +3,6 @@ import {
   Component,
   inject,
   Input,
-  OnInit,
 } from '@angular/core';
 
 import { TopBarService } from './top-bar.service';
@@ -18,6 +17,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 })
 export class TopBarComponent {
   private componentService = inject(TopBarService);
+
   params$$$ = toSignal(this.componentService.init$());
 
   @Input()

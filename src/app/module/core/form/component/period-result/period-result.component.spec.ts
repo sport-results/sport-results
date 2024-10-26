@@ -9,7 +9,7 @@ describe('PeriodResultComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PeriodResultComponent],
+      imports: [PeriodResultComponent],
       providers: [provideExperimentalZonelessChangeDetection()],
     });
     fixture = TestBed.createComponent(PeriodResultComponent);

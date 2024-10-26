@@ -27,21 +27,21 @@ import { SearchParam, SearchParams } from '@app/api/core/search';
 import { FirestoreDataUtil } from './firestore-data.util';
 
 export class FirestoreDataEngine extends DataEngine {
-  protected dataUtil = new FirestoreDataUtil();
   protected collection!: CollectionReference<EntityModel>;
   protected idCollection: CollectionReference<EntityModel>;
 
   public constructor(
     protected firestore: Firestore,
-    protected featureKey: string
+    protected featureKey: string,
+    protected firestoreDataUtil: FirestoreDataUtil
   ) {
     super();
 
-    this.collection = this.dataUtil.createCollectionReference<EntityModel>(
+    this.collection = this.firestoreDataUtil.createCollectionReference<EntityModel>(
       this.firestore,
       this.featureKey
     );
-    this.idCollection = this.dataUtil.createCollectionReference<EntityModel>(
+    this.idCollection = this.firestoreDataUtil.createCollectionReference<EntityModel>(
       this.firestore,
       'id'
     );
@@ -58,7 +58,7 @@ export class FirestoreDataEngine extends DataEngine {
     };
 
     return new Observable((subscriber) => {
-      const path = this.dataUtil.createPath(
+      const path = this.firestoreDataUtil.createPath(
         this.featureKey,
         uid,
         subCollectionPath
@@ -75,7 +75,7 @@ export class FirestoreDataEngine extends DataEngine {
   }
 
   public override delete$(uid: string, subCollectionPath?: string): Observable<string> {
-    const path = this.dataUtil.createPath(
+    const path = this.firestoreDataUtil.createPath(
       this.featureKey,
       uid,
       subCollectionPath
@@ -175,7 +175,7 @@ export class FirestoreDataEngine extends DataEngine {
   }
 
   public override load$(uid: string): Observable<EntityModel | undefined> {
-    const entityDocument = this.dataUtil.createDocumentReference(
+    const entityDocument = this.firestoreDataUtil.createDocumentReference(
       this.firestore,
       this.featureKey,
       uid
@@ -210,7 +210,7 @@ export class FirestoreDataEngine extends DataEngine {
     } as EntityModel;
 
     return new Observable((subscriber) => {
-      const path = this.dataUtil.createPath(
+      const path = this.firestoreDataUtil.createPath(
         this.featureKey,
         entityUpdate.uid,
         subCollectionPath

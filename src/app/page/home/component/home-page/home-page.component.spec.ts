@@ -1,3 +1,4 @@
+import { provideRouter } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HomePageComponent } from './home-page.component';
@@ -10,7 +11,10 @@ describe('HomePageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [HomePageComponent],
-      providers: [provideExperimentalZonelessChangeDetection()],
+      providers: [
+        provideExperimentalZonelessChangeDetection(),
+        provideRouter([]),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomePageComponent);

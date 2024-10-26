@@ -3,16 +3,28 @@ import { TestBed } from '@angular/core/testing';
 
 import { SportCategoryRuleDataServiceImpl } from './sport-category-rule-data.service.impl';
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { Firestore } from '@angular/fire/firestore';
+
+jest.mock('@app/engine', () => {
+  return {
+    FirestoreDataEngine: jest.fn(),
+  };
+});
 
 describe('SportCategoryRuleDataServiceImpl', () => {
   let service: SportCategoryRuleDataServiceImpl;
+  let firestoreMock;
+  let firestoreDataEngineMock;
 
   beforeEach(() => {
+    firestoreDataEngineMock = {};
+    firestoreMock = {};
+
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       providers: [
         provideExperimentalZonelessChangeDetection(),
         SportCategoryRuleDataServiceImpl,
+        { provide: Firestore, useValue: firestoreMock },
       ],
     });
 

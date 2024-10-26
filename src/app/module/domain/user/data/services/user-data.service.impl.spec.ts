@@ -18,6 +18,7 @@ describe('UserDataServiceImpl', () => {
   beforeEach(() => {
     firestoreDataEngineMock = {};
     firestoreMock = {};
+
     TestBed.configureTestingModule({
       providers: [
         provideExperimentalZonelessChangeDetection(),

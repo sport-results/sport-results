@@ -1,27 +1,33 @@
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
 import { RoleDataServiceImpl } from './role-data.service.impl';
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { Firestore } from '@angular/fire/firestore';
+
+jest.mock('@app/engine', () => {
+  return {
+    FirestoreDataEngine: jest.fn(),
+  };
+});
 
 describe('RoleDataServiceImpl', () => {
   let service: RoleDataServiceImpl;
-  let httpMock: HttpTestingController;
+  let firestoreMock;
+  let firestoreDataEngineMock;
 
   beforeEach(() => {
+    firestoreDataEngineMock = {};
+    firestoreMock = {};
+
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       providers: [
         provideExperimentalZonelessChangeDetection(),
         RoleDataServiceImpl,
+        { provide: Firestore, useValue: firestoreMock },
       ],
     });
 
     service = TestBed.inject(RoleDataServiceImpl);
-    httpMock = TestBed.get(HttpTestingController);
   });
 
   it('should be created', () => {
