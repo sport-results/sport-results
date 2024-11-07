@@ -1,6 +1,13 @@
 import { Observable } from 'rxjs';
 
-import { ChangeDetectionStrategy, Component, OnInit, signal, Signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  signal,
+  Signal,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NetworkPlayerStoreService } from '@app/api/domain/network-player';
 import { NetworkPlayerAdminPermissionsService } from '@app/api/admin/network-player';
@@ -14,13 +21,15 @@ import { toSignal } from '@angular/core/rxjs-interop';
   styleUrls: ['./network-player-admin-page.component.scss'],
 })
 export class NetworkPlayerAdminPageComponent implements OnInit {
+  private networkPlayerStoreService = inject(NetworkPlayerStoreService);
   public buttonPermissions: string[] = [];
-  public isNewEntityButtonEnabled$$$: Signal<boolean | undefined> = signal(false);
+  public isNewEntityButtonEnabled$$$ = toSignal(
+    this.networkPlayerStoreService.selectNewEntityButtonEnabled$()
+  );
 
   public constructor(
     private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private networkPlayerStoreService: NetworkPlayerStoreService
+    private router: Router
   ) {}
 
   public clickHandler(): void {
@@ -29,8 +38,6 @@ export class NetworkPlayerAdminPageComponent implements OnInit {
 
   public ngOnInit(): void {
     this.initButtonPermissions();
-    this.isNewEntityButtonEnabled$$$ =
-      toSignal(this.networkPlayerStoreService.selectNewEntityButtonEnabled$());
   }
 
   private initButtonPermissions(): void {

@@ -3,17 +3,21 @@ import {
   Component,
   inject,
   OnInit,
+  Signal,
 } from '@angular/core';
 
-import { UserTableService } from './user-table.service';
+import { UserTableService, UserTableViewModel } from './user-table.service';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { TableModule } from 'primeng/table';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [TableModule],
   providers: [UserTableService],
   selector: 'sr-user-table',
-  templateUrl: './user-table.component.html',
+  standalone: true,
   styleUrls: ['./user-table.component.scss'],
+  templateUrl: './user-table.component.html',
 })
 export class UserTableComponent implements OnInit {
   private componentService = inject(UserTableService);

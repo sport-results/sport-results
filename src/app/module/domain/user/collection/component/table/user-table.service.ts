@@ -1,4 +1,4 @@
-import { map, Observable, Subject, tap } from 'rxjs';
+import { map, Observable, of, Subject, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -34,11 +34,10 @@ export class UserTableService extends ComponentStore<UserTableState> {
         }
     );
     private readonly selectUserEntities = this.effect(() => {
-        return this.userStoreService.selectEntities$().pipe(
-            tap((userEntities) => {
-                this.updateUserEntitiesState(userEntities);
-            })
-        );
+        const userEntities = this.userStoreService.selectEntities()();
+        this.updateUserEntitiesState(userEntities);
+
+        return of(userEntities);
     });
     private readonly userEntities$ = this.select((state) => state.userEntities);
 

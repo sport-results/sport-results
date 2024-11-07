@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { EntityStoreService } from '@app/api/core/entity';
 import { UserEntity, UserStoreService } from '@app/api/domain/user';
 import { ComponentStore } from '@ngrx/component-store';
-import { Observable, switchMap, tap } from 'rxjs';
+import { Observable, of, switchMap, tap } from 'rxjs';
 
 export interface EntityComponentState<S> {
   entity: S | undefined;
@@ -51,11 +51,11 @@ export class EntityComponentStore<
 
   protected readonly fetchUser = (userId: string | undefined) =>
     this.effect(() => {
-      return this.userStoreService.selectEntityById$(userId || '').pipe(
-        tap((user) => {
-          this.updateUserState(user);
-        })
-      );
+      const user = this.userStoreService.selectEntityById(userId || '')();
+
+      this.updateUserState(user);
+
+      return of(user);
     });
 
   protected updateEntityState(entity: R | undefined): void {

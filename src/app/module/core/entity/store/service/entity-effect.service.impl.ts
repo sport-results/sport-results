@@ -102,6 +102,11 @@ export class EntityEffectServiceImpl extends EntityEffectService<
                 )
               : of(models as Entity[]);
 
+              x.subscribe({
+                next: (data) => console.log(data),
+                error: (error) => console.error(error)
+              })
+
           return x;
         })
       );

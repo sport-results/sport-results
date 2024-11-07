@@ -74,6 +74,12 @@ export class RoleStoreServiceImpl extends RoleStoreService {
         return this.store.pipe(select(RoleSelectors.selectRoleById(entityId)));
     }
 
+    public selectEntitiesByIds$(
+      ids: string[]
+  ): Observable<RoleEntity[]> {
+      return this.store.pipe(select(RoleSelectors.getEntitiesByIds(ids)));
+  }
+
     public selectNewEntityButtonEnabled$(): Observable<boolean> {
         return this.store.pipe(select(RoleSelectors.isNewEntityButtonEnabled));
     }

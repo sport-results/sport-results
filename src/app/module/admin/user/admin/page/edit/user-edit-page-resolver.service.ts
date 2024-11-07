@@ -13,7 +13,7 @@ export class UserEditPageResolverService implements Resolve<void> {
     ) {}
 
     public resolve(): void | Observable<void> | Promise<void> {
-        this.userStoreService.dispatchChangeNewEntityButtonEnabled(false);
+        this.userStoreService.setNewEntityButtonEnabled(false);
         this.roleStoreService.dispatchListEntitiesAction();
     }
 }

@@ -4,7 +4,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { UserCollectionModule, UserFormModule } from '@app/domain/user';
+
 
 import { AdminUserRoutingModule } from './admin-user-routing.module';
 import { UserAdminPageComponent } from './page/admin';
@@ -16,6 +16,7 @@ import {
     UserListPageComponent,
     UserListPageResolverService,
 } from './page/list';
+import { UserFormComponent, UserTableComponent } from '@app/domain/user';
 
 @NgModule({
     declarations: [
@@ -28,8 +29,8 @@ import {
         ButtonModule,
         NgxPermissionsModule,
         AdminUserRoutingModule,
-        UserFormModule,
-        UserCollectionModule,
+        UserFormComponent,
+        UserTableComponent,
         ToolbarModule,
     ],
     providers: [UserEditPageResolverService, UserListPageResolverService],

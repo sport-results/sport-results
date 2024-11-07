@@ -51,3 +51,8 @@ export const selectRoleById = (id: string) =>
     createSelector(getRoleEntities, (roleEntities: Dictionary<RoleEntity>) => {
         return roleEntities[id];
     });
+
+    export const getEntitiesByIds = (ids: string[]) =>
+      createSelector(getAllRole, (entities: RoleEntity[]) =>
+        entities.filter((entity) => ids.includes(entity.uid))
+      );

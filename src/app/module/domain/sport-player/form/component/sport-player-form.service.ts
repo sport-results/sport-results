@@ -1,4 +1,4 @@
-import { Observable, tap } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
   SportPlayerEntity,
@@ -49,11 +49,10 @@ export class SportPlayerFormService extends EntityFormComponentStore<
   );
 
   private readonly fetchUsers = this.effect(() => {
-    return this.userStoreService.selectEntities$().pipe(
-      tap((users) => {
-        this.updateUsersState(users);
-      })
-    );
+    const users = this.userStoreService.selectEntities()();
+    this.updateUsersState(users);
+
+    return of(users);
   });
 
   private readonly fetchSportCategories = this.effect(() => {

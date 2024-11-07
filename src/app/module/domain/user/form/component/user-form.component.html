@@ -1,86 +1,99 @@
-<section
-    class="artist-form"
-    *ngIf="userFormViewModel$$$() as userFormViewModel"
->
-    <form
-        [formGroup]="userFormViewModel.formGroup"
-        *ngIf="userFormViewModel.formGroup"
-    >
-        <input name="uid" formControlName="uid" hidden />
-        <input name="meta" formControlName="meta" hidden />
+@if(userFormViewModel$$$(); as userFormViewModel) {
+<section class="artist-form">
+  @if(userFormViewModel.formGroup; as formGroup) {
+  <form [formGroup]="formGroup">
+    <input name="uid" formControlName="uid" hidden />
+    <input name="meta" formControlName="meta" hidden />
 
-        <div class="field">
-			<span class="p-float-label">
-				<input id="email" type="text" pInputText formControlName="email" />
+    <div class="field">
+      <span class="p-float-label">
+        <input id="email" type="text" pInputText formControlName="email" />
 
-				<label for="email">Email</label>
-			</span>
-		</div>
+        <label for="email">Email</label>
+      </span>
+    </div>
 
-		<div class="field">
-			<span class="p-float-label">
-				<input id="firstName" type="text" pInputText formControlName="firstName" />
+    <div class="field">
+      <span class="p-float-label">
+        <input
+          id="firstName"
+          type="text"
+          pInputText
+          formControlName="firstName"
+        />
 
-				<label for="firstName">First name</label>
-			</span>
-		</div>
+        <label for="firstName">First name</label>
+      </span>
+    </div>
 
-		<div class="field">
-			<span class="p-float-label">
-				<input id="lastName"  formControlName="lastName" pInputText type="text"/>
+    <div class="field">
+      <span class="p-float-label">
+        <input
+          id="lastName"
+          formControlName="lastName"
+          pInputText
+          type="text"
+        />
 
-				<label for="lastName">Last name</label>
-			</span>
-		</div>
+        <label for="lastName">Last name</label>
+      </span>
+    </div>
 
-		<div class="field">
-			<span class="p-float-label">
-				<input id="displayName"  formControlName="displayName" pInputText type="text"/>
+    <div class="field">
+      <span class="p-float-label">
+        <input
+          id="displayName"
+          formControlName="displayName"
+          pInputText
+          type="text"
+        />
 
-				<label for="displayName">Display name</label>
-			</span>
-		</div>
+        <label for="displayName">Display name</label>
+      </span>
+    </div>
 
-		<div class="field">
-			<span class="p-float-label">
-				<p-multiSelect [options]="userFormViewModel.roles" formControlName="roles" optionLabel="name"></p-multiSelect>
+    <div class="field">
+      <span class="p-float-label">
+        <p-multiSelect
+          [options]="userFormViewModel.roles"
+          formControlName="roles"
+          optionLabel="name"
+        ></p-multiSelect>
 
-				<label for="roles">Roles</label>
-			</span>
-		</div>
+        <label for="roles">Roles</label>
+      </span>
+    </div>
 
-        <div class="field">
-            <span class="p-float-label">
-                <p-dropdown
-                    formControlName="language"
-                    id="language"
-                    [options]="userFormViewModel.languages"
-                    placeholder="Select a language"
-                ></p-dropdown>
+    <div class="field">
+      <span class="p-float-label">
+        <p-dropdown
+          formControlName="language"
+          id="language"
+          [options]="userFormViewModel.languages"
+          placeholder="Select a language"
+        ></p-dropdown>
 
-                <label for="language">Language</label>
-            </span>
-        </div>
+        <label for="language">Language</label>
+      </span>
+    </div>
 
-        <div
-            style="margin-top: 10px"
-            fxLayout="row"
-            fxLayoutAlign="space-around"
-        >
-            <button
-                pButton
-                type="button"
-                label="Submit"
-                (click)="userFormViewModel.submit$$.next()"
-                [disabled]="!userFormViewModel.formGroup.valid"
-            ></button>
+    <div style="margin-top: 10px">
+      <button
+        pButton
+        type="button"
+        label="Submit"
+        (click)="userFormViewModel.submit$$.next()"
+        [disabled]="!formGroup.valid"
+      ></button>
 
-            <button
-                pButton
-                type="button"
-                label="Cancel"
-                (click)="userFormViewModel.cancel$$.next()"
-            ></button>
-        </div>
-    </form>
+      <button
+        pButton
+        type="button"
+        label="Cancel"
+        (click)="userFormViewModel.cancel$$.next()"
+      ></button>
+    </div>
+  </form>
+  }
 </section>
+}

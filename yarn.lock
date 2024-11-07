@@ -2596,10 +2596,10 @@
   dependencies:
     tslib "^2.0.0"
 
-"@ngrx/signals@^18.0.2":
-  version "18.1.0"
-  resolved "https://registry.yarnpkg.com/@ngrx/signals/-/signals-18.1.0.tgz#017f0c9656899c461709fc72bd57a5659e60a0b7"
-  integrity sha512-ivuOyCPXoysUxvCRotRAMtwo+ObfWN06kHz/Nnlp8GyCB6wgZaUUGe6luOQyWhrZkbu3K+oCu7HB6YCSY6zT+A==
+"@ngrx/signals@^18.1.1":
+  version "18.1.1"
+  resolved "https://registry.yarnpkg.com/@ngrx/signals/-/signals-18.1.1.tgz#6747a603e66a8dbfc9482610cb460d93df66c4fa"
+  integrity sha512-7AaFp4VrzYhnDHlF15VZAMvp067zIC5arRRRMV+i+oi95sQVDXezpj74KTIguwRbZ3FU+GKGzFCNrwgYvginSg==
   dependencies:
     tslib "^2.3.0"
 
@@ -8291,14 +8291,14 @@ spdy@^4.0.2:
     "@ngrx/component-store" "^18.0.2"
     "@ngrx/effects" "^18.0.2"
     "@ngrx/entity" "^18.0.2"
-    "@ngrx/signals" "^18.0.2"
+    "@ngrx/signals" "^18.1.1"
     "@ngrx/store" "^18.0.2"
     "@ngrx/store-devtools" "^18.0.2"
     ngx-permissions "^17.1.0"
     primeicons "^7.0.0"
     primeng "^17.18.10"
     rxjs "~7.8.0"
-    sport-results "file:../../Users/zsagi/AppData/Local/Yarn/Cache/v6/npm-sport-results-0.0.0-28d6550b-c1d7-48ff-972d-7135a4a29ac9-1729878679473/node_modules/sport-results"
+    sport-results "file:../../Users/zsagi/AppData/Local/Yarn/Cache/v6/npm-sport-results-0.0.0-7b23a699-4fe6-494b-971c-f80b71a63ce1-1730459579205/node_modules/sport-results"
     tslib "^2.3.0"
     zone.js "~0.14.3"
 

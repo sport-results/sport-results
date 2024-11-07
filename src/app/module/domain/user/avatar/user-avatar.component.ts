@@ -4,6 +4,7 @@ import { MenuModule } from 'primeng/menu';
 import { combineLatest, map } from 'rxjs';
 
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   inject,
@@ -18,6 +19,7 @@ import { AuthorizationService } from '@app/api/core/authorization';
 import { AdminPermissionsService } from '@app/api/module/admin';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'sr-user-avatar',
   standalone: true,
   imports: [AvatarModule, MenuModule],
@@ -36,10 +38,8 @@ export class UserAvatarComponent {
 
   constructor() {
     this.userMenuItems$$$ = toSignal(
-      combineLatest([
-        this.applicationStoreService.selectAuthenticatedUser$(),
-      ]).pipe(
-        map(([authenticatedUser]) => {
+      this.applicationStoreService.selectAuthenticatedUser$().pipe(
+        map((authenticatedUser) => {
           return this.createMenuItems(authenticatedUser);
         })
       )

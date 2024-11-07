@@ -10,4 +10,7 @@ export abstract class RoleStoreService extends EntityStoreService<
 > {
   public abstract dispatchChangeNewEntityButtonEnabled(enabled: boolean): void;
   public abstract selectNewEntityButtonEnabled$(): Observable<boolean>;
+  public abstract selectEntitiesByIds$(
+    ids: string[]
+  ): Observable<RoleEntity[]>;
 }
