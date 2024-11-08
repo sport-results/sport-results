@@ -1,4 +1,5 @@
 import {
+  concatMap,
   exhaustMap,
   forkJoin,
   mergeAll,
@@ -80,7 +81,10 @@ export class EntityEffectServiceImpl extends EntityEffectService<
       );
   }
 
-  public deleteEntity$(entityId: string, subCollectionPath?: string,): Observable<string> {
+  public deleteEntity$(
+    entityId: string,
+    subCollectionPath?: string
+  ): Observable<string> {
     return this.entityDataService.delete$(entityId, subCollectionPath);
   }
 
@@ -89,25 +93,25 @@ export class EntityEffectServiceImpl extends EntityEffectService<
     pathParams?: string[],
     queryParams?: KeyValue<string, string>[]
   ): Observable<Entity[]> {
+    console.log('Effect service')
     return this.entityDataService
       .list$(subCollectionPath, pathParams, queryParams)
       .pipe(
-        mergeMap((models) => {
-          const x =
-            models && models.length
-              ? forkJoin(
-                  models.map((model) =>
-                    this.entityUtilService.convertModelToEntity$(model)
-                  )
+        concatMap((models) => {
+          const x$ = models && models.length
+            ? forkJoin(
+                models.map((model) =>
+                  this.entityUtilService.convertModelToEntity$(model)
                 )
-              : of(models as Entity[]);
+              )
+            : of(models as Entity[]);
 
-              x.subscribe({
-                next: (data) => console.log(data),
-                error: (error) => console.error(error)
-              })
+            x$.subscribe({
+              next: console.log,
+              error: console.error
+            });
 
-          return x;
+            return x$;
         })
       );
   }
@@ -141,10 +145,10 @@ export class EntityEffectServiceImpl extends EntityEffectService<
               )
             : of(models as Entity[]);
 
-            x.subscribe({
-              next: (data) => console.log(data),
-              error: (error) => console.error(error)
-            })
+        x.subscribe({
+          next: (data) => console.log(data),
+          error: (error) => console.error(error),
+        });
 
         return x;
       })

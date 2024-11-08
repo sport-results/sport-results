@@ -1,5 +1,7 @@
+import { listEntities } from './../../../../sport-result/store/state/sport-result.actions';
 import {
   computed,
+  effect,
   EnvironmentInjector,
   inject,
   Injectable,
@@ -53,20 +55,11 @@ export class UserStoreServiceImpl extends UserStoreService {
     pathParams?: string[],
     queryParams?: KeyValue<string, string>[]
   ): void {
-    runInInjectionContext(this.injector, () => {
-      const data = toSignal(
-        this.userEffectService.listEntities$()
-      );
-
-      computed(() => {
-        const users = data();
-
-        if (users) {
-          this.userStore.setUsers(users);
-        }
-      });
+    this.userStore.listEntities$({
+      subCollectionPath,
+      pathParams,
+      queryParams,
     });
-
   }
 
   public loadExistedUser(existedUser: UserEntity): void {

@@ -1,7 +1,7 @@
 <section class="artist-table">
-  @if(userTableViewModel$$$(); as userTableViewModel) {
+  @if(componentStore) {
   <p-table
-    [value]="userTableViewModel.userEntities"
+    [value]="componentStore.userEntities()"
     sortField="email"
     sortMode="multiple"
     styleClass="p-datatable-striped p-datatable-sm"
@@ -25,14 +25,14 @@
 
         <td>
           <ng-template
-            [ngxPermissionsOnly]="userTableViewModel.buttonPermissions"
+            [ngxPermissionsOnly]="componentStore.buttonPermissions()"
           >
             <button
               pButton
               pRipple
               icon="pi pi-pencil"
               class="p-button-rounded p-button-success mr-2"
-              (click)="userTableViewModel.editUser$$.next(userEntity)"
+              (click)="componentStore.editUser(userEntity)"
             ></button>
           </ng-template>
         </td>

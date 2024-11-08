@@ -1,4 +1,10 @@
-import { USER_FEATURE_KEY, UserEntity } from '@app/api/domain/user';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import {
+  USER_FEATURE_KEY,
+  UserEffectService,
+  UserEntity,
+} from '@app/api/domain/user';
+import { tapResponse } from '@ngrx/operators';
 import {
   patchState,
   signalStore,
@@ -18,7 +24,9 @@ import {
 } from '@ngrx/signals/entities';
 
 import { CustomEntityState } from '@app/api/core/entity';
-import { computed } from '@angular/core';
+import { computed, inject } from '@angular/core';
+import { switchMap, tap } from 'rxjs';
+import { KeyValue } from '@angular/common';
 
 const userStoreConfig = entityConfig({
   entity: type<UserEntity>(),
@@ -73,6 +81,8 @@ export const UserStore = signalStore(
   withEntities(userStoreConfig),
   withCustomEntity(),
   withMethods((store) => {
+    const userEffectService = inject(UserEffectService);
+
     return {
       addUser(user: UserEntity): void {
         patchState(store, addEntity(user, userStoreConfig));
@@ -83,6 +93,30 @@ export const UserStore = signalStore(
       setUser(user: UserEntity): void {
         patchState(store, setEntity(user, userStoreConfig));
       },
+      listEntities$: rxMethod<{
+        subCollectionPath?: string;
+        pathParams?: string[];
+        queryParams?: KeyValue<string, string>[];
+      }>((params$) =>
+        params$.pipe(
+          switchMap((params) =>
+            userEffectService
+              .listEntities$(
+                params.subCollectionPath,
+                params.pathParams,
+                params.queryParams
+              )
+              .pipe(
+                tapResponse({
+                  next: (users) => {
+                    patchState(store, setEntities(users, userStoreConfig))
+                  },
+                  error: console.error,
+                })
+              )
+          )
+        )
+      ),
     };
   }),
   withComputed(({ userEntityMap }) => ({}))

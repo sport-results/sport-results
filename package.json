@@ -25,9 +25,10 @@
     "@ngrx/component-store": "^18.0.2",
     "@ngrx/effects": "^18.0.2",
     "@ngrx/entity": "^18.0.2",
+    "@ngrx/operators": "^18.1.1",
+    "@ngrx/signals": "^18.1.1",
     "@ngrx/store": "^18.0.2",
     "@ngrx/store-devtools": "^18.0.2",
-    "@ngrx/signals": "^18.1.1",
     "ngx-permissions": "^17.1.0",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.10",
@@ -53,27 +54,51 @@
     ],
     "globalSetup": "jest-preset-angular/global-setup",
     "moduleNameMapper": {
-      "@app/api/common": ["<rootDir>/src/app/api/common/index.ts"],
+      "@app/api/common": [
+        "<rootDir>/src/app/api/common/index.ts"
+      ],
       "@app/api/core/authorization": [
         "<rootDir>/src/app/api/core/authorization/index.ts"
       ],
-      "@app/api/core/application": ["<rootDir>/src/app/api/core/application/index.ts"],
-      "@app/api/core/entity": ["<rootDir>/src/app/api/core/entity/index.ts"],
-      "@app/api/core/form": ["./src/app/api/core/form/index.ts"],
-      "@app/api/core/search": ["<rootDir>/src/app/api/core/search/index.ts"],
-      "@app/api/core/store": ["<rootDir>/src/app/api/core/store/index.ts"],
-      "@app/api/domain/role": ["<rootDir>/src/app/api/domain/role/index.ts"],
-      "@app/api/domain/user": ["<rootDir>/src/app/api/domain/user/index.ts"],
-      "@app/api/engine": ["<rootDir>/src/app/api/engine/index.ts"],
-      "@app/api/module/admin": ["<rootDir>/src/app/api/module/admin/index.ts"],
+      "@app/api/core/application": [
+        "<rootDir>/src/app/api/core/application/index.ts"
+      ],
+      "@app/api/core/entity": [
+        "<rootDir>/src/app/api/core/entity/index.ts"
+      ],
+      "@app/api/core/form": [
+        "./src/app/api/core/form/index.ts"
+      ],
+      "@app/api/core/search": [
+        "<rootDir>/src/app/api/core/search/index.ts"
+      ],
+      "@app/api/core/store": [
+        "<rootDir>/src/app/api/core/store/index.ts"
+      ],
+      "@app/api/domain/role": [
+        "<rootDir>/src/app/api/domain/role/index.ts"
+      ],
+      "@app/api/domain/user": [
+        "<rootDir>/src/app/api/domain/user/index.ts"
+      ],
+      "@app/api/engine": [
+        "<rootDir>/src/app/api/engine/index.ts"
+      ],
+      "@app/api/module/admin": [
+        "<rootDir>/src/app/api/module/admin/index.ts"
+      ],
       "@app/api/domain/sport-category": [
         "<rootDir>/src/app/api/domain/sport-category/index.ts"
       ],
       "@app/api/admin/sport-category": [
         "<rootDir>/src/app/api/admin/sport-category/index.ts"
       ],
-      "@app/api/admin/user": ["<rootDir>/src/app/api/admin/user/index.ts"],
-      "@app/api/admin/role": ["<rootDir>/src/app/api/admin/role/index.ts"],
+      "@app/api/admin/user": [
+        "<rootDir>/src/app/api/admin/user/index.ts"
+      ],
+      "@app/api/admin/role": [
+        "<rootDir>/src/app/api/admin/role/index.ts"
+      ],
       "@app/api/domain/sport-category-rule": [
         "<rootDir>/src/app/api/domain/sport-category-rule/index.ts"
       ],
@@ -113,12 +138,24 @@
       "@app/api/admin/sport-result": [
         "<rootDir>/src/app/api/admin/sport-result/index.ts"
       ],
-      "@app/api/admin/permission": ["<rootDir>/src/app/api/admin/permission/index.ts"],
-      "@app/core/entity": ["<rootDir>/src/app/module/core/entity/index.ts"],
-      "@app/core/form": ["<rootDir>/src/app/module/core/form/index.ts"],
-      "@app/domain/role": ["<rootDir>/src/app/module/domain/role/index.ts"],
-      "@app/domain/user": ["<rootDir>/src/app/module/domain/user/index.ts"],
-      "@app/engine": ["<rootDir>/src/app/module/engine/index.ts"],
+      "@app/api/admin/permission": [
+        "<rootDir>/src/app/api/admin/permission/index.ts"
+      ],
+      "@app/core/entity": [
+        "<rootDir>/src/app/module/core/entity/index.ts"
+      ],
+      "@app/core/form": [
+        "<rootDir>/src/app/module/core/form/index.ts"
+      ],
+      "@app/domain/role": [
+        "<rootDir>/src/app/module/domain/role/index.ts"
+      ],
+      "@app/domain/user": [
+        "<rootDir>/src/app/module/domain/user/index.ts"
+      ],
+      "@app/engine": [
+        "<rootDir>/src/app/module/engine/index.ts"
+      ],
       "@app/domain/sport-category": [
         "<rootDir>/src/app/module/domain/sport-category/index.ts"
       ],
@@ -152,7 +189,9 @@
       "@app/domain/sport-event": [
         "<rootDir>/src/app/module/domain/sport-event/index.ts"
       ],
-      "@app/admin/sport-event": ["<rootDir>/src/app/module/admin/sport-event/index.ts"],
+      "@app/admin/sport-event": [
+        "<rootDir>/src/app/module/admin/sport-event/index.ts"
+      ],
       "@app/module/domain/permission": [
         "<rootDir>/src/app/module/domain/permission/index.ts"
       ],
@@ -166,6 +205,5 @@
         "<rootDir>/src/app/module/admin/sport-result/index.ts"
       ]
     }
-
   }
 }

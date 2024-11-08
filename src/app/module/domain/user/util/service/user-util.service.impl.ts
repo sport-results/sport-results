@@ -1,4 +1,4 @@
-import { delay, first, map, mergeMap, Observable, of, switchMap } from 'rxjs';
+import { concatMap, first, map, mergeMap, Observable, of, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -9,7 +9,7 @@ import {
   SimpleEntity,
   SimpleModel,
 } from '@app/api/core/entity';
-import { RoleDataService, RoleEntity, RoleStoreService } from '@app/api/domain/role';
+import { RoleStoreService } from '@app/api/domain/role';
 import {
   UserEntity,
   UserEntityAdd,
@@ -105,15 +105,28 @@ export class UserUtilServiceImpl extends EntityUtilServiceImpl {
   public override convertModelToEntity$(
     model: UserModel
   ): Observable<UserEntity> {
+    console.log('User util service')
     return super.convertModelToEntity$(model).pipe(
       map((entity) => entity as UserEntity),
-      mergeMap((entity) => {
-        return this.roleStoreService.selectEntitiesByIds$(model.roleIds || []).pipe(
-          map((roles) => ({
-            ...entity,
-            roles,
-          }))
+      concatMap((entity) => {
+        const x$ = this.roleStoreService
+        .selectEntitiesByIds$(model.roleIds || [])
+        .pipe(
+          first(),
+          map((roles) => {
+            return {
+              ...entity,
+              roles,
+            }
+          })
         );
+
+        x$.subscribe({
+          next: console.log,
+          error: console.error
+        });
+
+        return x$;
       })
     );
   }
