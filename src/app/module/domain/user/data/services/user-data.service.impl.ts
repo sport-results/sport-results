@@ -4,7 +4,7 @@ import { USER_FEATURE_KEY } from '@app/api/domain/user';
 import { EntityDataServiceImpl } from '@app/core/entity';
 import { FirestoreDataEngine, FirestoreDataUtil } from '@app/engine';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class UserDataServiceImpl extends EntityDataServiceImpl {
   public constructor(firestore: Firestore) {
     super(

@@ -1,4 +1,4 @@
-import { delay, first, map, mergeMap, Observable, of, switchMap } from 'rxjs';
+import { concatMap, first, map, mergeMap, Observable, of, switchMap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -9,7 +9,7 @@ import {
   SimpleEntity,
   SimpleModel,
 } from '@app/api/core/entity';
-import { RoleDataService, RoleEntity } from '@app/api/domain/role';
+import { RoleStoreService } from '@app/api/domain/role';
 import {
   UserEntity,
   UserEntityAdd,
@@ -28,15 +28,13 @@ export class UserUtilServiceImpl extends EntityUtilServiceImpl {
   public override createSimpleModel(entity: SimpleEntity): SimpleModel {
     throw new Error('Method not implemented.');
   }
-  private roleDataService: RoleDataService;
+  private roleStoreService = inject(RoleStoreService);
 
   public _sort = (a: UserEntity, b: UserEntity): number =>
     a.email < b.email ? 1 : -1;
 
   public constructor(formBuilder: FormBuilder) {
     super(formBuilder);
-
-    this.roleDataService = inject(RoleDataService);
   }
 
   public override convertEntityAddToModelAdd(
@@ -107,17 +105,28 @@ export class UserUtilServiceImpl extends EntityUtilServiceImpl {
   public override convertModelToEntity$(
     model: UserModel
   ): Observable<UserEntity> {
+    console.log('User util service')
     return super.convertModelToEntity$(model).pipe(
       map((entity) => entity as UserEntity),
-      mergeMap((entity) => {
-        return this.convertRoleIdsToRoles$(model.roleIds || []).pipe(
-          delay(100),
+      concatMap((entity) => {
+        const x$ = this.roleStoreService
+        .selectEntitiesByIds$(model.roleIds || [])
+        .pipe(
           first(),
-          map((roles) => ({
-            ...entity,
-            roles,
-          }))
+          map((roles) => {
+            return {
+              ...entity,
+              roles,
+            }
+          })
         );
+
+        x$.subscribe({
+          next: console.log,
+          error: console.error
+        });
+
+        return x$;
       })
     );
   }
@@ -157,7 +166,7 @@ export class UserUtilServiceImpl extends EntityUtilServiceImpl {
         }
 
         if (model.roleIds) {
-          return this.convertRoleIdsToRoles$(model.roleIds).pipe(
+          return this.roleStoreService.selectEntitiesByIds$(model.roleIds).pipe(
             map((roles) => ({
               ...entity,
               roles,
@@ -228,9 +237,5 @@ export class UserUtilServiceImpl extends EntityUtilServiceImpl {
       roles: formGroup.value['roles'],
       uid: formGroup.value['uid'],
     };
-  }
-
-  private convertRoleIdsToRoles$(roleIds: string[]): Observable<RoleEntity[]> {
-    return this.roleDataService.listByIds$(roleIds);
   }
 }

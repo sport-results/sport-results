@@ -1,48 +1,43 @@
-<section
-    class="artist-table"
-    *ngIf="userTableViewModel$$$() as userTableViewModel"
->
-    <p-table
-        [value]="userTableViewModel.userEntities"
-        sortField="email"
-        sortMode="multiple"
-        styleClass="p-datatable-striped p-datatable-sm"
-        responsiveLayout="scroll"
-        [paginator]="true"
-        [rows]="10"
-    >
-        <ng-template pTemplate="header">
-            <tr>
-                <th pSortableColumn="email">
-                    Email <p-sortIcon field="email"></p-sortIcon>
-                </th>
+<section class="artist-table">
+  @if(componentStore) {
+  <p-table
+    [value]="componentStore.userEntities()"
+    sortField="email"
+    sortMode="multiple"
+    styleClass="p-datatable-striped p-datatable-sm"
+    responsiveLayout="scroll"
+    [paginator]="true"
+    [rows]="10"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="email">
+          Email <p-sortIcon field="email"></p-sortIcon>
+        </th>
 
-                <th></th>
-            </tr>
-        </ng-template>
+        <th></th>
+      </tr>
+    </ng-template>
 
-        <ng-template pTemplate="body" let-userEntity>
-            <tr>
-                <td>{{ userEntity.email }}</td>
+    <ng-template pTemplate="body" let-userEntity>
+      <tr>
+        <td>{{ userEntity.email }}</td>
 
-                <td>
-                    <ng-template
-                        [ngxPermissionsOnly]="
-                            userTableViewModel.buttonPermissions
-                        "
-                    >
-                        <button
-                            pButton
-                            pRipple
-                            icon="pi pi-pencil"
-                            class="p-button-rounded p-button-success mr-2"
-                            (click)="
-                                userTableViewModel.editUser$$.next(userEntity)
-                            "
-                        ></button>
-                    </ng-template>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+        <td>
+          <ng-template
+            [ngxPermissionsOnly]="componentStore.buttonPermissions()"
+          >
+            <button
+              pButton
+              pRipple
+              icon="pi pi-pencil"
+              class="p-button-rounded p-button-success mr-2"
+              (click)="componentStore.editUser(userEntity)"
+            ></button>
+          </ng-template>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  }
 </section>

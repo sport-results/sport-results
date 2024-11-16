@@ -1,16 +1,15 @@
-import { KeyValue } from '@angular/common';
 import { Identifiable } from '../../common/identifiable';
 import { Meta } from '../../common/meta';
 
 export const enum EntityTypeEnum {
-    Entity = 'entity',
-    User = 'user',
+  Entity = 'entity',
+  User = 'user',
 }
 
 export type EntityType = EntityTypeEnum.Entity;
 
 export interface EntityHelper {
-    meta: Meta;
+  meta: Meta;
 }
 
 export type Entity = EntityHelper & Identifiable;
@@ -23,8 +22,16 @@ export type EntityModel = Entity;
 
 export type EntityModelAdd = Omit<EntityModel, 'uid'>;
 
-export type EntityModelUpdate = Partial<EntityModel> & Identifiable & EntityHelper;
+export type EntityModelUpdate = Partial<EntityModel> &
+  Identifiable &
+  EntityHelper;
 
 export type SimpleEntity = Omit<Entity, 'meta'>;
 
 export type SimpleModel = Omit<EntityModel, 'meta'>;
+
+export type CustomEntityState = {
+  isLoading: boolean;
+  newEntityButtonEnabled: boolean;
+  selectedEntity: Entity | null;
+};

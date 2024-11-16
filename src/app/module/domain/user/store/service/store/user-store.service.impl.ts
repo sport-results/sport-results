@@ -1,93 +1,123 @@
-import { Observable } from 'rxjs';
-
-import { Injectable } from '@angular/core';
+import { listEntities } from './../../../../sport-result/store/state/sport-result.actions';
+import {
+  computed,
+  effect,
+  EnvironmentInjector,
+  inject,
+  Injectable,
+  runInInjectionContext,
+  Signal,
+} from '@angular/core';
 import { KeyValue } from '@angular/common';
 import {
+  UserEffectService,
   UserEntity,
   UserEntityAdd,
   UserStoreService,
 } from '@app/api/domain/user';
-import { select, Store } from '@ngrx/store';
+import { UserStore } from '../../user.store';
+import { toSignal } from '@angular/core/rxjs-interop';
 
-import * as userActions from '../../state/user.actions';
-import * as fromUser from '../../state/user.reducer';
-import * as UserSelectors from '../../state/user.selectors';
-
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class UserStoreServiceImpl extends UserStoreService {
-  public constructor(private store: Store<fromUser.UserPartialState>) {
-    super();
+  protected injector = inject(EnvironmentInjector);
+  userStore = inject(UserStore);
+  userEffectService = inject(UserEffectService);
+
+  public addEntity(userAdd: UserEntityAdd, subCollectionPath?: string): void {
+    runInInjectionContext(this.injector, () => {
+      const user = toSignal(
+        this.userEffectService.addEntity$(userAdd, subCollectionPath)
+      )();
+
+      if (user) {
+        this.userStore.addUser(user);
+      }
+    });
   }
 
-  public dispatchAddEntityAction(user: UserEntityAdd): void {
-    this.store.dispatch(userActions.addEntity({ user }));
+  public loadEntity(uid: string): void {
+    runInInjectionContext(this.injector, () => {
+      const user = toSignal(this.userEffectService.loadEntity$(uid))();
+
+      if (user) {
+        this.userStore.setUser(user);
+      }
+    });
   }
 
-  public override dispatchLoadEntityAction(uid: string): void {
-    this.store.dispatch(userActions.loadEntity({ uid }));
+  public setNewEntityButtonEnabled(enabled: boolean): void {
+    this.userStore.setNewEntityButtonEnabled(enabled);
   }
 
-  public override dispatchChangeNewEntityButtonEnabled(enabled: boolean): void {
-    this.store.dispatch(userActions.changeNewEntityButtonEnabled({ enabled }));
-  }
-
-  public dispatchListEntitiesAction(
+  public listEntities(
     subCollectionPath?: string,
     pathParams?: string[],
     queryParams?: KeyValue<string, string>[]
   ): void {
-    this.store.dispatch(
-      userActions.listEntities({
-        subCollectionPath,
-        pathParams: pathParams,
-        queryParams: queryParams,
-      })
-    );
+    this.userStore.listEntities$({
+      subCollectionPath,
+      pathParams,
+      queryParams,
+    });
   }
 
-  public dispatchLoadExistedUserAction(user: UserEntity): void {
-    this.store.dispatch(userActions.loadExistedUser({ user }));
+  public loadExistedUser(existedUser: UserEntity): void {
+    runInInjectionContext(this.injector, () => {
+      const user = toSignal(
+        this.userEffectService.loadExistedUser$(existedUser)
+      );
+
+      computed(() => {
+        const x = user();
+
+        if (x) {
+          this.userStore.setUser(x);
+        }
+      });
+    });
   }
 
-  public dispatchSelectEntityAction(user: UserEntity | null): void {
-    this.store.dispatch(userActions.selectEntity({ user }));
+  public setSelectedEntity(user: UserEntity | null): void {
+    this.userStore.setSelectedEntity(user);
   }
 
-  public override dispatchSetSelectedEntityIdAction(entityId: string): void {
-    this.store.dispatch(userActions.setSelectedEntityId({ userId: entityId }));
+  public updateEntity(
+    userUpdate: UserEntity,
+    subCollectionPath?: string
+  ): void {
+    runInInjectionContext(this.injector, () => {
+      const user = toSignal(
+        this.userEffectService.updateEntity$(userUpdate, subCollectionPath)
+      )();
+
+      if (user) {
+        this.userStore.setUser(user as UserEntity);
+      }
+    });
   }
 
-  public dispatchUpdateEntityAction(user: UserEntity): void {
-    this.store.dispatch(userActions.updateEntity({ user }));
+  public setLoading(isLoading: boolean): void {
+    this.userStore.setLoading(isLoading);
   }
 
-  public override isLoading$(): Observable<boolean> {
-    throw new Error('Method not implemented.');
+  public isLoading(): Signal<boolean> {
+    return this.userStore.isLoading;
   }
 
-  public override selectEntities$(): Observable<UserEntity[]> {
-    return this.store.pipe(select(UserSelectors.getAllEntities));
+  public selectEntities(): Signal<UserEntity[]> {
+    return this.userStore.userEntities;
   }
 
-  public override selectEntityById$(
-    entityId: string
-  ): Observable<UserEntity | undefined> {
-    return this.store.pipe(select(UserSelectors.getEntityById(entityId)));
+  public selectEntityById(entityId: string): Signal<UserEntity | undefined> {
+    return computed(() => this.userStore.userEntityMap()[entityId]);
   }
 
-  public override selectNewEntityButtonEnabled$(): Observable<boolean> {
-    return this.store.pipe(select(UserSelectors.isNewEntityButtonEnabled));
+  public selectNewEntityButtonEnabled(): Signal<boolean> {
+    return this.userStore.isNewEntityButtonEnabled;
   }
 
-  public override selectSelectedEntity$(): Observable<UserEntity | null> {
-    throw new Error('Method not implemented.');
-  }
-
-  public selectSelectedEntityID$(): Observable<string> {
-    return this.store.pipe(select(UserSelectors.getSelectedId));
-  }
-
-  public override selectSelectedEntityId$(): Observable<string> {
-    throw new Error('Method not implemented.');
+  public selectSelectedEntityId$(): Signal<string | undefined> {
+    return computed(() => this.userStore.selectedEntity()?.uid);
   }
 }

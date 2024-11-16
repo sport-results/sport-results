@@ -49,13 +49,7 @@ export class ApplicationEffects {
             uid: currentUser.uid || '',
           };
 
-          this.userStoreService.dispatchLoadExistedUserAction(user);
-
-          actions.push(
-            applicationActions.authenticated({
-              user,
-            })
-          );
+          this.userStoreService.loadExistedUser(user);
         } else {
           actions.push(applicationActions.notAuthenticated());
         }

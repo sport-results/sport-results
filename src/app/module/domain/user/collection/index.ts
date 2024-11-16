@@ -1,1 +1,1 @@
-export * from './user-collection.module';
+export * from './component';

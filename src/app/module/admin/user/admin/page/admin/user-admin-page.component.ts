@@ -8,7 +8,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserAdminPermissionsService } from '@app/api/admin/user';
 import { UserStoreService } from '@app/api/domain/user';
 import { RoleNamesEnum } from '@app/api/common';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,10 +17,9 @@ import { toSignal } from '@angular/core/rxjs-interop';
 })
 export class UserAdminPageComponent implements OnInit {
   public buttonPermissions: string[] = [];
-  public isNewEntityButtonEnabled$$$ = toSignal(
-    inject(UserStoreService).selectNewEntityButtonEnabled$(),
-    { initialValue: false }
-  );
+  public isNewEntityButtonEnabled$$$ =
+    inject(UserStoreService).selectNewEntityButtonEnabled();
+
 
   public constructor(
     private activatedRoute: ActivatedRoute,

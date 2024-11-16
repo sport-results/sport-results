@@ -5,7 +5,6 @@ import { Resolve } from '@angular/router';
 import { SportPlayerStoreService } from '@app/api/domain/sport-player';
 import { UserStoreService } from '@app/api/domain/user';
 
-
 @Injectable()
 export class SportPlayerEditPageResolverService implements Resolve<void> {
 	private sportPlayerStoreService = inject(SportPlayerStoreService);
@@ -13,6 +12,6 @@ export class SportPlayerEditPageResolverService implements Resolve<void> {
 
 	public resolve(): void | Observable<void> | Promise<void> {
 		this.sportPlayerStoreService.dispatchChangeNewEntityButtonEnabled(false);
-    this.userStoreService.dispatchListEntitiesAction();
+    this.userStoreService.listEntities();
 	}
 }

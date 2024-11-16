@@ -10,6 +10,7 @@ import {
   doc,
   docData,
   Firestore,
+  getDoc,
   getDocs,
   Query,
   query,
@@ -18,6 +19,7 @@ import {
   where,
 } from '@angular/fire/firestore';
 import {
+  Entity,
   EntityModel,
   EntityModelAdd,
   EntityModelUpdate,
@@ -175,15 +177,23 @@ export class FirestoreDataEngine extends DataEngine {
   }
 
   public override load$(uid: string): Observable<EntityModel | undefined> {
-    const entityDocument = this.firestoreDataUtil.createDocumentReference(
-      this.firestore,
-      this.featureKey,
-      uid
-    );
+    return new Observable((subscriber) => {
+      const entityDocumentRef = this.firestoreDataUtil.createDocumentReference(
+        this.firestore,
+        this.featureKey,
+        uid
+      );
 
-    return docData(entityDocument, {
-      idField: 'uid',
-    }) as Observable<EntityModel>;
+      getDoc(entityDocumentRef)
+      .then((snapshot) => {
+        subscriber.next(
+          snapshot.data() as unknown as Entity
+        );
+      })
+      .catch((error) => {
+        subscriber.error(error);
+      });
+    });
   }
 
   public searchByCollectionGroup$(

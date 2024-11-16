@@ -7,7 +7,7 @@ export class UserListPageResolverService implements Resolve<void> {
     constructor(private userStoreService: UserStoreService) {}
 
     public resolve(): void {
-        this.userStoreService.dispatchChangeNewEntityButtonEnabled(true);
-        this.userStoreService.dispatchListEntitiesAction();
+        this.userStoreService.setNewEntityButtonEnabled(true);
+        this.userStoreService.listEntities();
     }
 }

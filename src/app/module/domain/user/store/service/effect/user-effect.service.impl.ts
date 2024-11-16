@@ -1,7 +1,7 @@
-import { map, Observable, of, switchMap } from 'rxjs';
+import { map, Observable, of, switchMap, tap } from 'rxjs';
 
 import { inject, Injectable } from '@angular/core';
-import { User } from '@app/api/common';
+import { ActionEnum, User } from '@app/api/common';
 import {
   USER_FEATURE_KEY,
   UserDataService,
@@ -14,9 +14,14 @@ import {
   SportNetworkStoreService,
   SportNetworkUtilService,
 } from '@app/api/domain/sport-network';
+import { AuthorizationService } from '@app/api/core/authorization';
+import { RoleEntity } from '@app/api/domain/role';
+import { ApplicationStoreService } from '@app/api/core/application';
 
 @Injectable()
 export class UserEffectServiceImpl extends EntityEffectServiceImpl {
+  private applicationStoreService = inject(ApplicationStoreService);
+  private authorizationService = inject(AuthorizationService);
   private sportNetworkStoreService = inject(SportNetworkStoreService);
   private sportNetworkUtilService = inject(SportNetworkUtilService);
 
@@ -29,13 +34,14 @@ export class UserEffectServiceImpl extends EntityEffectServiceImpl {
 
   public loadExistedUser$(user: User): Observable<UserEntity> {
     return this.entityDataService.load$(user.uid || '').pipe(
+      tap(console.log),
       switchMap((model) => {
         if (!model || !model.uid) {
           this.sportNetworkStoreService.dispatchAddEntityAction(
             this.sportNetworkUtilService.createDefaultSportNetwork(
               [],
               user as UserEntity,
-              this.sportNetworkUtilService.createPath(user.uid),
+              this.sportNetworkUtilService.createPath(user.uid)
             ),
             `${USER_FEATURE_KEY}/${user.uid}`
           );
@@ -45,7 +51,8 @@ export class UserEffectServiceImpl extends EntityEffectServiceImpl {
               this.entityUtilService.convertEntityUpdateToModelUpdate(
                 user as unknown as UserModelUpdate
               )
-            );
+            )
+            .pipe(map((user) => user as UserEntity));
         } else {
           return of(model);
         }
@@ -53,6 +60,18 @@ export class UserEffectServiceImpl extends EntityEffectServiceImpl {
       switchMap((model) =>
         this.entityUtilService.convertModelUpdateToEntityUpdate$(model)
       ),
+      tap((user) => {
+        this.authorizationService.removeAll();
+        this.authorizationService.addRoles(
+          (user as unknown as UserEntity).roles as RoleEntity[]
+        );
+        this.authorizationService.addPermission(
+          `${ActionEnum.SOME}${user.uid}`
+        );
+        this.applicationStoreService.dispatchAuthenticated(
+          user as unknown as UserEntity
+        );
+      }),
       map((entity) => entity as UserEntity)
     );
   }

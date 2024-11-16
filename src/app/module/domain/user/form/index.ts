@@ -1,1 +1,1 @@
-export * from './user-form.module';
+export * from './component';

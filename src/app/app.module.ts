@@ -12,7 +12,6 @@ import {
 } from '@angular/fire/app-check';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { UserModule } from '@app/domain/user';
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -31,6 +30,10 @@ import { NetworkPlayerModule } from './module/domain/network-player';
 import { SportEventModule } from './module/domain/sport-event';
 import { PermissionModule } from './module/domain/permission';
 import { SportResultModule } from './module/domain/sport-result';
+import { UserDataService, UserEffectService, UserStoreService, UserUtilService } from './api/domain/user';
+import { UserEffectServiceImpl, UserStoreServiceImpl } from './module/domain/user/store/service';
+import { UserDataServiceImpl } from './module/domain/user/data';
+import { UserUtilServiceImpl } from './module/domain/user/util/service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -43,7 +46,6 @@ import { SportResultModule } from './module/domain/sport-result';
     CoreApplicationModule,
     CoreStoreModule,
     NgxPermissionsModule.forRoot(),
-    UserModule,
     RoleModule,
     SportCategoryModule,
     SportCategoryRuleModule,
@@ -71,6 +73,22 @@ import { SportResultModule } from './module/domain/sport-result';
     }),
     provideExperimentalZonelessChangeDetection(),
     MessageService,
+    {
+      provide: UserStoreService,
+      useClass: UserStoreServiceImpl
+    },
+    {
+      provide: UserEffectService,
+      useClass: UserEffectServiceImpl
+    },
+    {
+      provide: UserDataService,
+      useClass: UserDataServiceImpl
+    },
+    {
+      provide: UserUtilService,
+      useClass: UserUtilServiceImpl
+    }
   ],
   bootstrap: [AppComponent],
 })
