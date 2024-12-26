@@ -1,5 +1,10 @@
 import { catchError, from, map, mergeMap, of, switchMap } from 'rxjs';
-import { Auth, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
+import {
+  Auth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  UserCredential,
+} from '@angular/fire/auth';
 
 import { inject, Injectable } from '@angular/core';
 import { RoleNamesEnum } from '@app/api/common';
@@ -17,6 +22,7 @@ export class ApplicationEffects {
   private actions$ = inject(Actions);
   private auth = inject(Auth);
   private userStoreService = inject(UserStoreService);
+  private provider = new GoogleAuthProvider();
 
   getAuthenticatedUser$ = createEffect(() =>
     this.actions$.pipe(
@@ -82,7 +88,22 @@ export class ApplicationEffects {
       })
     )
   );
-  private googleLogin(): Promise<unknown> {
-    return signInWithPopup(this.auth, new GoogleAuthProvider());
+
+  private getTokenFromLogin(result: UserCredential) {
+    // This gives you a Google Access Token.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential?.accessToken;
+    console.log('token', token);
+    return token;
+  }
+
+  private async googleLogin(): Promise<unknown> {
+    const result = await signInWithPopup(this.auth, this.provider);
+
+    // The signed-in user info.
+    const user = result.user;
+    console.log('googleLogin user', user);
+    this.getTokenFromLogin(result);
+    return result;
   }
 }

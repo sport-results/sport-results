@@ -33,6 +33,7 @@ export class UserAvatarComponent {
   @Input()
   public user?: User;
   public userMenuItems$$$!: Signal<MenuItem[] | undefined>;
+  userImageUrl?: string;
 
   constructor() {
     this.userMenuItems$$$ = toSignal(
@@ -40,6 +41,8 @@ export class UserAvatarComponent {
         this.applicationStoreService.selectAuthenticatedUser$(),
       ]).pipe(
         map(([authenticatedUser]) => {
+          this.userImageUrl = authenticatedUser?.photoURL ?? undefined;
+          console.log('authenticatedUser', this.userImageUrl);
           return this.createMenuItems(authenticatedUser);
         })
       )

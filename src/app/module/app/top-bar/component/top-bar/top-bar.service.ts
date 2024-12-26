@@ -32,8 +32,7 @@ export class TopBarService {
   private params!: TopBarParams;
   private params$$: Subject<TopBarParams>;
 
-  constructor(
-  ) {
+  constructor() {
     this.params$$ = new ReplaySubject();
   }
 
@@ -78,7 +77,10 @@ export class TopBarService {
     this.router.navigate(['/home']);
   }
 
-  private updateParams(params: TopBarParams, user: User | undefined): TopBarParams {
+  private updateParams(
+    params: TopBarParams,
+    user: User | undefined
+  ): TopBarParams {
     let newParams: TopBarParams;
 
     if (!params) {
